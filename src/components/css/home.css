@@ -1,0 +1,70 @@
+
+.sareeList{
+    height: 430px;
+    width: 100%;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+
+.saree{
+    height: 350px;
+    width: 100%;
+    cursor: pointer;
+}
+.product{
+    position: relative;
+}
+.similarProducts{
+    background: rgba(0,0,0,0.5);
+    width: 100%;
+    position: absolute;
+    bottom: 8px;
+    height: 75px;
+}
+
+.similarProductsImg{
+    width: 20%;
+    height: 75px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.sareeList .productDesc{
+    font-size: 15px;
+    text-align: left;
+    width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    height: 1.2em;
+    white-space: nowrap;
+    padding-left: 5px;
+}
+
+.productRs{
+    text-align: left;
+    font-weight: bold;
+    font-size: 15px;
+    padding-left: 5px;
+}
+
+.addToCart, .buyNow{
+    height: 25px;
+    width: 100px;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 4px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.addToCart{
+    background-color: #ffd814;
+    float: left;
+    margin-left: 5px;
+}
+
+.buyNow{
+    background-color: #ffa41c;
+    float: right;
+    margin-right: 5px;
+}

@@ -1,0 +1,138 @@
+
+.productLeftImgList{
+    width: 15%;
+    float: left;
+    background-color: #00cfff;
+}
+
+.itemDetailsMainImg{
+    width: 80%;
+    cursor: pointer;
+}
+
+.otherImg{
+    width: 100%;
+    height: 75px;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.sameTypeProductImg{
+    width: 80px;
+    height: 80px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.addToCartItemDetails{
+    float: left;
+    width: 40%;
+    text-align: center;
+    background-color: #ffd814;
+    color: #fff;
+    padding: 15px;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-top: 3px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.buyNowItemDetails{
+    float: right;
+    width: 40%;
+    text-align: center;
+    background-color: #00cfff;
+    color: #fff;
+    padding: 15px;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-top: 3px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.similarTypeProductImg{
+    width: 250px;
+    height: 250px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.SimilarProducts {
+    position: relative;
+}
+.SimilarProducts .react-horizontal-scrolling-menu--arrow-right{
+    position: absolute;
+    right: 0px;
+    bottom: 100px;
+}
+.SimilarProducts .react-horizontal-scrolling-menu--arrow-left{
+    position: absolute;
+    left: 0px;
+    bottom: 100px;
+    z-index: 9;
+}
+.SimilarProducts .react-horizontal-scrolling-menu--arrow-left button{
+    height: 80px;
+    background: #fff;
+    border: 0px;
+    border-radius: 0px 3px 3px 0px;
+}
+.SimilarProducts .react-horizontal-scrolling-menu--arrow-right button{
+    height: 80px;
+    background: #fff;
+    border: 0px;
+    border-radius: 3px 0px 0px 3px;
+}
+
+.SimilarProducts .react-horizontal-scrolling-menu--arrow-right button:disabled, .SimilarProducts .react-horizontal-scrolling-menu--arrow-left button:disabled{
+    display: none;
+}
+
+.SimilarProducts .react-horizontal-scrolling-menu--scroll-container {
+    overflow: hidden;
+}
+
+.productPrice .actualPrice{
+    text-decoration: line-through;
+    color: #a49393;
+    font-weight: bold;
+    margin-right: 13px;
+    font-size: 15px;
+}
+
+.productPrice .offerPrice{
+    color: #00cfff;
+    font-weight: bold;
+    margin-right: 13px;
+    font-size: 15px;
+}
+
+.productPrice .offerPrice{
+    color: #00cfff;
+    font-weight: bold;
+    margin-right: 13px;
+    font-size: 15px;
+}
+
+@media only screen and (max-device-width: 450px) {
+    .below450{
+        display: block;
+    }
+
+    .after450{
+        display: none;
+    }
+}
+
+@media only screen and (min-device-width: 451px) {
+    .below450{
+        display: none;
+    }
+
+    .after450{
+        display: block;
+    }
+}

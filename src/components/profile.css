@@ -1,0 +1,78 @@
+.container-class{
+    max-width: 100%;
+    background-color: #00dbff;
+}
+
+.error{
+    color: red;
+}
+
+.formValidation{
+    margin-bottom: 2px !important;
+}
+
+.modalHeader{
+    padding: 5px 5px 5px 13px;
+    background-color: #00cfff;
+    color: #fff;
+}
+
+.modalHeader .modal-title{
+    font-size: 17px;
+}
+
+.closeBtn{
+    font-size: 12px; 
+    margin-right: -2px !important;
+}
+
+.loginButton, .signupButton{
+    float: right;
+    margin: 8px 0px 10px 0px;
+    background-color: #00cfff;
+    color: #fff;
+    border: 1px solid #00cfff;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+.requiredfield{
+    color: red;
+}
+
+.navbarBg{
+    background-color: #00cfff !important;
+}
+
+.dropdown-item:focus, .dropdown-item:hover {
+    color: #fff;
+    background-color: #00cfff;
+}
+
+.navbarBg .navbar-brand{
+    color: #fff;
+}
+
+.HomeContainer{
+    max-width: 100%;
+    padding: 15px;
+}
+
+
+/* Item Details */
+
+
+
+@media screen and (min-device-width: 481px) and (max-device-width: 768px) { 
+    .HomeContainer .row .col-md-2{
+        width: 33%;
+        padding: 0px;
+    } 
+}
+
+@media only screen and (max-device-width: 480px) {
+    .HomeContainer .row .col-md-2{
+        width: 50%;
+        padding: 0px;
+    } 
+}
