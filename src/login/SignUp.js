@@ -3,7 +3,7 @@ import {Form } from 'react-bootstrap';
 import { Lang, useFormInputValidation } from "react-form-input-validation";
 import { useNavigate } from "react-router-dom";
 
-
+ 
 const SignUp = (e) => {
   
     /* Form Validation start */
