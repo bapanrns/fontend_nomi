@@ -113,7 +113,7 @@ import './profile.css';
                         </NavDropdown>
                         
                         <NavDropdown title="Product" id="basic-nav-dropdown">
-                            <Link className="dropdown-item" to="/admin/product_fabric">Product</Link>
+                            <Link className="dropdown-item" to="/admin/product">Product</Link>
                             <Link className="dropdown-item" to="/admin/product-add">Add Product</Link>
                         </NavDropdown>
                         

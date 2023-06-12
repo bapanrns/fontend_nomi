@@ -34,20 +34,12 @@ const StatusCellRenderer = (p) =>{
 
     return <span>{status}</span>;
 }
-/*
-const ActionCellRenderer = (p) => {
-    const btn = <>
-        <span>Edit</span>
-        <span>Delete</span>
-    </>
-    return btn;
-}*/
 
-const Categories = () => {
+const Products = () => {
     const [rowData, setRowData] = useState([]);
 
     // {category_name: "", active_status: "", id: 1}
-    function getCategoryData(){
+    function getProductData(){
         
         const headers = {
             'Content-Type': 'application/json'
@@ -70,20 +62,26 @@ const Categories = () => {
 
 
     const onGridReady = useCallback((params) => {
-          getCategoryData();
+          getProductData();
     }, []);
-
-    
     
     const [columnDefs] = useState([
         {
             field: 'id',
-            minWidth: 50,
+            width: 30,
             checkboxSelection: checkboxSelection,
             headerCheckboxSelection: headerCheckboxSelection,
         },
-        { field: 'category_name', headerName: "Category" },
-        { field: 'active_status', headerName: "Status", cellRenderer: StatusCellRenderer },
+        { field: 'category_id', headerName: "Category" },
+        { field: 'sub_category_id', headerName: "Sub Category" },
+        { field: 'no_of_product', headerName: "Total Quantity", width: 130 },
+        { field: 'quantity_xs', headerName: "Size XS", width: 100 },
+        { field: 'quantity_s', headerName: "Size S", width: 100 },
+        { field: 'quantity_l', headerName: "Size L", width: 100 },
+        { field: 'quantity_m', headerName: "Size M", width: 100 },
+        { field: 'quantity_xl', headerName: "Size XL", width: 100 },
+        { field: 'quantity_2xl', headerName: "Size 2XL", width: 100 },
+        { field: 'active_status', headerName: "Status", cellRenderer: StatusCellRenderer, width: 100 },
         { field: 'id', headerName: "Action", cellRenderer: ActionCellRenderer }
     ])
 
@@ -102,4 +100,4 @@ const Categories = () => {
     );
 }
 
-export default Categories
+export default Products
