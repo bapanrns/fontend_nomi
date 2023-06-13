@@ -36,7 +36,16 @@ const StatusCellRenderer = (p) =>{
 }
 
 const Products = () => {
+    const [gridApi, setGridApi] = useState(null);
+    const [selectedIds, setSelectedIds] = useState([]);
     const [rowData, setRowData] = useState([]);
+
+    const onSelectionChanged = () => {
+        const selectedRows = gridApi.getSelectedRows();
+        const ids = selectedRows.map(row => row.id);
+        setSelectedIds(ids);
+        console.log("selectedIds", selectedIds);
+    };
 
     // {category_name: "", active_status: "", id: 1}
     function getProductData(){
@@ -60,9 +69,10 @@ const Products = () => {
         console.log(rowData);
     }
 
-
+    
     const onGridReady = useCallback((params) => {
-          getProductData();
+        setGridApi(params.api);
+        getProductData();
     }, []);
     
     const [columnDefs] = useState([
@@ -72,16 +82,17 @@ const Products = () => {
             checkboxSelection: checkboxSelection,
             headerCheckboxSelection: headerCheckboxSelection,
         },
-        { field: 'category_id', headerName: "Category" },
-        { field: 'sub_category_id', headerName: "Sub Category" },
-        { field: 'no_of_product', headerName: "Total Quantity", width: 130 },
-        { field: 'quantity_xs', headerName: "Size XS", width: 100 },
-        { field: 'quantity_s', headerName: "Size S", width: 100 },
-        { field: 'quantity_l', headerName: "Size L", width: 100 },
-        { field: 'quantity_m', headerName: "Size M", width: 100 },
-        { field: 'quantity_xl', headerName: "Size XL", width: 100 },
-        { field: 'quantity_2xl', headerName: "Size 2XL", width: 100 },
+        { field: 'category_id', headerName: "Category", width: 150 },
+        { field: 'sub_category_id', headerName: "Sub Category", width: 150 },
         { field: 'active_status', headerName: "Status", cellRenderer: StatusCellRenderer, width: 100 },
+        { field: 'color', headerName: "Color", width: 150 },
+        { field: 'no_of_product', headerName: "Total Quantity", width: 130 },
+        { field: 'quantity_xs', headerName: "Size XS", width: 90 },
+        { field: 'quantity_s', headerName: "S", width: 90 },
+        { field: 'quantity_l', headerName: "L", width: 90 },
+        { field: 'quantity_m', headerName: "M", width: 90 },
+        { field: 'quantity_xl', headerName: "XL", width: 90 },
+        { field: 'quantity_2xl', headerName: "2XL", width: 90 },
         { field: 'id', headerName: "Action", cellRenderer: ActionCellRenderer }
     ])
 
@@ -93,6 +104,7 @@ const Products = () => {
                 pagination={true}
                 rowSelection={'multiple'}
                 onGridReady={onGridReady}
+                onSelectionChanged={onSelectionChanged}
                 >
                     
             </AgGridReact>
