@@ -193,7 +193,11 @@ const ProductAdd = () => {
         images2: null,
         images3: null,
         images4: null,
-        images5: null
+        images5: null,
+        saree_length: 5.5,
+        blouse: "No",
+        blouse_length: ".8",
+        weight:""
     });
     const [hideQuantity, sethideQuantity] = useState({
         display: "none"
@@ -381,9 +385,56 @@ const ProductAdd = () => {
                                 <option value="2023-05">2023-05</option>
                             </select>
                         </div>
+                        <div className="mb-3 formValidation" style={hideQuantity}>
+                            <label className="form-label" htmlFor="saree_length">Saree Length:</label>
+                            <input 
+                                type="text" 
+                                name='saree_length'
+                                id="saree_length" 
+                                className="form-control"
+                                value={5.5}
+                                onKeyPress={(e) => AcceptNumericValue(e)}
+                                onChange={handalChange}
+                            />
+                        </div>
+                        <div className="mb-3 formValidation" style={hideQuantity}>
+                            <label className="form-label" htmlFor="blouse.ControlInput1">Blouse Piece:</label>
+                            <select
+                                className='form-select'
+                                id="blouse"
+                                name="blouse"
+                                onChange={handalChange}
+                            >   
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
+                            </select>
+                        </div>
+                        <div className="mb-3 formValidation" style={hideQuantity}>
+                            <label className="form-label" htmlFor="blouse_length">Blouse Length:</label>
+                            <input 
+                                type="text" 
+                                name='blouse_length'
+                                id="blouse_length" 
+                                className="form-control"
+                                value={.8}
+                                onKeyPress={(e) => AcceptNumericValue(e)}
+                                onChange={handalChange}
+                            />
+                        </div>
+                        <div className="mb-3 formValidation" style={hideQuantity}>
+                            <label className="form-label" htmlFor="weight">Weight:</label>
+                            <input 
+                                type="text" 
+                                name='weight'
+                                id="weight" 
+                                className="form-control"
+                                onKeyPress={(e) => AcceptNumericValue(e)}
+                                onChange={handalChange}
+                            />
+                        </div>
                     </div>
                     <div className='col-md-6' style={{float: 'left', padding: "5px"}}>
-                    <div className="mb-3 formValidation" style={hideQuantity}>
+                        <div className="mb-3 formValidation" style={hideQuantity}>
                             <label className="form-label" htmlFor="quantity.ControlInput1">Quantity: <span className='requiredfield'> *</span></label>
                             <input 
                                 type="text" 
