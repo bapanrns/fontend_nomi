@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from "axios";
+import global from "../../components/global";
+import Loader from '../../components/Loader'
 
 import {
     useParams,
@@ -8,24 +10,27 @@ import {
   } from "react-router-dom";
 
 const AddSubCategory = () => {
-    
+    const [isLoading, setIsLoading] = useState(false);
     const [categoryObj, setCategoryObj] = useState([]);
     async function getCategory(){
+        setIsLoading(true);
         const headers = {
             'Content-Type': 'application/json'
         }
         
         let data = {};
-        await axios.post('http://localhost:8081/api/AllCategory', data, {
+        await axios.post(global["axios_url"]+'/AllCategory', data, {
             headers: headers
         })
         .then((response) => {
             if(response.data.length > 0){
                 setCategoryObj(response.data)
             }
+            setIsLoading(false);
         })
         .catch((error) => {
             console.log(error)
+            setIsLoading(false);
         })
     }
     const {id} = useParams();
@@ -47,12 +52,13 @@ const AddSubCategory = () => {
 
     // Edit section
     async function getSubCategoryById(id){
+        setIsLoading(true);
         const headers = {
             'Content-Type': 'application/json'
         }
         let data = {};
         data["id"] = id;
-        await axios.post('http://localhost:8081/api/SubCategoryFindId', data, {
+        await axios.post(global["axios_url"]+'/SubCategoryFindId', data, {
             headers: headers
         })
         .then((response) => {
@@ -66,12 +72,14 @@ const AddSubCategory = () => {
                     subCategory: response.data.sub_category_name,
                     status: response.data.active_status,
                 });
-
+                
             //}
+            setIsLoading(false);
            // console.log(editData);
         })
         .catch((error) => {
-            console.log(error)
+            console.log(error);
+            setIsLoading(false);
         })
     }
     
@@ -92,15 +100,17 @@ const AddSubCategory = () => {
 
     const onSubmit = async (event) => {
         event.preventDefault();
+        setIsLoading(true);
         const headers = {
             'Content-Type': 'application/json'
         }
-        axios.post('http://localhost:8081/api/subCategoryAdd', subCategoryObj, {
+        axios.post(global["axios_url"]+'/subCategoryAdd', subCategoryObj, {
             headers: headers
         })
         .then((response) => {
             alert(response.data);
             //console.log(JSON.parse(JSON.stringify(response)))
+            setIsLoading(false);
             navigate("../admin/sub_category/");
         })
         .catch((error) => {
@@ -111,6 +121,7 @@ const AddSubCategory = () => {
 
     return (
         <>
+            {isLoading ? <Loader /> : ""}
             <div className='addNewAddress' style={{padding: '10px'}}>
                 <form
                     className="myForm"

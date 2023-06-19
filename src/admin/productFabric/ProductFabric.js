@@ -9,6 +9,8 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
 import ActionCellRenderer from './ActionCellRenderer'
 
 import axios from "axios";
+import Loader from '../../components/Loader'
+import global from "../../components/global";
 
 
 const checkboxSelection = function (params) {
@@ -31,21 +33,22 @@ const StatusCellRenderer = (p) =>{
 
 const SubCategories = () => {
     const [rowData, setRowData] = useState([]);
-
+    const [isLoading, setIsLoading] = useState(false);
     // {category_name: "", active_status: "", id: 1}
     function getCategoryData(){
-        
+        setIsLoading(true);
         const headers = {
             'Content-Type': 'application/json'
         }
         
         let data = {};
-        axios.post('http://localhost:8081/api/AllProductFabric', data, {
+        axios.post(global["axios_url"]+'/AllProductFabric', data, {
             headers: headers
         })
         .then((response) => {
-            setRowData(response.data)
-           // console.log(response.data);
+            setRowData(response.data);
+            setIsLoading(false);
+            // console.log(response.data);
         })
         .catch((error) => {
             console.log(error)
@@ -74,18 +77,21 @@ const SubCategories = () => {
     ])
 
     return (
-        <div className="ag-theme-alpine" style={{height: 600}}>
-            <h3 style={{textAlign: 'center'}}>Product Fabric</h3>
-            <AgGridReact
-                rowData={rowData}
-                columnDefs={columnDefs}
-                pagination={true}
-                rowSelection={'multiple'}
-                onGridReady={onGridReady}
-                >
-                    
-            </AgGridReact>
-        </div>
+        <>
+            {isLoading ? <Loader /> : ""}
+            <div className="ag-theme-alpine" style={{height: 600}}>
+                <h3 style={{textAlign: 'center'}}>Product Fabric</h3>
+                <AgGridReact
+                    rowData={rowData}
+                    columnDefs={columnDefs}
+                    pagination={true}
+                    rowSelection={'multiple'}
+                    onGridReady={onGridReady}
+                    >
+                        
+                </AgGridReact>
+            </div>
+        </>
     );
 }
 

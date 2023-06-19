@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import 'react-horizontal-scrolling-menu/dist/styles.css';
 import axios from "axios";
+import global from "../../components/global";
 
 
 
@@ -57,7 +58,7 @@ const ProductAdd = () => {
         const headers = {
             'Content-Type': 'application/json'
         }
-        axios.post('http://localhost:8081/api/productAdd', productObj, {
+        axios.post(global["axios_url"]+'/productAdd', productObj, {
             headers: headers
         })
         .then((response) => {
@@ -110,7 +111,7 @@ const ProductAdd = () => {
         }
         
         let data = {};
-        await axios.post('http://localhost:8081/api/AllCategory', data, {
+        await axios.post(global["axios_url"]+'/AllCategory', data, {
             headers: headers
         })
         .then((response) => {
@@ -131,7 +132,7 @@ const ProductAdd = () => {
         }
         
         let data = {};
-        await axios.post('http://localhost:8081/api/AllProductFabric', data, {
+        await axios.post(global["axios_url"]+'/AllProductFabric', data, {
             headers: headers
         })
         .then((response) => {
@@ -152,7 +153,7 @@ const ProductAdd = () => {
         }
         
         let data = {id: id};
-        await axios.post('http://localhost:8081/api/subCategoryFindCategoryId', data, {
+        await axios.post(global["axios_url"]+'/subCategoryFindCategoryId', data, {
             headers: headers
         })
         .then((response) => {

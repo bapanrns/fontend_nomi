@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from "axios";
+import global from "../../components/global";
+import Loader from '../../components/Loader'
 
 import {
     useParams,
@@ -8,7 +10,7 @@ import {
   } from "react-router-dom";
 
 const AddProductFabric = () => {
-    
+    const [isLoading, setIsLoading] = useState(false);
     const {id} = useParams();
     useEffect(() => {
 
@@ -27,17 +29,19 @@ const AddProductFabric = () => {
 
     // Edit section
     async function getSubCategoryById(id){
+        setIsLoading(true);
         const headers = {
             'Content-Type': 'application/json'
         }
         let data = {};
         data["id"] = id;
-        await axios.post('http://localhost:8081/api/ProductFabricFindId', data, {
+        await axios.post(global["axios_url"]+'/ProductFabricFindId', data, {
             headers: headers
         })
         .then((response) => {
             console.log(response.data);
           //  if(response.data.length > 0){
+            setIsLoading(false);
                 setEditData(response.data);
 
                 setSubCategoryObj({
@@ -51,7 +55,8 @@ const AddProductFabric = () => {
            // console.log(editData);
         })
         .catch((error) => {
-            console.log(error)
+            console.log(error);
+            setIsLoading(false);
         })
     }
     
@@ -72,25 +77,29 @@ const AddProductFabric = () => {
 
     const onSubmit = async (event) => {
         event.preventDefault();
+        setIsLoading(true);
         const headers = {
             'Content-Type': 'application/json'
         }
-        axios.post('http://localhost:8081/api/productFabricAdd', subCategoryObj, {
+        axios.post(global["axios_url"]+'/productFabricAdd', subCategoryObj, {
             headers: headers
         })
         .then((response) => {
             alert(response.data);
+            setIsLoading(false);
             //console.log(JSON.parse(JSON.stringify(response)))
             navigate("../admin/product_fabric/");
         })
         .catch((error) => {
             console.log(error)
             alert(error);
+            setIsLoading(false);
         })
     };
 
     return (
         <>
+             {isLoading ? <Loader /> : ""}
             <div className='addNewAddress' style={{padding: '10px'}}>
                 <h1>Product Fabric</h1>
                 <form

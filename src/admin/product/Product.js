@@ -6,10 +6,11 @@ import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 
-import ActionCellRenderer from './ActionCellRenderer'
-import Loader from '../../components/Loader'
+import ActionCellRenderer from './ActionCellRenderer';
+import Loader from '../../components/Loader';
 
 import axios from "axios";
+import global from "../../components/global";
 
 const checkboxSelection = function (params) {
     // we put checkbox on the name if we are not doing grouping
@@ -44,21 +45,23 @@ const Products = () => {
 
     // {category_name: "", active_status: "", id: 1}
     function getProductData(){
-        
+        setIsLoading(true);
         const headers = {
             'Content-Type': 'application/json'
         }
         
         let data = searchObj;
-        axios.post('http://localhost:8081/api/AllProduct', data, {
+        axios.post(global["axios_url"]+'/AllProduct', data, {
             headers: headers
         })
         .then((response) => {
             setRowData(response.data)
+            setIsLoading(false);
            // console.log(response.data);
         })
         .catch((error) => {
             console.log(error)
+            setIsLoading(false);
         })
 
         console.log(rowData);
@@ -101,7 +104,7 @@ const Products = () => {
             }
             
             let data = {product_id: selectedIds};
-            axios.post('http://localhost:8081/api/UpdateGroupID', data, {
+            axios.post(global["axios_url"]+'/UpdateGroupID', data, {
                 headers: headers
             })
             .then((response) => {
@@ -123,33 +126,37 @@ const Products = () => {
     // For category
     const [categoryObj, setCategoryObj] = useState([]);
     async function getCategory(){
+        setIsLoading(true);
         const headers = {
             'Content-Type': 'application/json'
         }
         
         let data = {};
-        await axios.post('http://localhost:8081/api/AllCategory', data, {
+        await axios.post(global["axios_url"]+'/AllCategory', data, {
             headers: headers
         })
         .then((response) => {
             if(response.data.length > 0){
                 setCategoryObj(response.data)
             }
+            setIsLoading(false);
         })
         .catch((error) => {
             console.log(error)
+            setIsLoading(false);
         })
     }
 
     // For Sub Category
     const [subCategoryObj, setSubCategoryObj] = useState([]);
     async function getSubCategory(id){
+        setIsLoading(true);
         const headers = {
             'Content-Type': 'application/json'
         }
         
         let data = {id: id};
-        await axios.post('http://localhost:8081/api/subCategoryFindCategoryId', data, {
+        await axios.post(global["axios_url"]+'/subCategoryFindCategoryId', data, {
             headers: headers
         })
         .then((response) => {
@@ -157,9 +164,11 @@ const Products = () => {
                 setSubCategoryObj(response.data)
                 console.log(response.data)
             }
+            setIsLoading(false);
         })
         .catch((error) => {
-            console.log(error)
+            console.log(error);
+            setIsLoading(false);
         })
     }
     const [searchObj, setSerchObj] = useState({
