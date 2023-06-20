@@ -4,7 +4,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-horizontal-scrolling-menu/dist/styles.css';
 import axios from "axios";
 import global from "../../components/global";
-
+import {
+    useParams,
+    useNavigate
+  } from "react-router-dom";
 
 
 const ProductAdd = () => {
@@ -17,21 +20,18 @@ const ProductAdd = () => {
     {"color": "Reds", "code": "#be0000"},
     {"color": "Pinks", "code": "#f7007c"},
     {"color": "Oranges", "code": "#fba13e"},
-    {"color": "Green", "code": "#66bf19"},
-    {"color": "Blue", "code": "blue"},
-    {"color": "Blue", "code": "blue"},
-    {"color": "Blue", "code": "blue"},
-    {"color": "Blue", "code": "blue"},
-    {"color": "Blue", "code": "blue"},
+    {"color": "Green", "code": "#66bf19"}
     ];
     
     const [previewImage, setPreviewImage] = useState({
-        images: null,
+        images1: null,
         images2: null,
         images3: null,
         images4: null,
         images5: null 
     });
+
+    const navigate = useNavigate();
     
     const handelFile = (e) =>{
         const file = e.target.files[0];
@@ -64,7 +64,7 @@ const ProductAdd = () => {
         .then((response) => {
             alert(response.data);
            // console.log(JSON.parse(JSON.stringify(response)))
-            //navigate("../admin/product_fabric/");
+            navigate("../admin/product/");
         })
         .catch((error) => {
             console.log(error)
@@ -98,10 +98,13 @@ const ProductAdd = () => {
             setProductObj({...productObj, ["product_offer_price"]: price})
         }
     }
-
+    const {id} = useParams();
     useEffect(() => {
         getCategory();
         getProductFebric();
+        if(id !== undefined){
+            getProductById(id);
+        }
     }, []);
     // For category
     const [categoryObj, setCategoryObj] = useState([]);
@@ -190,7 +193,7 @@ const ProductAdd = () => {
         product_febric: "",
         color: [],
         product_offer_price: "",
-        images: null,
+        images1: null,
         images2: null,
         images3: null,
         images4: null,
@@ -198,7 +201,8 @@ const ProductAdd = () => {
         saree_length: 5.5,
         blouse: "No",
         blouse_length: ".8",
-        weight:""
+        weight:"",
+        youtube_link: ""
     });
     const [hideQuantity, sethideQuantity] = useState({
         display: "none"
@@ -255,11 +259,56 @@ const ProductAdd = () => {
     const [editData, setEditData] = useState({
         id: "",
         category_id: "",
-        subCategory_id: "",
-        sub_category_name: "",
+        sub_category_id: "",
+        product_name: "",
         active_status: "",
-        product_fabric_id: ""
+        company_name: "",
+        year_month: "",
+        product_original_price: "",
+        product_selling_price: "",
+        product_offer_percentage: "",
+        delivery_charges: "",
+        quantity: "",
+        quantityXs: "",
+        quantityS: "",
+        quantityL: "",
+        quantityM: "",
+        quantityXl: "",
+        quantity2Xl: "",
+        product_febric_id: "",
+        product_febric: "",
+        color: [],
+        product_offer_price: "",
+        images1: null,
+        images2: null,
+        images3: null,
+        images4: null,
+        images5: null,
+        saree_length: 5.5,
+        blouse: "No",
+        blouse_length: ".8",
+        weight:"",
+        youtube_link: ""
     });
+
+    async function getProductById(id){
+        const headers = {
+            'Content-Type': 'application/json'
+        }
+        
+        let data = {id: id};
+        await axios.post(global["axios_url"]+'/ProductFindById', data, {
+            headers: headers
+        })
+        .then((response) => {
+            setProductObj({...productObj, ['color']: response.data.color.split(", ")});
+            getSubCategory(response.data.category_id)
+            setEditData(response.data);
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+    }
 
     return (
         <>
@@ -279,12 +328,13 @@ const ProductAdd = () => {
                                 id="category_id"
                                 name="category_id"
                                 onChange={handalChange}
+                                value={editData.category_id}
                             >
                                 <option value="">Select Category</option>
                                 {
                                     categoryObj.length > 0  &&
                                     categoryObj.map((data, index)=>{
-                                        return (<option key={index} selected={editData.category_id === data.id?"selected":""} value={data.id} >{data.category_name}</option>);
+                                        return (<option key={index} value={data.id} >{data.category_name}</option>);
                                     })
 
                                 }
@@ -298,12 +348,13 @@ const ProductAdd = () => {
                                 id="sub_category_id"
                                 name="sub_category_id"
                                 onChange={handalChange}
+                                value={editData.sub_category_id}
                                 >
                                 <option value="">Select Sub Category</option>
                                 {
                                     
                                     subCategoryObj.map((data, index)=>{
-                                        return (<option key={index} selected={editData.subCategory_id === data.id?"selected":""} value={data.id} >{data.sub_category_name}</option>);
+                                        return (<option key={index} value={data.id} >{data.sub_category_name}</option>);
                                     })
 
                                 }
@@ -318,6 +369,7 @@ const ProductAdd = () => {
                                 name='product_original_price'
                                 id="product_original_price.ControlInput1" 
                                 className="form-control"
+                                value={editData['product_original_price']}
                                 onKeyPress={(e) => AcceptNumericValue(e)}
                                 onChange={handalChange}
                             />
@@ -330,6 +382,7 @@ const ProductAdd = () => {
                                 name='product_selling_price'
                                 id="product_selling_price.ControlInput1" 
                                 className="form-control"
+                                value={editData['product_selling_price']}
                                 onKeyPress={(e) => AcceptNumericValue(e)}
                                 onBlur={sellProductPriceFn}
                                 onChange={handalChange}
@@ -343,6 +396,7 @@ const ProductAdd = () => {
                                 name='product_offer_percentage'
                                 id="product_offer_percentage.ControlInput1" 
                                 className="form-control"
+                                value={editData['product_offer_percentage']}
                                 onKeyPress={(e) => AcceptNumericValue(e)}
                                 onBlur={(e) => calculateOfferprice(e)}
                                 onChange={handalChange}
@@ -368,6 +422,7 @@ const ProductAdd = () => {
                                 name='delivery_charges'
                                 id="delivery_charges.ControlInput1" 
                                 className="form-control"
+                                value={editData['delivery_charges']}
                                 onKeyPress={(e) => AcceptNumericValue(e)}
                                 onChange={handalChange}
                             />
@@ -380,6 +435,7 @@ const ProductAdd = () => {
                                 id="year_month"
                                 name="year_month"
                                 onChange={handalChange}
+                                value={editData.year_month}
                             >   
                                 <option value="">NULL</option>
                                 <option value="2023-04">2023-04</option>
@@ -393,7 +449,7 @@ const ProductAdd = () => {
                                 name='saree_length'
                                 id="saree_length" 
                                 className="form-control"
-                                value={5.5}
+                                value={editData['saree_length']}
                                 onKeyPress={(e) => AcceptNumericValue(e)}
                                 onChange={handalChange}
                             />
@@ -405,6 +461,7 @@ const ProductAdd = () => {
                                 id="blouse"
                                 name="blouse"
                                 onChange={handalChange}
+                                value={editData.blouse}
                             >   
                                 <option value="No">No</option>
                                 <option value="Yes">Yes</option>
@@ -417,18 +474,31 @@ const ProductAdd = () => {
                                 name='blouse_length'
                                 id="blouse_length" 
                                 className="form-control"
-                                value={.8}
+                                value={editData['blouse_length']}
                                 onKeyPress={(e) => AcceptNumericValue(e)}
                                 onChange={handalChange}
                             />
                         </div>
-                        <div className="mb-3 formValidation" style={hideQuantity}>
+                        <div className="mb-3 formValidation">
                             <label className="form-label" htmlFor="weight">Weight:</label>
                             <input 
                                 type="text" 
                                 name='weight'
                                 id="weight" 
                                 className="form-control"
+                                value={editData['weight']}
+                                onKeyPress={(e) => AcceptNumericValue(e)}
+                                onChange={handalChange}
+                            />
+                        </div>
+                        <div className="mb-3 formValidation">
+                            <label className="form-label" htmlFor="youtube_link">Youtube Link:</label>
+                            <input 
+                                type="text" 
+                                name='youtube_link'
+                                id="youtube_link" 
+                                className="form-control"
+                                value={editData['youtube_link']}
                                 onKeyPress={(e) => AcceptNumericValue(e)}
                                 onChange={handalChange}
                             />
@@ -442,6 +512,7 @@ const ProductAdd = () => {
                                 name='quantity'
                                 id="quantity.ControlInput1" 
                                 className="form-control"
+                                value={editData['quantity']}
                                 onKeyPress={(e) => AcceptNumericValue(e)}
                                 onChange={handalChange}
                             />
@@ -454,6 +525,7 @@ const ProductAdd = () => {
                                 name='quantityXs'
                                 id="quantityXs.ControlInput1" 
                                 className="form-control"
+                                value={editData['quantityXs']}
                                 onKeyPress={(e) => AcceptNumericValue(e)}
                                 onChange={handalChange}
                             />
@@ -466,6 +538,7 @@ const ProductAdd = () => {
                                 name='quantityS'
                                 id="quantityS.ControlInput1" 
                                 className="form-control"
+                                value={editData['quantityS']}
                                 onKeyPress={(e) => AcceptNumericValue(e)}
                                 onChange={handalChange}
                             />
@@ -478,6 +551,7 @@ const ProductAdd = () => {
                                 name='quantityL'
                                 id="quantityL.ControlInput1" 
                                 className="form-control"
+                                value={editData['quantityL']}
                                 onKeyPress={(e) => AcceptNumericValue(e)}
                                 onChange={handalChange}
                             />
@@ -490,6 +564,7 @@ const ProductAdd = () => {
                                 name='quantityM'
                                 id="quantityM.ControlInput1" 
                                 className="form-control"
+                                value={editData['quantityM']}
                                 onKeyPress={(e) => AcceptNumericValue(e)}
                                 onChange={handalChange}
                             />
@@ -502,6 +577,7 @@ const ProductAdd = () => {
                                 name='quantityXl'
                                 id="quantityXl.ControlInput1" 
                                 className="form-control"
+                                value={editData['quantityXl']}
                                 onKeyPress={(e) => AcceptNumericValue(e)}
                                 onChange={handalChange}
                             />
@@ -514,6 +590,7 @@ const ProductAdd = () => {
                                 name='quantity2Xl'
                                 id="quantity2Xl.ControlInput1" 
                                 className="form-control"
+                                value={editData['quantity2Xl']}
                                 onKeyPress={(e) => AcceptNumericValue(e)}
                                 onChange={handalChange}
                             />
@@ -526,6 +603,7 @@ const ProductAdd = () => {
                                 name='product_name'
                                 id="product_name.ControlInput1" 
                                 className="form-control" 
+                                value={editData['product_name']}
                                 onChange={handalChange}
                                 />
                         </div>
@@ -537,6 +615,7 @@ const ProductAdd = () => {
                                 name='company_name'
                                 id="company_name.ControlInput1" 
                                 className="form-control" 
+                                value={editData['company_name']}
                                 onChange={handalChange}
                                 />
                         </div>
@@ -548,12 +627,13 @@ const ProductAdd = () => {
                                 id="product_febric"
                                 name="product_febric"
                                 onChange={handalChange}
+                                value={editData.product_febric_id+"@"+editData.product_febric}
                                 >
                                 <option value="">Select Product Fabric</option> 
                                 {
                                     productFebricObj.length > 0  &&
                                     productFebricObj.map((data, index)=>{
-                                        return (<option key={index} selected={editData.product_fabric_id === data.id?"selected":""} value={data.id+"@"+data.product_fabric_name} >{data.product_fabric_name}</option>);
+                                        return (<option key={index} value={data.id+"@"+data.product_fabric_name} >{data.product_fabric_name}</option>);
                                     })
 
                                 }
@@ -568,7 +648,7 @@ const ProductAdd = () => {
                                 colorObj.length > 0  &&
                                 colorObj.map((obj, index)=>{
                                     return (
-                                        <div className='form-check' style={{background: obj.code, float: 'left', width: 'auto', marginLeft: '5px', width: '100px', color: '#fff'}}>
+                                        <div className='form-check' style={{background: obj.code, float: 'left', width: 'auto', marginLeft: '5px', width: '100px', color: '#fff'}} key={index}>
                                             <input 
                                                 className="form-check-input" 
                                                 type="checkbox" 
@@ -581,7 +661,7 @@ const ProductAdd = () => {
                                                 />
                                             <label 
                                                 className="form-check-label" 
-                                                for={"flexCheckDefaul"+index} 
+                                                htmlFor={"flexCheckDefaul"+index} 
                                                 style={{padding: '5px', cursor: 'pointer'}}
                                                 >
                                                 {obj.color}
@@ -595,13 +675,17 @@ const ProductAdd = () => {
                         <br></br>
                         <div className="mb-3 formValidation" style={{clear: 'both'}}>
                             <label className="form-label" htmlFor="images1.ControlInput">Images: <span className='requiredfield'> *</span></label>
-                            <input type="file" name="images" onChange={handelFile}></input>
-
-                            {previewImage['images'] && (
-                                <div style={{float: 'right'}}>
-                                    <img src={previewImage['images']} alt="Selected" style={{ maxWidth: '100%', height: '100px' }} />
-                                </div>
-                            )}
+                            <input type="file" name="images1" onChange={handelFile}></input>
+                            <div style={{float: 'right'}}>
+                                {editData['images1'] && (
+                                    <img src={editData['images1']} alt="Update" style={{ maxWidth: '100%', height: '100px' }}></img>
+                                )}
+                                {previewImage['images1'] && (
+                                    
+                                        <img src={previewImage['images1']} alt="Selected" style={{ maxWidth: '100%', height: '100px' }} />
+                                    
+                                )}
+                            </div>
                         </div>
                         <div className="mb-3 formValidation" style={{clear: 'both'}}>
                             <label className="form-label" htmlFor="images2.ControlInput">Images 2: <span className='requiredfield'> *</span></label>

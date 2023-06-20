@@ -91,13 +91,13 @@ import './profile.css';
                                         <i class="bi bi-bag-heart-fill"></i> Wishlist
                                     </NavDropdown.Item>
                                     <NavDropdown.Divider />
-                                    <NavDropdown.Item href="javascript:void(0)" onClick={loginOut}>
+                                    <NavDropdown.Item href="#" onClick={loginOut}>
                                         <i class="bi bi-bag-heart-fill"></i> Logout
                                     </NavDropdown.Item>
                                 </NavDropdown>
                             </>
                         ) : (
-                           <> <Nav.Link href="javascript:void(0)" onClick={openLoginModal}>Login</Nav.Link><Nav.Link href="javascript:void(0)" onClick={signUpModalOpen}>Sign Up</Nav.Link></>
+                           <> <Nav.Link href="#" onClick={openLoginModal}>Login</Nav.Link><Nav.Link href="#" onClick={signUpModalOpen}>Sign Up</Nav.Link></>
                         )}
                         <NavDropdown title="Category" id="basic-nav-dropdown">
                             <Link className="dropdown-item" to="/admin/Category">Category</Link>

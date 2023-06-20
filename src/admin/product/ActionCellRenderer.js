@@ -8,20 +8,20 @@ import {
 
 const ActionCellRenderer = (props) => {
 
-    const navigate = useNavigate();
-function productDetailsFn(pid){
-    navigate("../admin/category-add/"+pid);
-}
+  const navigate = useNavigate();
+  function productDetailsFn(pid){
+    navigate("../admin/product-add/"+pid);
+  }
 
 
-    const cellValue = props.valueFormatted ? props.valueFormatted : props.value;
-    const EditHandleClick = (e) => {
-        console.log("Edit", cellValue);
-        productDetailsFn(cellValue)
-    };
-    const DeleteHandleClick = (e) => {
-        console.log("Delete", cellValue);
-    };
+  const cellValue = props.valueFormatted ? props.valueFormatted : props.value;
+  const EditHandleClick = (e) => {
+      console.log("Edit", cellValue);
+      productDetailsFn(cellValue)
+  };
+  const DeleteHandleClick = (e) => {
+      console.log("Delete", cellValue);
+  };
 
   return (
     <span>
