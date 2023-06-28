@@ -7,8 +7,9 @@ import global from "../../components/global";
 import {
     useParams,
     useNavigate
-  } from "react-router-dom";
-
+} from "react-router-dom";
+import Loader from '../../components/Loader';
+//import xx from "../../../../../img/";
 
 const ProductAdd = () => {
     const colorObj = [{"color": "Blue", "code": "#175195"},
@@ -22,6 +23,8 @@ const ProductAdd = () => {
     {"color": "Oranges", "code": "#fba13e"},
     {"color": "Green", "code": "#66bf19"}
     ];
+
+    const [isLoading, setIsLoading] = useState(false);
     
     const [previewImage, setPreviewImage] = useState({
         images1: null,
@@ -54,7 +57,11 @@ const ProductAdd = () => {
         // console.log("MAKE AN API CALL", fields);
         event.preventDefault();
         //console.log(productObj);
+        setIsLoading(true);
 
+        console.log(productObj);
+
+        return false;
         const headers = {
             'Content-Type': 'application/json'
         }
@@ -64,10 +71,12 @@ const ProductAdd = () => {
         .then((response) => {
             alert(response.data);
            // console.log(JSON.parse(JSON.stringify(response)))
+           setIsLoading(false);
             navigate("../admin/product/");
         })
         .catch((error) => {
             console.log(error)
+            setIsLoading(false);
             alert(error);
         })
     };
@@ -95,7 +104,7 @@ const ProductAdd = () => {
             let price = parseInt(productPrice) + parseInt(productPrice * e.target.value/100);
             setofferPrice(price)
             // Set Offer Price
-            setProductObj({...productObj, ["product_offer_price"]: price})
+            setProductObj({...productObj, product_offer_price: price})
         }
     }
     const {id} = useParams();
@@ -112,7 +121,7 @@ const ProductAdd = () => {
         const headers = {
             'Content-Type': 'application/json'
         }
-        
+        setIsLoading(true);
         let data = {};
         await axios.post(global["axios_url"]+'/AllCategory', data, {
             headers: headers
@@ -121,9 +130,11 @@ const ProductAdd = () => {
             if(response.data.length > 0){
                 setCategoryObj(response.data)
             }
+            setIsLoading(false);
         })
         .catch((error) => {
-            console.log(error)
+            console.log(error);
+            setIsLoading(false);
         })
     }
 
@@ -133,7 +144,7 @@ const ProductAdd = () => {
         const headers = {
             'Content-Type': 'application/json'
         }
-        
+        setIsLoading(true);
         let data = {};
         await axios.post(global["axios_url"]+'/AllProductFabric', data, {
             headers: headers
@@ -142,15 +153,18 @@ const ProductAdd = () => {
             if(response.data.length > 0){
                 setProductFebricObj(response.data)
             }
+            setIsLoading(false);
         })
         .catch((error) => {
-            console.log(error)
+            console.log(error);
+            setIsLoading(false);
         })
     }
 
     // For Sub Category
     const [subCategoryObj, setSubCategoryObj] = useState([]);
     async function getSubCategory(id){
+        setIsLoading(true);
         const headers = {
             'Content-Type': 'application/json'
         }
@@ -164,9 +178,11 @@ const ProductAdd = () => {
                 setSubCategoryObj(response.data)
                 console.log(response.data)
             }
+            setIsLoading(false);
         })
         .catch((error) => {
-            console.log(error)
+            console.log(error);
+            setIsLoading(false);
         })
     }
     // Edit 
@@ -214,11 +230,16 @@ const ProductAdd = () => {
         if(e.target.name === "product_febric"){
             //console.log(e.target.value.split("@"));
             setProductObj({...productObj, 
-                ["product_febric_id"]: e.target.value.split("@")[0], 
-                ["product_febric"]: e.target.value.split("@")[1]
+                product_febric_id: e.target.value.split("@")[0], 
+                product_febric: e.target.value.split("@")[1]
+            })
+            setEditData({...editData, 
+                product_febric_id: e.target.value.split("@")[0], 
+                product_febric: e.target.value.split("@")[1]
             })
         }else{
             setProductObj({...productObj, [e.target.name]:e.target.value})
+            setEditData({...editData, [e.target.name]:e.target.value});
         }
 
         if (e.target.name === "category_id"){
@@ -247,11 +268,12 @@ const ProductAdd = () => {
         const { value, checked } = event.target;
         if (checked) {
             setCheckedValues([...checkedValues, value]);
-            setProductObj({...productObj, ['color']: [...productObj['color'], value]})
+            //setProductObj({...productObj, ['color']: [...productObj['color'], value]})
+            setProductObj({...productObj, color: [...productObj['color'], value]})
         } else {
             setCheckedValues(checkedValues.filter((item) => item !== value));
-            
-            setProductObj({...productObj, ['color']: productObj['color'].filter((item) => item !== value)})
+            //setProductObj({...productObj, ['color']: productObj['color'].filter((item) => item !== value)})
+            setProductObj({...productObj, color: productObj['color'].filter((item) => item !== value)})
         }
     };
 
@@ -292,6 +314,7 @@ const ProductAdd = () => {
     });
 
     async function getProductById(id){
+        setIsLoading(true);
         const headers = {
             'Content-Type': 'application/json'
         }
@@ -301,25 +324,55 @@ const ProductAdd = () => {
             headers: headers
         })
         .then((response) => {
-            setProductObj({...productObj, ['color']: response.data.color.split(", ")});
+            //setProductObj({...productObj, ['color']: response.data.color.split(", ")});
+            
             getSubCategory(response.data.category_id)
             setEditData(response.data);
+            //setProductObj(response.data);
+            setProductObj({...productObj, color: response.data.color.split(", "), id: response.data.id});
+            setIsLoading(false);
         })
         .catch((error) => {
-            console.log(error)
+            console.log(error);
+            setIsLoading(false);
+        })
+    }
+
+    async function deleteProductImage(id, image_name){
+        console.log("deleteProductImage", image_name);
+       setIsLoading(true);
+        const headers = {
+            'Content-Type': 'application/json'
+        }
+        
+        let data = {image: image_name};
+        await axios.post(global["axios_url"]+'/deleteProductImage', data, {
+            headers: headers
+        })
+        .then((response) => {
+            //setProductObj({...productObj, ['color']: response.data.color.split(", ")});
+            setIsLoading(false);
+            alert("Image deleted successfully");
+            setEditData({...editData, ['images'+id]: ""});
+        })
+        .catch((error) => {
+            console.log(error);
+            setIsLoading(false);
         })
     }
 
     return (
         <>
+            {isLoading ? <Loader /> : ""}
             <div className='addNewAddress' style={{padding: '10px'}}>
-                <h3 style={{textAlign: 'center'}}>Product Add</h3>
+                <h3 style={{textAlign: 'center'}}>Product {editData.id === ""?"Add":"Edit"}</h3>
                 <form
                     className="myForm"
                     noValidate
                     autoComplete="off"
                     onSubmit={onSubmit}
                 >
+                    <input type='hidden' name="id" value={editData.id} />
                     <div className='col-md-6' style={{float: 'left', padding: "5px"}}>
                     <div className="mb-3 formValidation">
                             <label className="form-label" htmlFor="category_id.ControlInput1">Category: <span className='requiredfield'> *</span></label>
@@ -329,6 +382,7 @@ const ProductAdd = () => {
                                 name="category_id"
                                 onChange={handalChange}
                                 value={editData.category_id}
+                                disabled = {editData.id === ""?"":true}
                             >
                                 <option value="">Select Category</option>
                                 {
@@ -627,7 +681,7 @@ const ProductAdd = () => {
                                 id="product_febric"
                                 name="product_febric"
                                 onChange={handalChange}
-                                value={editData.product_febric_id+"@"+editData.product_febric}
+                                value={editData['product_febric_id']+"@"+editData['product_febric']}
                                 >
                                 <option value="">Select Product Fabric</option> 
                                 {
@@ -648,7 +702,7 @@ const ProductAdd = () => {
                                 colorObj.length > 0  &&
                                 colorObj.map((obj, index)=>{
                                     return (
-                                        <div className='form-check' style={{background: obj.code, float: 'left', width: 'auto', marginLeft: '5px', width: '100px', color: '#fff'}} key={index}>
+                                        <div className='form-check' style={{background: obj.code, float: 'left', marginLeft: '5px', width: '100px', color: '#fff'}} key={index}>
                                             <input 
                                                 className="form-check-input" 
                                                 type="checkbox" 
@@ -673,20 +727,42 @@ const ProductAdd = () => {
                             }
                         </div>
                         <br></br>
-                        <div className="mb-3 formValidation" style={{clear: 'both'}}>
-                            <label className="form-label" htmlFor="images1.ControlInput">Images: <span className='requiredfield'> *</span></label>
-                            <input type="file" name="images1" onChange={handelFile}></input>
-                            <div style={{float: 'right'}}>
-                                {editData['images1'] && (
-                                    <img src={editData['images1']} alt="Update" style={{ maxWidth: '100%', height: '100px' }}></img>
-                                )}
-                                {previewImage['images1'] && (
-                                    
-                                        <img src={previewImage['images1']} alt="Selected" style={{ maxWidth: '100%', height: '100px' }} />
-                                    
-                                )}
-                            </div>
-                        </div>
+                        {
+                        [1, 2, 3, 4, 5].map((obj, index)=>{
+                            return (<div className="mb-3 formValidation" key={"imageDiv"+obj} style={{clear: 'both'}}>
+                                <label className="form-label" htmlFor="images1.ControlInput">Images: <span className='requiredfield'> *</span></label>
+                                <input type="file" name={"images"+obj} onChange={handelFile}></input>
+                                <div>
+                                    {editData['images'+obj] && (
+                                        <div style={{border: "1px dashed", float: 'right'}}>
+                                            <img 
+                                                src={require("../../images/delete.png")} 
+                                                style={{
+                                                    width: '20px',
+                                                    position: 'absolute',
+                                                    float: 'right',
+                                                    right: '20px',
+                                                    cursor: 'pointer',
+                                                }}
+                                                onClick={(e) => { 
+                                                    deleteProductImage(obj, editData['images'+obj].toString())
+                                                }}
+                                                >
+
+                                            </img>
+                                            <img src={require("../../images/product/"+editData['images'+obj])} alt="" style={{ width: '200px', height: '200px'}}></img>
+                                        </div>
+                                    )}
+                                    {previewImage['images'+obj] && (
+                                        
+                                            <img src={previewImage['images'+obj]} alt="Selected" style={{ width: '200px', height: '200px', float: 'left' }} />
+                                        
+                                    )}
+                                </div>
+                            </div>)
+                            })
+                        }
+{/*
                         <div className="mb-3 formValidation" style={{clear: 'both'}}>
                             <label className="form-label" htmlFor="images2.ControlInput">Images 2: <span className='requiredfield'> *</span></label>
                             <input type="file" name="images2" onChange={handelFile}></input>
@@ -727,6 +803,7 @@ const ProductAdd = () => {
                                 </div>
                             )}
                         </div>
+                            */}
                     </div>
                     
 

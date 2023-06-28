@@ -213,6 +213,7 @@ const Products = () => {
                                     
                                 </select>
                             </td>
+                            <td style={{width: "10px"}}></td>
                             <td>
                                 <select
                                     className='form-select'
@@ -231,6 +232,7 @@ const Products = () => {
                                     
                                 </select>
                             </td>
+                            <td style={{width: "10px"}}></td>
                             <td>
                                 <select
                                     className='form-select'
@@ -243,7 +245,9 @@ const Products = () => {
                                     <option value="0">In Active</option>
                                 </select>
                             </td>
+                            <td style={{width: "10px"}}></td>
                             <td><button className='btn btn-info' onClick={productSearch}>Search</button></td>
+                            <td style={{width: "10px"}}></td>
                             <td>
                                 <button className="btn btn-primary" onClick={UpdateGroupIdHandleClick}> Update Group Id </button>
                             </td>

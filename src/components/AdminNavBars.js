@@ -74,7 +74,7 @@ import './profile.css';
                     <Navbar.Collapse id="navbarScroll">
                     <Nav
                         className="me-auto my-2 my-lg-0"
-                        style={{ maxHeight: '100px' }}
+                        style={{ maxHeight: '300px' }}
                         navbarScroll
                     >
                         
@@ -115,6 +115,13 @@ import './profile.css';
                         <NavDropdown title="Product" id="basic-nav-dropdown">
                             <Link className="dropdown-item" to="/admin/product">Product</Link>
                             <Link className="dropdown-item" to="/admin/product-add">Add Product</Link>
+                        </NavDropdown>
+
+                        <NavDropdown title="Buy" id="basic-nav-dropdown">
+                            <Link className="dropdown-item" to="/admin/buy_details">Buy Details</Link>
+                            <Link className="dropdown-item" to="/admin/buy_details_add">Add Buy Product Details</Link>
+                            <Link className="dropdown-item" to="/admin/shop">Shop Details</Link>
+                            <Link className="dropdown-item" to="/admin/shop_details_add">Add Shop Details</Link>
                         </NavDropdown>
                         
                         

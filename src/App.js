@@ -24,6 +24,11 @@ import AddSubCategory from './admin/subCategory/AddSubCategory';
 import ProductFabric from './admin/productFabric/ProductFabric';
 import AddProductFabric from './admin/productFabric/AddProductFabric';
 
+import BuyDetailsAdd from "./admin/productBuyDetails/BuyDetailsAdd";
+import ShopDetailsAdd from "./admin/productBuyDetails/ShopAdd";
+import ShopDetails from "./admin/productBuyDetails/ShopDetails";
+import BuyDetails from "./admin/productBuyDetails/BuyDetails";
+
 function App() {
   return (
       <>
@@ -49,6 +54,13 @@ function App() {
           <Route path="admin/product_fabric" element={<ProductFabric />} />
           <Route path="admin/product_fabric_add" element={<AddProductFabric />} />
           <Route path="admin/product_fabric_add/:id" element={<AddProductFabric />} />
+
+          <Route path="admin/buy_details_add" element={<BuyDetailsAdd />} />
+          <Route path="admin/buy_details_add/:id" element={<BuyDetailsAdd />} />
+          <Route path="admin/shop_details_add" element={<ShopDetailsAdd />} />
+          <Route path="admin/shop_details_add/:id" element={<ShopDetailsAdd />} />
+          <Route path="admin/shop" element={<ShopDetails />} />
+          <Route path="admin/buy_details" element={<BuyDetails />} />
         </Routes>
       </BrowserRouter>
     </>
