@@ -14,6 +14,7 @@ import ItemDetails from './product/ItemDetails';
 import Checkout from './cart/Checkout';
 import Product from './admin/product/Product';
 import ProductAdd from './admin/product/ProductAdd';
+import ProductActive from './admin/product/ProductActive';
 
 import Category from './admin/category/Category';
 import AddCategory from './admin/category/AddCategory';
@@ -42,6 +43,7 @@ function App() {
           <Route path="admin/product-add" element={<ProductAdd />} />
           <Route path="admin/product-add/:id" element={<ProductAdd />} />
           <Route path="admin/product" element={<Product />} />
+          <Route path="admin/product_active/:id" element={<ProductActive />} />
           
           <Route path="admin/category" element={<Category />} />
           <Route path="admin/category-add" element={<AddCategory />} />

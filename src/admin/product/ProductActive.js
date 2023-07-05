@@ -9,7 +9,6 @@ import {
     useNavigate
 } from "react-router-dom";
 import Loader from '../../components/Loader';
-import Joi from 'joi';
 
 const ProductAdd = () => {
     const colorObj = [{"color": "Blue", "code": "#175195"},
@@ -25,176 +24,15 @@ const ProductAdd = () => {
     ];
 
     const [isLoading, setIsLoading] = useState(false);
-    
-    const [previewImage, setPreviewImage] = useState({
-        images1: null,
-        images2: null,
-        images3: null,
-        images4: null,
-        images5: null 
-    });
-
-    const navigate = useNavigate();
-    
-    const handelFile = (e) =>{
-        const file = e.target.files[0];
-        //console.log(file);
-        const reader = new FileReader();
-
-        reader.onloadend = () => {
-            const base64String = reader.result;
-            
-            setProductObj({...productObj, [e.target.name]: base64String})
-            setPreviewImage({...previewImage, [e.target.name]: reader.result});
-        };
-
-        if (file) {
-            reader.readAsDataURL(file);
-        }
-    }
-    const [errors, setErrors] = useState({});
-    const [formData, setFormData] = useState({
-        category_id: '',
-        sub_category_id: '',
-        bill_id_and_shop_id: '',
-        product_name: '',
-        company_name: '',
-        product_febric: '',
-        year_month: ''
-    });
-
-    const schema = Joi.object({
-        category_id: Joi.string().required(),
-        sub_category_id: Joi.string().required(),
-        bill_id_and_shop_id: Joi.string().required(),
-        product_name: Joi.string().required(),
-        company_name: Joi.string().required(),
-        product_febric: Joi.string().required(),
-        year_month: Joi.string().required()
-    });
-   
-    const saveProduct = async (event) => {
-        // console.log("MAKE AN API CALL", fields);
-        const validationResult = schema.validate(formData, { abortEarly: false });
-        console.log(validationResult.error);
-        console.log("editData: ", editData);
-        if (validationResult.error) {
-            const validationErrors = {};
-            validationResult.error.details.forEach((error) => {
-                validationErrors[error.path[0]] = error.message;
-            });
-            setErrors(validationErrors);
-        } else {
-            const x = quantityValidationFn();
-            if(x.length === 0){
-                event.preventDefault();
-                //console.log(productObj);
-                setIsLoading(true);
-                
-                const headers = {
-                    'Content-Type': 'application/json'
-                }
-                axios.post(global["axios_url"]+'/productAdd', productObj, {
-                    headers: headers
-                })
-                .then((response) => {
-                    alert(response.data);
-                // console.log(JSON.parse(JSON.stringify(response)))
-                setIsLoading(false);
-                // navigate("../admin/product/");
-                })
-                .catch((error) => {
-                    console.log(error)
-                    setIsLoading(false);
-                    alert(error);
-                })
-            }
-        }
-    };
-
-    const AcceptNumericValue = e => {
-        var key = e.key;
-        var regex = /[0-9]|\./;
-        if( !regex.test(key) ) {
-            e.preventDefault();
-        }
-    }
-
-    function validateQuantity(key, quantity, buy_price, selling_price){
-        let returnFlag = false;
-        if(quantity <= 0){
-            returnFlag = true;
-        }
-
-        if(buy_price >= selling_price){
-            returnFlag = true;
-        }
-        return returnFlag;
-    }
-
-    const quantityValidationFn = () => {
-        const returnArray = [];
-        if(editData.quantity !=="" || editData.quantity_buy_price !=="" || editData.quantity_selling_price !==""){
-            if( validateQuantity("quantity", editData.quantity, editData.quantity_buy_price, editData.quantity_selling_price)){
-                alert("Error in quantity. Please enter the quantity, buy price, and sell price.");
-                returnArray.push(true);
-            }
-        }
-
-        if(editData.quantityXs !=="" || editData.quantityXs_buy_price !=="" || editData.quantityXs_selling_price !==""){
-            if(validateQuantity("quantityXs", editData.quantityXs, editData.quantityXs_buy_price, editData.quantityXs_selling_price)){
-                alert("Error in quantity xs. Please enter the quantity, buy price, and sell price.");
-                returnArray.push(true);
-            }
-        }
-
-        if(editData.quantityS !=="" || editData.quantityS_buy_price !=="" || editData.quantityS_selling_price !==""){
-            if(validateQuantity("quantityS", editData.quantityS, editData.quantityS_buy_price, editData.quantityS_selling_price)){
-                alert("Error in quantity S. Please enter the quantity, buy price, and sell price.");
-                returnArray.push(true);
-            }
-        }
-
-        if(editData.quantityL !=="" || editData.quantityL_buy_price !=="" || editData.quantityL_selling_price !==""){
-            if(validateQuantity("quantityL", editData.quantityL, editData.quantityL_buy_price, editData.quantityL_selling_price)){
-                alert("Error in quantity L. Please enter the quantity, buy price, and sell price.");
-                returnArray.push(true);
-            }
-        }
-
-        if(editData.quantityM !=="" || editData.quantityM_buy_price !=="" || editData.quantityM_selling_price !==""){
-            if(validateQuantity("quantityM", editData.quantityM, editData.quantityM_buy_price, editData.quantityM_selling_price)){
-                alert("Error in quantity M. Please enter the quantity, buy price, and sell price.");
-                returnArray.push(true);
-            }
-        }
-
-        if(editData.quantityXl !=="" || editData.quantityXl_buy_price !=="" || editData.quantityXl_selling_price !==""){
-            if(validateQuantity("quantityXl", editData.quantityXl, editData.quantityXl_buy_price, editData.quantityXl_selling_price)){
-                alert("Error in quantity XL. Please enter the quantity, buy price, and sell price.");
-                returnArray.push(true);
-            }
-        }
-
-        if(editData.quantity2Xl !=="" || editData.quantity2Xl_buy_price !=="" || editData.quantity2Xl_selling_price !==""){
-            if(validateQuantity("quantity2Xl", editData.quantity2Xl, editData.quantity2Xl_buy_price, editData.quantity2Xl_selling_price)){
-                alert("Error in quantity 2XL. Please enter the quantity, buy price, and sell price.");
-                returnArray.push(true);
-            }
-        }
-
-        return returnArray;
-    }
 
     const {id} = useParams();
+    const navigate = useNavigate();
     useEffect(() => {
         getCategory();
         getProductFebric();
         getBillDetails();
         if(id !== undefined){
             getProductById(id);
-        }else{
-            setUploadImageLength(5);
         }
     }, []);
     // For category
@@ -292,60 +130,7 @@ const ProductAdd = () => {
     }
     // Edit 
     const [productObj, setProductObj] = useState({
-        id: "",
-        category_id: "",
-        sub_category_id: "",
-        product_name: "",
-        active_status: "",
-        company_name: "",
-        year_month: "",
-        product_offer_percentage: "",
-        delivery_charges: "",
-        quantity: "",
-        quantity_buy_price: "",
-        quantity_selling_price: "",
-        quantityXs: "",
-        quantityXs_buy_price: "",
-        quantityXs_selling_price: "",
-        quantityS: "",
-        quantityS_buy_price: "",
-        quantityS_selling_price: "",
-        quantityL: "",
-        quantityL_buy_price: "",
-        quantityL_selling_price: "",
-        quantityM: "",
-        quantityM_buy_price: "",
-        quantityM_selling_price: "",
-        quantityXl: "",
-        quantityXl_buy_price: "",
-        quantityXl_selling_price: "",
-        quantity2Xl: "",
-        quantity2Xl_buy_price: "",
-        quantity2Xl_selling_price: "",
-        product_febric_id: "",
-        product_febric: "",
-        color: [],
-        images1: null,
-        images2: null,
-        images3: null,
-        images4: null,
-        images5: null,
-        saree_length: 5.5,
-        blouse: "No",
-        blouse_length: ".8",
-        weight:"",
-        youtube_link: "",
-        // quantity id start
-        quantity_id: "",
-        quantity_Xs_id: "",
-        quantity_S_id: "",
-        quantity_L_id: "",
-        quantity_M_id: "",
-        quantity_Xl_id: "",
-        quantity_2Xl_id: "",
-        // quantity id end
-        fabric_care: "",
-        bill_id_and_shop_id: ""
+        color: []
     });
     const [hideQuantity, sethideQuantity] = useState({
         display: "none",
@@ -357,35 +142,6 @@ const ProductAdd = () => {
         float: 'left', 
         paddingRight: '10px'
     });
-    const handalChange = (e) =>{
-        if(e.target.name === "product_febric"){
-            //console.log(e.target.value.split("@"));
-            setProductObj({...productObj, 
-                product_febric_id: e.target.value.split("@")[0], 
-                product_febric: e.target.value.split("@")[1]
-            })
-            setEditData({...editData, 
-                product_febric_id: e.target.value.split("@")[0], 
-                product_febric: e.target.value.split("@")[1]
-            })
-        }else{
-            setProductObj({...productObj, [e.target.name]:e.target.value})
-            setEditData({...editData, [e.target.name]:e.target.value});
-        }
-
-        if (e.target.name === "category_id"){
-            hideShowQuantity(e.target.value);
-            getSubCategory(e.target.value);
-        }
-
-        // For validation
-        if (Object.keys(formData).includes(e.target.name)) {
-            setFormData({
-                ...formData,
-                [e.target.name]: e.target.value,
-            });
-        }
-    }
 
     const hideShowQuantity = (category_id) => {
         console.log("category_id: ", category_id);
@@ -409,22 +165,6 @@ const ProductAdd = () => {
             });
         }
     };
-
-    const [checkedValues, setCheckedValues] = useState([]);
-
-    const handleCheckboxChange = (event) => {
-        const { value, checked } = event.target;
-        if (checked) {
-            setCheckedValues([...checkedValues, value]);
-            //setProductObj({...productObj, ['color']: [...productObj['color'], value]})
-            setProductObj({...productObj, color: [...productObj['color'], value]})
-        } else {
-            setCheckedValues(checkedValues.filter((item) => item !== value));
-            //setProductObj({...productObj, ['color']: productObj['color'].filter((item) => item !== value)})
-            setProductObj({...productObj, color: productObj['color'].filter((item) => item !== value)})
-        }
-    };
-
 
     const [editData, setEditData] = useState({
         id: "",
@@ -482,8 +222,7 @@ const ProductAdd = () => {
         youtube_link: "",
         fabric_care: "",
         bill_id_and_shop_id: ""
-    });
-    const [uploadImageLength, setUploadImageLength] = useState(0);
+    }); 
     const [imageArray, setImageArray] = useState();
     async function getProductById(id){
         setIsLoading(true);
@@ -496,7 +235,6 @@ const ProductAdd = () => {
             headers: headers
         })
         .then((response) => {
-            //setProductObj({...productObj, ['color']: response.data.color.split(", ")});
             // Show hide quantity
             hideShowQuantity(response.data.category_id);
             // Load category select option
@@ -505,22 +243,10 @@ const ProductAdd = () => {
             setEditData(response.data);
             setProductObj(response.data);
             // Set color checkbox
-            //setProductObj({...productObj, color: response.data.color.split(", "), id: response.data.id});
-            setUploadImageLength(5 - response.data.imageArray.length);
             setImageArray(response.data.imageArray);
-
-            setFormData({
-                category_id: response.data.category_id,
-                sub_category_id: response.data.sub_category_id,
-                bill_id_and_shop_id: response.data.bill_id_and_shop_id,
-                product_name: response.data.product_name,
-                company_name: response.data.company_name,
-                product_febric: response.data.product_febric,
-                year_month: response.data.year_month
-            });
-
             // Loader hide
             setIsLoading(false);
+
         })
         .catch((error) => {
             console.log(error);
@@ -528,53 +254,163 @@ const ProductAdd = () => {
         })
     }
 
-    async function deleteProductImage(id, image_name){
-        console.log("deleteProductImage", image_name);
-        if(window.confirm('Are you sure you want to delete?')){
-            setIsLoading(true);
-            const headers = {
-                'Content-Type': 'application/json'
+    const activeInactiveProduct = (e) => {
+        if(editData.active_status === 0){
+            const x = quantityValidationFn();
+            console.log("x", x.length);
+            if(x.length === 0){
+                // Active
+                activeInactiveProductFn(e);
             }
-            
-            let data = {image: image_name};
-            await axios.post(global["axios_url"]+'/deleteProductImage', data, {
-                headers: headers
-            })
-            .then((response) => {
-                //setProductObj({...productObj, ['color']: response.data.color.split(", ")});
-                setIsLoading(false);
-                alert("Image deleted successfully");
-                setEditData({...editData, ['images'+id]: ""});
-                const updatedArray = imageArray.filter(item => item !== image_name);
-                console.log("updatedArray", updatedArray);
-                setImageArray(updatedArray);
-                setUploadImageLength(uploadImageLength + 1);
-            })
-            .catch((error) => {
-                console.log(error);
-                setIsLoading(false);
-            })
+        }else{
+            activeInactiveProductFn(e);
         }
+    }
+
+    const activeInactiveProductFn = (event) =>{
+        event.preventDefault();
+        //console.log(productObj);
+        let active_status = 0;
+        if(editData.active_status === 0){
+            active_status = 1;
+        }
+        setIsLoading(true);
+        
+        const headers = {
+            'Content-Type': 'application/json'
+        }
+        axios.post(global["axios_url"]+'/productAactiveInactive', {id: editData.id, active_status: active_status}, {
+            headers: headers
+        })
+        .then((response) => {
+            alert(response.data);
+            // console.log(JSON.parse(JSON.stringify(response)))
+            setIsLoading(false);
+            navigate("../admin/product/");
+        })
+        .catch((error) => {
+            console.log(error)
+            setIsLoading(false);
+            alert(error);
+        })
+    }
+
+    const [quantityValidation, setQuantityValidation] = useState({
+        quantity: false,
+        quantityXs: false,
+        quantityS: false,
+        quantityL: false,
+        quantityM: false,
+        quantityXl: false,
+        quantity2Xl: false
+    });
+
+    function validateQuantity(key, quantity, buy_price, selling_price){
+        let returnFlag = false;
+        if(quantity <= 0){
+            setQuantityValidation({...quantityValidation, key: true})
+            returnFlag = true;
+        }
+        console.log(key, "-------------", buy_price, ">=", selling_price);
+        if(buy_price >= selling_price){
+            setQuantityValidation({...quantityValidation, key: true})
+            returnFlag = true;
+        }
+        return returnFlag;
+    }
+
+    const quantityValidationFn = () => {
+        const returnArray = [];
+        if(editData.quantity !=="" || editData.quantity_buy_price !=="" || editData.quantity_selling_price !==""){
+            if( validateQuantity("quantity", editData.quantity, editData.quantity_buy_price, editData.quantity_selling_price)){
+                alert("Error in quantity. Please edit before activation.");
+                returnArray.push(true);
+            }
+        }
+
+        if(editData.quantityXs !=="" || editData.quantityXs_buy_price !=="" || editData.quantityXs_selling_price !==""){
+            if(validateQuantity("quantityXs", editData.quantityXs, editData.quantityXs_buy_price, editData.quantityXs_selling_price)){
+                alert("Error in quantity xs. Please edit before activation.");
+                returnArray.push(true);
+            }
+        }
+
+        if(editData.quantityS !=="" || editData.quantityS_buy_price !=="" || editData.quantityS_selling_price !==""){
+            if(validateQuantity("quantityS", editData.quantityS, editData.quantityS_buy_price, editData.quantityS_selling_price)){
+                alert("Error in quantity S. Please edit before activation.");
+                returnArray.push(true);
+            }
+        }
+
+        if(editData.quantityL !=="" || editData.quantityL_buy_price !=="" || editData.quantityL_selling_price !==""){
+            if(validateQuantity("quantityL", editData.quantityL, editData.quantityL_buy_price, editData.quantityL_selling_price)){
+                alert("Error in quantity L. Please edit before activation.");
+                returnArray.push(true);
+            }
+        }
+
+        if(editData.quantityM !=="" || editData.quantityM_buy_price !=="" || editData.quantityM_selling_price !==""){
+            if(validateQuantity("quantityM", editData.quantityM, editData.quantityM_buy_price, editData.quantityM_selling_price)){
+                alert("Error in quantity M. Please edit before activation.");
+                returnArray.push(true);
+            }
+        }
+
+        if(editData.quantityXl !=="" || editData.quantityXl_buy_price !=="" || editData.quantityXl_selling_price !==""){
+            if(validateQuantity("quantityXl", editData.quantityXl, editData.quantityXl_buy_price, editData.quantityXl_selling_price)){
+                alert("Error in quantity XL. Please edit before activation.");
+                returnArray.push(true);
+            }
+        }
+
+        if(editData.quantity2Xl !=="" || editData.quantity2Xl_buy_price !=="" || editData.quantity2Xl_selling_price !==""){
+            if(validateQuantity("quantity2Xl", editData.quantity2Xl, editData.quantity2Xl_buy_price, editData.quantity2Xl_selling_price)){
+                alert("Error in quantity 2XL. Please edit before activation.");
+                returnArray.push(true);
+            }
+        }
+
+        return returnArray;
+    }
+
+    const editProduct = () =>{
+        navigate("../admin/product-add/"+editData.id);
     }
 
     return (
         <>
             {isLoading ? <Loader /> : ""}
             <div className='addNewAddress' style={{padding: '10px'}}>
-                <h3 style={{textAlign: 'center'}}>Product {editData.id === ""?"Add":"Edit"}</h3>
+                <div className='col-md-12' style={{display: "inline-block"}}>
+                    <button 
+                        type="submit" 
+                        className="signupButton btn btn-info" 
+                        style={{float: 'left'}}
+                        onClick={(e) => { 
+                            editProduct(e)
+                        }}
+                    >Edit</button>
+                    <button 
+                        type="submit" 
+                        className="signupButton btn btn-danger" 
+                        onClick={(e) => { 
+                            activeInactiveProduct(e)
+                        }}
+                    >Active/InActive</button>
+                </div>
                 
+                <h3 style={{textAlign: 'center'}}>Product Details</h3>
                     <input type='hidden' name="id" value={editData.id} />
                     <div style={{width: '100%', backgroundColor: "#00cfff", textAlign: "center", padding: '10px'}}>Basic Details</div>
                     <div className='col-md-12' style={{padding: "5px", clear: 'both', display: 'inline-block'}}>
                         <div className="col-md-4" style={{float: 'left', paddingRight: '10px'}}>
-                            <label className="form-label" htmlFor="category_id.ControlInput1">Category: <span className='requiredfield'> *</span></label>
+                            <label className="form-label" htmlFor="category_id.ControlInput1">Category: </label>
                             <select
                                 className='form-select'
                                 id="category_id"
                                 name="category_id"
-                                onChange={handalChange}
                                 value={editData.category_id}
-                                disabled = {editData.id === ""?"":true}
+                                disabled = {true}
                             >
                                 <option value="">Select Category</option>
                                 {
@@ -586,16 +422,15 @@ const ProductAdd = () => {
                                 }
                                 
                             </select>
-                            {errors.category_id && <span className="error">This is a required field.</span>}
                         </div>
                         <div className="col-md-4" style={{float: 'left', paddingRight: '10px'}}>
-                            <label className="form-label" htmlFor="sub_category_id.ControlInput1">Sub Category: <span className='requiredfield'> *</span></label>
+                            <label className="form-label" htmlFor="sub_category_id.ControlInput1">Sub Category: </label>
                             <select
                                 className='form-select'
                                 id="sub_category_id"
                                 name="sub_category_id"
-                                onChange={handalChange}
                                 value={editData.sub_category_id}
+                                disabled = {true}
                                 >
                                 <option value="">Select Sub Category</option>
                                 {
@@ -607,16 +442,15 @@ const ProductAdd = () => {
                                 }
                                 
                             </select>
-                            {errors.sub_category_id && <span className="error">This is a required field.</span>}
                         </div>
                         <div className="col-md-4" style={{float: 'left', paddingRight: '10px'}}>
-                            <label className="form-label" htmlFor="bill_id_and_shop_id.ControlInput1">Bill: <span className='requiredfield'> *</span></label>
+                            <label className="form-label" htmlFor="bill_id_and_shop_id.ControlInput1">Bill: </label>
                             <select
                                 className='form-select'
                                 id="bill_id_and_shop_id"
                                 name="bill_id_and_shop_id"
-                                onChange={handalChange}
                                 value={editData.bill_id_and_shop_id}
+                                disabled = {true}
                                 >
                                 <option value="">Select Sub Category</option>
                                 {
@@ -628,7 +462,6 @@ const ProductAdd = () => {
                                 }
                                 
                             </select>
-                            {errors.bill_id_and_shop_id && <span className="error">This is a required field.</span>}
                         </div>
                     </div>
                     <div style={{width: '100%', backgroundColor: "#00cfff", textAlign: "center", padding: '10px', clear: 'both', marginTop: '5px'}}>Product Delivery</div>
@@ -642,8 +475,7 @@ const ProductAdd = () => {
                                 id="product_offer_percentage.ControlInput1" 
                                 className="form-control"
                                 value={editData['product_offer_percentage']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
+                                disabled = {true}
                             />
                         </div>
                         <div className="col-md-4"style={{float: 'left', paddingRight: '10px'}}>
@@ -654,8 +486,7 @@ const ProductAdd = () => {
                                 id="delivery_charges.ControlInput1" 
                                 className="form-control"
                                 value={editData['delivery_charges']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
+                                disabled = {true}
                             />
                         </div>
                     </div>
@@ -663,16 +494,16 @@ const ProductAdd = () => {
                     <div style={{width: '100%', backgroundColor: "#00cfff", textAlign: "center", padding: '10px'}}>Product Price Information</div>
 
                     <div className='col-md-12' style={{padding: "5px", display: 'inline-block'}}>
+                        {quantityValidation.quantity && <span className="error">Error in Quantity</span>}
                         <div className="col-md-4" style={hideQuantity}>
-                            <label className="form-label" htmlFor="quantity.ControlInput1">Quantity:</label>
+                            <label className="form-label" htmlFor="quantity.ControlInput1">Quantity: </label>
                             <input 
                                 type="text" 
                                 name='quantity'
                                 id="quantity.ControlInput1" 
                                 className="form-control"
                                 value={editData['quantity']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
+                                disabled = {true}
                             />
                         </div>
                         <div className="col-md-4" style={hideQuantity}>
@@ -683,8 +514,7 @@ const ProductAdd = () => {
                                 id="quantity_buy_price.ControlInput1" 
                                 className="form-control"
                                 value={editData['quantity_buy_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
+                                disabled = {true}
                             />
                         </div>
                         
@@ -696,12 +526,12 @@ const ProductAdd = () => {
                                 id="quantity_selling_price.ControlInput1" 
                                 className="form-control"
                                 value={editData['quantity_selling_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
+                                disabled = {true}
                             />
                         </div>
                         
                         <div className="col-md-4" style={hideQuantityType}>
+                            {quantityValidation.quantityXs && <span className="error">Error in Quantity</span>}
                             <label className="form-label" htmlFor="quantityXs.ControlInput1">Quantity: <b>XS</b> 75 cm = 28 Inches </label>
                             <input 
                                 type="text" 
@@ -709,8 +539,7 @@ const ProductAdd = () => {
                                 id="quantityXs.ControlInput1" 
                                 className="form-control"
                                 value={editData['quantityXs']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
+                                disabled = {true}
                             />
                         </div>
 
@@ -722,8 +551,7 @@ const ProductAdd = () => {
                                 id="quantityXs_buy_price.ControlInput1" 
                                 className="form-control"
                                 value={editData['quantityXs_buy_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
+                                disabled = {true}
                             />
                         </div>
                         
@@ -735,12 +563,12 @@ const ProductAdd = () => {
                                 id="quantityXs_selling_price.ControlInput1" 
                                 className="form-control"
                                 value={editData['quantityXs_selling_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
+                                disabled = {true}
                             />
                         </div>
                         
                         <div className="col-md-4" style={hideQuantityType}>
+                            {quantityValidation.quantityS && <span className="error">Error in Quantity <b>S</b></span>}
                             <label className="form-label" htmlFor="quantityS.ControlInput1">Quantity: <b>S</b> 80 cm = 30 Inches</label>
                             <input 
                                 type="text" 
@@ -748,8 +576,7 @@ const ProductAdd = () => {
                                 id="quantityS.ControlInput1" 
                                 className="form-control"
                                 value={editData['quantityS']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
+                                disabled = {true}
                             />
                         </div>
 
@@ -761,8 +588,7 @@ const ProductAdd = () => {
                                 id="quantityS_buy_price.ControlInput1" 
                                 className="form-control"
                                 value={editData['quantityS_buy_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
+                                disabled = {true}
                             />
                         </div>
                         
@@ -774,12 +600,12 @@ const ProductAdd = () => {
                                 id="quantityS_selling_price.ControlInput1" 
                                 className="form-control"
                                 value={editData['quantityS_selling_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
+                                disabled = {true}
                             />
                         </div>
                         
                         <div className="col-md-4" style={hideQuantityType}>
+                            {quantityValidation.quantityL && <span className="error">Error in Quantity <b>L</b></span>}
                             <label className="form-label" htmlFor="quantityL.ControlInput1">Quantity: <b>L</b> 90 cm = 3 Inches</label>
                             <input 
                                 type="text" 
@@ -787,8 +613,7 @@ const ProductAdd = () => {
                                 id="quantityL.ControlInput1" 
                                 className="form-control"
                                 value={editData['quantityL']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
+                                disabled = {true}
                             />
                         </div>
 
@@ -800,8 +625,7 @@ const ProductAdd = () => {
                                 id="quantityL_buy_price.ControlInput1" 
                                 className="form-control"
                                 value={editData['quantityL_buy_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
+                                disabled = {true}
                             />
                         </div>
                         
@@ -813,12 +637,12 @@ const ProductAdd = () => {
                                 id="quantityL_selling_price.ControlInput1" 
                                 className="form-control"
                                 value={editData['quantityL_selling_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
+                                disabled = {true}
                             />
                         </div>
                         
                         <div className="col-md-4" style={hideQuantityType}>
+                            {quantityValidation.quantityM && <span className="error">Error in Quantity <b>M</b></span>}
                             <label className="form-label" htmlFor="quantityM.ControlInput1">Quantity: <b>M</b> 85 cm = 32 Inches</label>
                             <input 
                                 type="text" 
@@ -826,8 +650,7 @@ const ProductAdd = () => {
                                 id="quantityM.ControlInput1" 
                                 className="form-control"
                                 value={editData['quantityM']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
+                                disabled = {true}
                             />
                         </div>
 
@@ -839,8 +662,7 @@ const ProductAdd = () => {
                                 id="quantityM_buy_price.ControlInput1" 
                                 className="form-control"
                                 value={editData['quantityM_buy_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
+                                disabled = {true}
                             />
                         </div>
                         
@@ -852,12 +674,12 @@ const ProductAdd = () => {
                                 id="quantityM_selling_price.ControlInput1" 
                                 className="form-control"
                                 value={editData['quantityM_selling_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
+                                disabled = {true}
                             />
                         </div>
                         
                         <div className="col-md-4" style={hideQuantityType}>
+                            {quantityValidation.quantityXl && <span className="error">Error in Quantity <b>XL</b></span>}
                             <label className="form-label" htmlFor="quantityXl.ControlInput1">Quantity: <b>XL</b> 95 cm = 36 Inches</label>
                             <input 
                                 type="text" 
@@ -865,8 +687,7 @@ const ProductAdd = () => {
                                 id="quantityXl.ControlInput1" 
                                 className="form-control"
                                 value={editData['quantityXl']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
+                                disabled = {true}
                             />
                         </div>
                         <div className="col-md-4" style={hideQuantityType}>
@@ -877,8 +698,7 @@ const ProductAdd = () => {
                                 id="quantityXl_buy_price.ControlInput1" 
                                 className="form-control"
                                 value={editData['quantityXl_buy_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
+                                disabled = {true}
                             />
                         </div>
                         
@@ -890,12 +710,12 @@ const ProductAdd = () => {
                                 id="quantityXl_selling_price.ControlInput1" 
                                 className="form-control"
                                 value={editData['quantityXl_selling_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
+                                disabled = {true}
                             />
                         </div>
                         
                         <div className="col-md-4" style={hideQuantityType}>
+                            {quantityValidation.quantity2Xl && <span className="error">Error in Quantity <b>2XL</b></span>}
                             <label className="form-label" htmlFor="quantity2Xl.ControlInput1">Quantity: <b>2XL</b> 100 cm = 38 Inches</label>
                             <input 
                                 type="text" 
@@ -903,8 +723,7 @@ const ProductAdd = () => {
                                 id="quantity2Xl.ControlInput1" 
                                 className="form-control"
                                 value={editData['quantity2Xl']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
+                                disabled = {true}
                             />
                         </div>
 
@@ -916,8 +735,7 @@ const ProductAdd = () => {
                                 id="quantity2Xl_buy_price.ControlInput1" 
                                 className="form-control"
                                 value={editData['quantity2Xl_buy_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
+                                disabled = {true}
                             />
                         </div>
                         
@@ -929,8 +747,7 @@ const ProductAdd = () => {
                                 id="quantity2Xl_selling_price.ControlInput1" 
                                 className="form-control"
                                 value={editData['quantity2Xl_selling_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
+                                disabled = {true}
                             />
                         </div>
                     </div>
@@ -939,7 +756,7 @@ const ProductAdd = () => {
 
                     <div className='col-md-12' style={{padding: "5px", display: 'inline-block'}}>
                         <div className="col-md-4" style={{float: 'left', paddingRight: '10px'}}>
-                            <label className="form-label" htmlFor="product_name.ControlInput1">Product Name: <span className='requiredfield'> *</span></label>
+                            <label className="form-label" htmlFor="product_name.ControlInput1">Product Name: </label>
                             <input 
                                 placeholder="" 
                                 type="text" 
@@ -947,12 +764,11 @@ const ProductAdd = () => {
                                 id="product_name.ControlInput1" 
                                 className="form-control" 
                                 value={editData['product_name']}
-                                onChange={handalChange}
+                                disabled = {true}
                                 />
-                            {errors.product_name && <span className="error">This is a required field.</span>}
                         </div>
                         <div className="col-md-4" style={{float: 'left', paddingRight: '10px'}}>
-                            <label className="form-label" htmlFor="company_name.ControlInput1">Company Name: <span className='requiredfield'> *</span></label>
+                            <label className="form-label" htmlFor="company_name.ControlInput1">Company Name: </label>
                             <input 
                                 placeholder="" 
                                 type="text" 
@@ -960,19 +776,18 @@ const ProductAdd = () => {
                                 id="company_name.ControlInput1" 
                                 className="form-control" 
                                 value={editData['company_name']}
-                                onChange={handalChange}
+                                disabled = {true}
                                 />
-                            {errors.company_name && <span className="error">This is a required field.</span>}
                         </div>
                         
                         <div className="col-md-4" style={{float: 'left', paddingRight: '10px'}}>
-                            <label className="form-label" htmlFor="product_febric.ControlInput1">Product Fabric: <span className='requiredfield'> *</span></label>
+                            <label className="form-label" htmlFor="product_febric.ControlInput1">Product Fabric: </label>
                             <select
                                 className='form-select'
                                 id="product_febric"
                                 name="product_febric"
-                                onChange={handalChange}
                                 value={editData['product_febric_id']+"@"+editData['product_febric']}
+                                disabled = {true}
                                 >
                                 <option value="">Select Product Fabric</option> 
                                 {
@@ -983,7 +798,6 @@ const ProductAdd = () => {
 
                                 }
                             </select>
-                            {errors.product_febric && <span className="error">This is a required field.</span>}
                         </div>
 
                         <div className="col-md-4" style={{float: 'left', paddingRight: '10px'}}>
@@ -992,8 +806,8 @@ const ProductAdd = () => {
                                 className='form-select'
                                 id="fabric_care"
                                 name="fabric_care"
-                                onChange={handalChange}
                                 value={editData.fabric_care}
+                                disabled = {true}
                             >   
                                 <option value="">NULL</option>
                                 <option value="Hand wash">Hand wash</option>
@@ -1002,13 +816,13 @@ const ProductAdd = () => {
                         </div>
 
                         <div className="col-md-4" style={{float: 'left', paddingRight: '10px'}}>
-                            <label className="form-label" htmlFor="year_month.ControlInput1">Year Month: <span className='requiredfield'> *</span></label>
+                            <label className="form-label" htmlFor="year_month.ControlInput1">Year Month: </label>
                             <select
                                 className='form-select'
                                 id="year_month"
                                 name="year_month"
-                                onChange={handalChange}
                                 value={editData.year_month}
+                                disabled = {true}
                             >   
                                 <option value="">NULL</option>
                                 <option value="2023-04">2023-04</option>
@@ -1023,8 +837,7 @@ const ProductAdd = () => {
                                 id="saree_length" 
                                 className="form-control"
                                 value={editData['saree_length']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
+                                disabled = {true}
                             />
                         </div>
                         <div className="col-md-4" style={hideQuantity}>
@@ -1033,8 +846,8 @@ const ProductAdd = () => {
                                 className='form-select'
                                 id="blouse"
                                 name="blouse"
-                                onChange={handalChange}
                                 value={editData.blouse}
+                                disabled = {true}
                             >   
                                 <option value="No">No</option>
                                 <option value="Yes">Yes</option>
@@ -1048,8 +861,7 @@ const ProductAdd = () => {
                                 id="blouse_length" 
                                 className="form-control"
                                 value={editData['blouse_length']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
+                                disabled = {true}
                             />
                         </div>
                         <div className="col-md-4" style={{float: 'left', paddingRight: '10px'}}>
@@ -1060,8 +872,7 @@ const ProductAdd = () => {
                                 id="weight" 
                                 className="form-control"
                                 value={editData['weight']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
+                                disabled = {true}
                             />
                         </div>
                         <div className="col-md-4" style={{float: 'left', paddingRight: '10px'}}>
@@ -1072,8 +883,7 @@ const ProductAdd = () => {
                                 id="youtube_link" 
                                 className="form-control"
                                 value={editData['youtube_link']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
+                                disabled = {true}
                             />
                         </div>
                     </div>
@@ -1082,7 +892,7 @@ const ProductAdd = () => {
                     
                     <div className='col-md-12' style={{padding: "5px", display: 'inline-block'}}>
                         <div className="mb-3 formValidation">
-                            <label className="form-label" htmlFor="color.ControlInput1">Color: <span className='requiredfield'> *</span></label>
+                            <label className="form-label" htmlFor="color.ControlInput1">Color: </label>
                             <br></br>
 
                             {
@@ -1098,7 +908,7 @@ const ProductAdd = () => {
                                                 style={{marginTop: '10px', marginLeft: '-15px'}} 
                                                 /*checked={checkedValues.includes(obj.color)}*/
                                                 checked={productObj['color'].includes(obj.color)}
-                                                onChange={handleCheckboxChange}
+                                                disabled = {true}
                                                 />
                                             <label 
                                                 className="form-check-label" 
@@ -1125,23 +935,6 @@ const ProductAdd = () => {
                                 return (
                                     <div style={{float: 'left', paddingRight: '10px', height: '250px', position: 'relative'}} key={"imageDiv"+index}>
                                         <div style={{border: "1px dashed"}}>
-                                            <img 
-                                                src={require("../../images/delete.png")} 
-                                                style={{
-                                                    width: '20px',
-                                                    position: 'absolute',
-                                                    float: 'right',
-                                                    right: '20px',
-                                                    cursor: 'pointer',
-                                                    top: '10px'
-                                                }}
-                                                alt='delete'
-                                                onClick={(e) => { 
-                                                    deleteProductImage(obj, obj.toString())
-                                                }}
-                                                >
-
-                                            </img>
                                             <img src={require("../../images/product/"+obj)} alt="" style={{ width: '200px', height: '200px'}}></img>
                                         </div>
                                     </div>
@@ -1149,36 +942,6 @@ const ProductAdd = () => {
                             })
 
                         }    
-                    </div>
-
-                    <div className='col-md-12' style={{padding: "5px", display: 'inline-block'}}>
-                    {
-                    Array.from({ length: uploadImageLength }, (_, index) => (
-                        <>
-                        <div className="col-md-4" style={{float: 'left', paddingRight: '10px', height: '250px', position: 'relative'}} key={"imageDiv"+(parseInt(index, 10) + 1)}>
-                            <label className="form-label" htmlFor="images1.ControlInput">Images: </label>
-                            <input type="file" name={"images"+(parseInt(index, 10) + 1)} onChange={handelFile}></input>
-                            <div>
-                                {previewImage['images'+(parseInt(index, 10) + 1)] && (
-                                    
-                                        <img src={previewImage['images'+(parseInt(index, 10) + 1)]} alt="Selected" style={{ width: '200px', height: '200px', float: 'left' }} />
-                                    
-                                )}
-                            </div>
-                        </div>
-                        </>
-                    ))
-                    }
-                    </div>
-                    
-                    <div className="mb-3 formValidation">
-                        <button 
-                            type="submit" 
-                            className="signupButton btn btn-primary"
-                            onClick={(e) => { 
-                                saveProduct(e)
-                            }}
-                        >Save Product</button>
                     </div>
             </div>
         </>

@@ -86,13 +86,13 @@ const Products = () => {
         { field: 'active_status', headerName: "Status", cellRenderer: StatusCellRenderer, width: 100 },
         { field: 'color', headerName: "Color", width: 150 },
         { field: 'no_of_product', headerName: "Total Quantity", width: 130 },
-        { field: 'quantity_xs', headerName: "Size XS", width: 90 },
-        { field: 'quantity_s', headerName: "S", width: 90 },
-        { field: 'quantity_l', headerName: "L", width: 90 },
-        { field: 'quantity_m', headerName: "M", width: 90 },
-        { field: 'quantity_xl', headerName: "XL", width: 90 },
-        { field: 'quantity_2xl', headerName: "2XL", width: 90 },
-        { field: 'id', headerName: "Action", cellRenderer: ActionCellRenderer }
+        { field: 'quantity_xs', headerName: "XS [Q => B => S Price]", width: 180 },
+        { field: 'quantity_s', headerName: "S", width: 150 },
+        { field: 'quantity_l', headerName: "L", width: 150 },
+        { field: 'quantity_m', headerName: "M", width: 150 },
+        { field: 'quantity_xl', headerName: "XL", width: 150 },
+        { field: 'quantity_2xl', headerName: "2XL", width: 150 },
+        { field: 'id', headerName: "Action", cellRenderer: ActionCellRenderer, width: 300 }
     ])
 
     function UpdateGroupIdHandleClick(){
