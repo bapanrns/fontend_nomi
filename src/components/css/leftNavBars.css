@@ -1,0 +1,31 @@
+.colorPanel{
+    position: relative;
+}
+
+.colorPanel .form-check-label{
+    padding-left: 20px;
+}
+
+.colorSpan{
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inherit;
+    top: 3px;
+    left: 21px;
+}
+
+.search-container {
+    position: relative;
+}
+  
+.search-container .form-control {
+    padding: 4px 30px;
+    margin-bottom: 13px; 
+    background-image: url('../../images/search.png'); 
+    background-repeat: no-repeat;
+    background-size: 17px;
+    background-position-y: 7px;
+    background-position-x: 4px;
+}
