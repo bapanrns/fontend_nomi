@@ -12,17 +12,7 @@ import Loader from '../../components/Loader';
 import Joi from 'joi';
 
 const ProductAdd = () => {
-    const colorObj = [{"color": "Blue", "code": "#175195"},
-    {"color": "Yellows", "code": "#feee2f"},
-    {"color": "Black", "code": "#000"},
-    {"color": "Greys", "code": "#848484"},
-    {"color": "Browns", "code": "#744113"},
-    {"color": "Beige", "code": "#c5bf9c"},
-    {"color": "Reds", "code": "#be0000"},
-    {"color": "Pinks", "code": "#f7007c"},
-    {"color": "Oranges", "code": "#fba13e"},
-    {"color": "Green", "code": "#66bf19"}
-    ];
+    const colorObj = global['color'];
 
     const [isLoading, setIsLoading] = useState(false);
     
@@ -64,8 +54,8 @@ const ProductAdd = () => {
     });
 
     const schema = Joi.object({
-        category_id: Joi.string().required(),
-        sub_category_id: Joi.string().required(),
+        category_id: Joi.number().required(),
+        sub_category_id: Joi.number().required(),
         bill_id_and_shop_id: Joi.string().required(),
         product_name: Joi.string().required(),
         company_name: Joi.string().required(),
@@ -99,9 +89,9 @@ const ProductAdd = () => {
                 })
                 .then((response) => {
                     alert(response.data);
-                // console.log(JSON.parse(JSON.stringify(response)))
-                setIsLoading(false);
-                // navigate("../admin/product/");
+                    // console.log(JSON.parse(JSON.stringify(response)))
+                    setIsLoading(false);
+                    navigate("../admin/product/");
                 })
                 .catch((error) => {
                     console.log(error)
@@ -121,14 +111,16 @@ const ProductAdd = () => {
     }
 
     function validateQuantity(key, quantity, buy_price, selling_price){
+        console.log(key, quantity, buy_price, selling_price);
         let returnFlag = false;
-        if(quantity <= 0){
+        if(parseInt(quantity) <= 0){
             returnFlag = true;
         }
 
-        if(buy_price >= selling_price){
+        if(parseInt(buy_price) >= parseInt(selling_price)){
             returnFlag = true;
         }
+        console.log("returnFlag", returnFlag);
         return returnFlag;
     }
 
@@ -325,11 +317,11 @@ const ProductAdd = () => {
         product_febric_id: "",
         product_febric: "",
         color: [],
-        images1: null,
-        images2: null,
-        images3: null,
-        images4: null,
-        images5: null,
+        images1: "",
+        images2: "",
+        images3: "",
+        images4: "",
+        images5: "",
         saree_length: 5.5,
         blouse: "No",
         blouse_length: ".8",
@@ -345,7 +337,8 @@ const ProductAdd = () => {
         quantity_2Xl_id: "",
         // quantity id end
         fabric_care: "",
-        bill_id_and_shop_id: ""
+        bill_id_and_shop_id: "",
+        primary: ""
     });
     const [hideQuantity, sethideQuantity] = useState({
         display: "none",
@@ -470,11 +463,11 @@ const ProductAdd = () => {
         product_febric: "",
         color: [],
         imageArray: [],
-        images1: null,
-        images2: null,
-        images3: null,
-        images4: null,
-        images5: null,
+        images1: "",
+        images2: "",
+        images3: "",
+        images4: "",
+        images5: "",
         saree_length: 5.5,
         blouse: "No",
         blouse_length: ".8",
@@ -528,32 +521,56 @@ const ProductAdd = () => {
         })
     }
 
-    async function deleteProductImage(id, image_name){
-        console.log("deleteProductImage", image_name);
+    async function deleteProductImage(id, image_name, image_id, product_id){
+        //console.log("deleteProductImage", id);
         if(window.confirm('Are you sure you want to delete?')){
             setIsLoading(true);
             const headers = {
                 'Content-Type': 'application/json'
             }
             
-            let data = {image: image_name};
+            let data = {image: image_name, image_id: image_id, product_id: product_id};
             await axios.post(global["axios_url"]+'/deleteProductImage', data, {
                 headers: headers
             })
             .then((response) => {
+                //console.log(response.data);
                 //setProductObj({...productObj, ['color']: response.data.color.split(", ")});
                 setIsLoading(false);
                 alert("Image deleted successfully");
-                setEditData({...editData, ['images'+id]: ""});
+                //setEditData({...editData, ['images'+id]: ""});
                 const updatedArray = imageArray.filter(item => item !== image_name);
-                console.log("updatedArray", updatedArray);
+                //console.log("updatedArray", updatedArray);
                 setImageArray(updatedArray);
-                setUploadImageLength(uploadImageLength + 1);
+                //setUploadImageLength(uploadImageLength + 1);
             })
             .catch((error) => {
                 console.log(error);
                 setIsLoading(false);
             })
+        }
+    }
+
+    const setPrimary = (id, product_id="")=>{
+        if(product_id !==""){
+            setIsLoading(true);
+            const headers = {
+                'Content-Type': 'application/json'
+            }
+            
+            axios.post(global["axios_url"]+'/setPrimaryImage', {id: id, product_id: product_id}, {
+                headers: headers
+            })
+            .then((response) => {
+                alert("Set Primary image. Please Refresh");
+                setIsLoading(false);
+            })
+            .catch((error) => {
+                console.log(error)
+                setIsLoading(false);
+            })
+        }else{
+            setProductObj({...productObj, primary: id})
         }
     }
 
@@ -988,17 +1005,20 @@ const ProductAdd = () => {
 
                         <div className="col-md-4" style={{float: 'left', paddingRight: '10px'}}>
                             <label className="form-label" htmlFor="fabric_care.ControlInput1">Fabric Care: </label>
-                            <select
-                                className='form-select'
-                                id="fabric_care"
-                                name="fabric_care"
-                                onChange={handalChange}
-                                value={editData.fabric_care}
-                            >   
-                                <option value="">NULL</option>
-                                <option value="Hand wash">Hand wash</option>
-                                <option value="2023-05">2023-05</option>
-                            </select>
+                           
+                                <select
+                                    className='form-select'
+                                    id="fabric_care"
+                                    name="fabric_care"
+                                    onChange={handalChange}
+                                    value={editData.fabric_care}
+                                >   
+                                    <option value="">NULL</option>
+                                    {global["careInstruction"].map((option, key) => (
+                                        <option value={option.value} key={"care_"+key}>{option.label}</option>
+                                    ))}
+                                </select>
+                           
                         </div>
 
                         <div className="col-md-4" style={{float: 'left', paddingRight: '10px'}}>
@@ -1089,15 +1109,15 @@ const ProductAdd = () => {
                                 colorObj.length > 0  &&
                                 colorObj.map((obj, index)=>{
                                     return (
-                                        <div className='form-check' style={{background: obj.code, float: 'left', marginLeft: '5px', width: '100px', color: '#fff'}} key={index}>
+                                        <div className='form-check' style={{background: obj.code, float: 'left', marginLeft: '5px', minWidth: '100px', color: obj.color}} key={index}>
                                             <input 
                                                 className="form-check-input" 
                                                 type="checkbox" 
-                                                value={obj.color} 
+                                                value={obj.label} 
                                                 id={"flexCheckDefaul"+index} 
                                                 style={{marginTop: '10px', marginLeft: '-15px'}} 
                                                 /*checked={checkedValues.includes(obj.color)}*/
-                                                checked={productObj['color'].includes(obj.color)}
+                                                checked={productObj['color'].includes(obj.label)}
                                                 onChange={handleCheckboxChange}
                                                 />
                                             <label 
@@ -1105,7 +1125,7 @@ const ProductAdd = () => {
                                                 htmlFor={"flexCheckDefaul"+index} 
                                                 style={{padding: '5px', cursor: 'pointer'}}
                                                 >
-                                                {obj.color}
+                                                {obj.label}
                                             </label>
                                         </div>
                                     );
@@ -1124,7 +1144,8 @@ const ProductAdd = () => {
                             imageArray.map((obj, index)=>{
                                 return (
                                     <div style={{float: 'left', paddingRight: '10px', height: '250px', position: 'relative'}} key={"imageDiv"+index}>
-                                        <div style={{border: "1px dashed"}}>
+                                        <div style={{border: editData["imageHash"][obj].primary === 1?"3px #00cfff dashed":"3px #000 dashed"}}>
+                                        {editData["imageHash"][obj].primary === 1 && <><label style={{fontWeight: 'bold', width: '100%', textAlign: 'center', background: '#00cfff', color: '#fff'}}>Primary Image</label> <br></br></>}
                                             <img 
                                                 src={require("../../images/delete.png")} 
                                                 style={{
@@ -1137,17 +1158,32 @@ const ProductAdd = () => {
                                                 }}
                                                 alt='delete'
                                                 onClick={(e) => { 
-                                                    deleteProductImage(obj, obj.toString())
+                                                    deleteProductImage(obj, obj.toString(), editData["imageHash"][obj].id, editData["imageHash"][obj].product_id)
                                                 }}
                                                 >
 
                                             </img>
                                             <img src={require("../../images/product/"+obj)} alt="" style={{ width: '200px', height: '200px'}}></img>
+
+                                            {
+                                                editData["imageHash"][obj].primary === 0 &&
+                                                <label style={{cursor: 'pointer', fontWeight: 'bold', padding: '5px', width: "100%"}}>
+                                                    <input
+                                                    type="radio"
+                                                    id={editData["imageHash"][obj].id}
+                                                    name='productImage'
+                                                    value="1"
+                                                    onClick={(e) => { 
+                                                        setPrimary(editData["imageHash"][obj].id, editData["imageHash"][obj].product_id)
+                                                    }}
+                                                    />
+                                                    Set Primary
+                                                </label>
+                                            }
                                         </div>
                                     </div>
                                 );
                             })
-
                         }    
                     </div>
 
@@ -1155,13 +1191,26 @@ const ProductAdd = () => {
                     {
                     Array.from({ length: uploadImageLength }, (_, index) => (
                         <>
-                        <div className="col-md-4" style={{float: 'left', paddingRight: '10px', height: '250px', position: 'relative'}} key={"imageDiv"+(parseInt(index, 10) + 1)}>
+                        <div className="col-md-4" style={{float: 'left', paddingRight: '10px', height: '280px', position: 'relative'}} key={"imageDiv"+(parseInt(index, 10) + 1)}>
                             <label className="form-label" htmlFor="images1.ControlInput">Images: </label>
                             <input type="file" name={"images"+(parseInt(index, 10) + 1)} onChange={handelFile}></input>
                             <div>
                                 {previewImage['images'+(parseInt(index, 10) + 1)] && (
-                                    
+                                    <>
                                         <img src={previewImage['images'+(parseInt(index, 10) + 1)]} alt="Selected" style={{ width: '200px', height: '200px', float: 'left' }} />
+                                        
+                                        <label style={{cursor: 'pointer', fontWeight: 'bold', padding: '5px', width: "100%"}}>
+                                            <input
+                                            type="radio"
+                                            name='productImage'
+                                            value="1"
+                                            onClick={(e) => { 
+                                                setPrimary('images'+(parseInt(index, 10) + 1))
+                                            }}
+                                            />
+                                            Set Primary
+                                        </label>
+                                  </>
                                     
                                 )}
                             </div>

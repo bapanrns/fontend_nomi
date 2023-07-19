@@ -71,10 +71,11 @@ const ActionCellRenderer = (props) => {
         console.log(response);
         alert("Set Primary image.");
         setIsLoading(false);
-        showImages();
+        setShow(false);
     })
     .catch((error) => {
-        console.log(error)
+        console.log(error);
+        alert('Error');
         setIsLoading(false);
     })
   }

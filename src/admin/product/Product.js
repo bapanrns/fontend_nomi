@@ -12,6 +12,9 @@ import Loader from '../../components/Loader';
 import axios from "axios";
 import global from "../../components/global";
 
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
+
 const checkboxSelection = function (params) {
     // we put checkbox on the name if we are not doing grouping
     return params.columnApi.getRowGroupColumns().length === 0;
@@ -29,6 +32,17 @@ const StatusCellRenderer = (p) =>{
 
     return <span>{status}</span>;
 }
+
+const TooltipRenderer = ({ value }) => {
+    return (
+      <OverlayTrigger
+        placement="top"
+        overlay={<Tooltip>{value}</Tooltip>}
+      >
+        <div>{value}</div>
+      </OverlayTrigger>
+    );
+  };
 
 const Products = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -84,14 +98,15 @@ const Products = () => {
         { field: 'sub_category_id', headerName: "Sub Category", width: 150 },
         { field: 'group_id', headerName: "Group Id", width: 90 },
         { field: 'active_status', headerName: "Status", cellRenderer: StatusCellRenderer, width: 100 },
-        { field: 'color', headerName: "Color", width: 150 },
-        { field: 'no_of_product', headerName: "Total Quantity", width: 130 },
-        { field: 'quantity_xs', headerName: "XS [Q => B => S Price]", width: 180 },
-        { field: 'quantity_s', headerName: "S", width: 150 },
-        { field: 'quantity_l', headerName: "L", width: 150 },
-        { field: 'quantity_m', headerName: "M", width: 150 },
-        { field: 'quantity_xl', headerName: "XL", width: 150 },
-        { field: 'quantity_2xl', headerName: "2XL", width: 150 },
+        { field: 'color', headerName: "Color", width: 150, cellRendererFramework: TooltipRenderer },
+        { field: 'no_of_product', headerName: "Total Quantity", width: 125, cellRendererFramework: TooltipRenderer },
+        { field: 'quantity', headerName: "Quantity [Q => B => S Price]", width: 190, cellRendererFramework: TooltipRenderer },
+        { field: 'quantity_xs', headerName: "XS [Q => B => S Price]", width: 180, cellRendererFramework: TooltipRenderer },
+        { field: 'quantity_s', headerName: "S", width: 150, cellRendererFramework: TooltipRenderer },
+        { field: 'quantity_l', headerName: "L", width: 150, cellRendererFramework: TooltipRenderer },
+        { field: 'quantity_m', headerName: "M", width: 150, cellRendererFramework: TooltipRenderer },
+        { field: 'quantity_xl', headerName: "XL", width: 150, cellRendererFramework: TooltipRenderer },
+        { field: 'quantity_2xl', headerName: "2XL", width: 150, cellRendererFramework: TooltipRenderer },
         { field: 'id', headerName: "Action", cellRenderer: ActionCellRenderer, width: 300 }
     ])
 

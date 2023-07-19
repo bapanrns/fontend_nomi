@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from "axios";
 
 import {
-    useParams
+    useParams,
+    useNavigate
   } from "react-router-dom";
 
 const AddCategory = () => {
@@ -12,8 +13,16 @@ const AddCategory = () => {
         status: 1
     });
     const {id} = useParams();
+
+    useEffect(() => {
+
+        if(id !== undefined){
+            getCategory(id);
+        }
+
+    }, []);
     // Edit section
-    if(id !== undefined){
+    function getCategory(id){
         const headers = {
             'Content-Type': 'application/json'
         }
@@ -23,22 +32,25 @@ const AddCategory = () => {
             headers: headers
         })
         .then((response) => {
-            console.log(response.data.length);
-            /*setEditData({
-                name: response.data.category_name,
-                status: response.data.active_status
-            })*/
+            console.log(response.data.id);
+            setCategoryObj({...categoryObj, 
+                id: response.data.id,
+                category_name: response.data.category_name, 
+                active_status: response.data.active_status
+            });
         })
         .catch((error) => {
             console.log(error)
         })
     }
-    
 
     const [categoryObj, setCategoryObj] = useState({
-        name: "",
-        status: 0
+        id: 0,
+        category_name: "",
+        active_status: 0
     });
+
+    const navigate = useNavigate();
 
     const onSubmit = async (event) => {
         event.preventDefault();
@@ -46,14 +58,12 @@ const AddCategory = () => {
             'Content-Type': 'application/json'
         }
         console.log(categoryObj);
-        let data = {};
-        data["name"] = categoryObj.name
-        data["status"] = categoryObj.status
-        axios.post('http://localhost:8081/api/categoryAdd', data, {
+        axios.post('http://localhost:8081/api/categoryAdd', categoryObj, {
             headers: headers
         })
         .then((response) => {
-            console.log(response);
+            alert(response.data);
+            navigate("../admin/Category/");
         })
         .catch((error) => {
             console.log(error)
@@ -70,17 +80,18 @@ const AddCategory = () => {
                     onSubmit={onSubmit}
                 >
                     <div className="mb-3 formValidation">
-                        <label className="form-label" htmlFor="buyPrice.ControlInput1">Category Name: <span className='requiredfield'> *</span></label>
+                        <label className="form-label" htmlFor="category_name.ControlInput1">Category Name: <span className='requiredfield'> *</span></label>
                         <input 
                             type="text" 
-                            name='buyPrice'
-                            id="buyPrice.ControlInput1" 
+                            name='category_name'
+                            id="category_name.ControlInput1" 
                             className="form-control"
+                            defaultValue={categoryObj.category_name}
                             onBlur={(e) => { 
                                 console.log(e.target.value);
                                 setCategoryObj(prevState => ({
                                     ...prevState,
-                                    ['name']: e.target.value
+                                    ['category_name']: e.target.value
                                 }))
                             }}
                         />
@@ -93,12 +104,12 @@ const AddCategory = () => {
                             id="pickup_place"
                             name="pickup_place"
                             onChange={(e) => { 
-                                console.log(e.target.value);
                                 setCategoryObj(prevState => ({
                                     ...prevState,
-                                    ['status']: e.target.value
+                                    ['active_status']: e.target.value
                                 }))
                             }}
+                            value={categoryObj.active_status}
                         >
                             <option value="1">Active</option>
                             <option value="0">Inactive</option>

@@ -111,7 +111,9 @@ const AddSubCategory = () => {
             alert(response.data);
             //console.log(JSON.parse(JSON.stringify(response)))
             setIsLoading(false);
-            navigate("../admin/sub_category/");
+            if(response.data !== "Sub-category already exists"){
+                navigate("../admin/sub_category/");
+            }
         })
         .catch((error) => {
             console.log(error)

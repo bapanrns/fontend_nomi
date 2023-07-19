@@ -3,14 +3,15 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import NavBars from './components/NavBars';
 import AdminNavBars from './components/AdminNavBars';
-import Home from './components/Home';
 
 import {
   BrowserRouter,
   Routes,
   Route
 } from "react-router-dom";
-import ItemDetails from './product/ItemDetails';
+import Home from './FrontEnd/Home';
+import Items from './FrontEnd/Items';
+import ItemDetails from './FrontEnd/ItemDetails';
 import Checkout from './cart/Checkout';
 import Product from './admin/product/Product';
 import ProductAdd from './admin/product/ProductAdd';
@@ -34,12 +35,19 @@ function App() {
   return (
       <>
       <BrowserRouter>
-        {/*<NavBars />*/}
+        <NavBars />
         <AdminNavBars />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/:id" element={<Home />} />
+          <Route path="/:id/:id" element={<Home />} />
           <Route path="product-details/:id" element={<ItemDetails />} />
           <Route path="checkout" element={<Checkout />} />
+          
+          <Route path="items/:id" element={<Items />} />
+
+
+          {/* Admin */}
           <Route path="admin/product-add" element={<ProductAdd />} />
           <Route path="admin/product-add/:id" element={<ProductAdd />} />
           <Route path="admin/product" element={<Product />} />
