@@ -101,7 +101,7 @@ const ItemDetails = () => {
         })
         .then((response) => {
             console.log(response.data);
-            setSimilarProducts(response.data)
+            setSimilarProducts(response.data);
         })
         .catch((error) => {
             console.log(error);

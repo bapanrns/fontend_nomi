@@ -3,6 +3,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from "axios";
 import global from "../../components/global";
 import Loader from '../../components/Loader'
+import axiosInstance from '../../components/axiosInstance';
+
+import { ToastContainer, toast } from 'react-toastify';
 
 import {
     useParams,
@@ -101,24 +104,28 @@ const AddSubCategory = () => {
     const onSubmit = async (event) => {
         event.preventDefault();
         setIsLoading(true);
-        const headers = {
-            'Content-Type': 'application/json'
-        }
-        axios.post(global["axios_url"]+'/subCategoryAdd', subCategoryObj, {
-            headers: headers
-        })
+
+        axiosInstance.post('/subCategoryAdd', subCategoryObj)
         .then((response) => {
-            alert(response.data);
-            //console.log(JSON.parse(JSON.stringify(response)))
             setIsLoading(false);
             if(response.data !== "Sub-category already exists"){
-                navigate("../admin/sub_category/");
+                toast.success('Sub-category save successfully.', {
+                    position: toast.POSITION.TOP_CENTER,
+                    autoClose: 3000,
+                });
+                setTimeout(() => {
+                    navigate("../admin/sub_category/");
+                }, 3500);
+            }else{
+                toast.error('Sub-category already exists.', {
+                    position: toast.POSITION.TOP_CENTER,
+                    autoClose: 3000,
+                });
             }
         })
         .catch((error) => {
-            console.log(error)
-            alert(error);
-        })
+            console.log('Error:', error);
+        });
     };
 
     return (

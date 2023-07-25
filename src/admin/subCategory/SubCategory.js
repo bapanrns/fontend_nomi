@@ -11,7 +11,10 @@ import ActionCellRenderer from './ActionCellRenderer'
 import axios from "axios";
 import Loader from '../../components/Loader';
 import global from "../../components/global";
+import { useNavigate, Link } from "react-router-dom";
+import axiosInstance from '../../components/axiosInstance';
 
+import { ToastContainer, toast } from 'react-toastify';
 
 const checkboxSelection = function (params) {
     // we put checkbox on the name if we are not doing grouping
@@ -34,37 +37,25 @@ const StatusCellRenderer = (p) =>{
 const SubCategories = () => {
     const [rowData, setRowData] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    // {category_name: "", active_status: "", id: 1}
+    const navigate = useNavigate();
     function getCategoryData(category_id = ""){
+
         setIsLoading(true);
-        const headers = {
-            'Content-Type': 'application/json'
-        }
-        
-        let data = {category_id: category_id};
-        axios.post(global["axios_url"]+'/AllSubCategory', data, {
-            headers: headers
-        })
+        axiosInstance.post('/AllSubCategory', {category_id: category_id})
         .then((response) => {
             setRowData(response.data)
             setIsLoading(false);
         })
         .catch((error) => {
-            console.log(error)
-            setIsLoading(false);
-        })
-
-        console.log(rowData);
+            console.log('Error:', error);
+        });
     }
-
 
     const onGridReady = useCallback((params) => {
           getCategoryData();
           getCategory();
     }, []);
 
-    
-    
     const [columnDefs] = useState([
         {
             field: 'id',
