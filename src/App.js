@@ -36,6 +36,9 @@ import BuyDetails from "./admin/productBuyDetails/BuyDetails";
 // Notification
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useState } from 'react';
+
+import axiosInstance from './components/axiosInstance';
 
 
 let userRole = 'user';
@@ -55,11 +58,68 @@ const isAuthorized = (roleRequired) => {
 
 
 function App() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [cartValue, setCartValu] = useState(
+    (JSON.parse(localStorage.getItem('cart')) || []).length
+  );
+  const getCartValue = (itemIds, itemSize) => {
+    //localStorage.removeItem('cart');
+    let cartArray = JSON.parse(localStorage.getItem('cart')) || []; // Initialize cartArray with the stored data or an empty array if nothing is stored
+    if(cartArray.includes(itemIds+"@"+itemSize)){
+      toast.warning('Items already in cart.', {
+        position: toast.POSITION.TOP_CENTER,
+      });
+    }else{
+
+      if(localStorage.getItem("login") === "true"){
+        let data = {itemIds: itemIds, itemSize: itemSize};
+        axiosInstance.post('/saveCartData', data)
+        .then((response) => {
+            setIsLoading(false);
+            setAddToCartData(itemIds, cartArray, itemSize);
+        })
+        .catch((error) => {
+            console.log('Error:', error);
+        });
+      }else{
+        setAddToCartData(itemIds, cartArray, itemSize);
+      }
+    }
+  }
+
+  const setAddToCartData=(itemIds, cartArray, size)=>{
+    cartArray.push(itemIds+"@"+size);
+    setCartValu(cartArray.length);
+    localStorage.setItem('cart', JSON.stringify(cartArray));
+
+    toast.success('Item added to cart successfully.', {
+      position: toast.POSITION.TOP_CENTER,
+    });      
+  }
+
+  const removeCartItem=(itemToRemove)=>{
+    
+    if(localStorage.getItem("login")){
+      removeAddToCartData(itemToRemove);
+    }else{
+      removeAddToCartData(itemToRemove);
+    }
+    toast.success('Item removed from cart successfully.', {
+      position: toast.POSITION.TOP_CENTER,
+    });
+  }
+
+  const removeAddToCartData=(itemToRemove)=>{
+    let cartArray = JSON.parse(localStorage.getItem('cart')) || []; // Initialize cartArray with the stored data or an empty array if nothing is stored
+    cartArray = cartArray.filter((item) => item.toString() !== itemToRemove.toString());
+    setCartValu(cartArray.length);
+    localStorage.setItem('cart', JSON.stringify(cartArray));
+  }
   return (
       <>
       <BrowserRouter>
         
-        <NavBars />
+        <NavBars cartValue={cartValue}/>
         {
           (userRole === "Admin")?<AdminNavBars />:""
         }
@@ -68,8 +128,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/:id" element={<Home />} />
           <Route path="/:id/:id" element={<Home />} />
-          <Route path="product-details/:id" element={<ItemDetails />} />
-          <Route path="checkout" element={<Checkout />} />
+          <Route path="product-details/:id" element={<ItemDetails  getCartValue={getCartValue} />} />
+          <Route path="checkout" element={<Checkout removeCartItem={removeCartItem}/>} />
           
           <Route path="items/:id" element={<Items />} />
 

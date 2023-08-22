@@ -154,6 +154,37 @@
     color: red;
     width: 100%;
 }
+.itemDetailsDesktopView{
+    /*display: block;*/
+}
+.deliveryOptionDiv{
+    width: 60%;
+}
+.headdingP{
+    margin-bottom: 0px;
+    font-weight: bold;
+    font-size: 16px;
+}
+.subHeaddingP{
+    font-size: 15px;
+}
+@media (max-width: 768px) {
+    .homePageitemListForMobile{
+        display: block;
+    }
+    .itemDetailsDesktopView{
+        display: none;
+    }
+    .addToCartItemDetails{
+        padding: 11px 0px 11px 11px;
+    }
+    .buyNowItemDetails{
+        padding: 11px 0px 11px 35px;
+    }
+    .deliveryOptionDiv{
+        width: 100%;
+    }
+}
 
 @media only screen and (max-device-width: 450px) {
     .below450{

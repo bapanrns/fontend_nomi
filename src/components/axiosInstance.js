@@ -50,15 +50,23 @@ instance.interceptors.response.use(
             position: toast.POSITION.TOP_CENTER,
             autoClose: 3000,
         });
+        if(localStorage.getItem("login")){
+          localStorage.setItem("cart","[]");
+        }
+        localStorage.setItem("login", false);
+        localStorage.removeItem('ioc');
          // Redirect to login page
     }else if(error.response && error.response.status === 403){
         toast.error('Unauthorized: Insufficient privileges.', {
             position: toast.POSITION.TOP_CENTER,
             autoClose: 3000,
         });
+        localStorage.clear();
+        localStorage.setItem("login", false);
+        localStorage.setItem("cart","[]");
     }
     localStorage.removeItem('ioc');
-    localStorage.clear();
+    //localStorage.clear();
     setTimeout(() => {
       //  window.location.href = '/';
     }, 3500);

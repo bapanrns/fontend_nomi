@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import {Container, NavDropdown, Form, Button } from 'react-bootstrap';
+import {Container, NavDropdown, Form, Button, Image } from 'react-bootstrap';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { useNavigate } from "react-router-dom";
@@ -9,11 +9,14 @@ import ForgotPassword from '../login/ForgotPassword';
 import NewPasswordModal from '../login/NewPassword';
 import SignUp from '../login/SignUp';
 
+// Notification
+import { ToastContainer, toast } from 'react-toastify';
 
-import './profile.css';
 
-  const NavBars = () => {
+import '../components/css/profile.css';
 
+  const NavBars = (props) => {
+    const { cartValue } = props;
     /* --------------- For Login Modal start */
     const [loginModal, setLoginModal] = useState(false)
     function openLoginModal(){
@@ -61,9 +64,28 @@ import './profile.css';
     const navigate = useNavigate();
     function loginOut(){
         localStorage.setItem("login", false);
-        localStorage.clear();
+
+        localStorage.removeItem('ioc');
+        localStorage.removeItem('search');
+        localStorage.removeItem('searchTermForType');
+        localStorage.removeItem('pincode');
+        localStorage.setItem("cart", "[]");
+
+        //localStorage.clear();
         navigate("/");
         window.location.reload(false);
+    }
+
+    /** goToCheckout */
+
+    const goToCheckout = () =>{
+        if ((JSON.parse(localStorage.getItem('cart')) || []).length > 0){
+            navigate("/checkout");
+        }else{
+            toast.error('Cart is empty.', {
+                position: toast.POSITION.TOP_CENTER,
+            });
+        }
     }
 
         return (
@@ -111,6 +133,20 @@ import './profile.css';
                         <Button variant="outline-success">Search</Button>
                     </Form>
                     </Navbar.Collapse>
+                    <div 
+                        className='cartIconDiv'
+                        onClick={() => { 
+                            goToCheckout();
+                        }}
+                        >
+                        { cartValue > 0 && (
+                        <div className='itemCount'>{cartValue}</div>
+                        )}
+                        <Image 
+                            className='cartIcon'
+                            src={require(`../images/cart.png`)} 
+                        />
+                    </div>
                 </Container>
 
 

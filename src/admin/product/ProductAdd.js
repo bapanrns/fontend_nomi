@@ -66,8 +66,8 @@ const ProductAdd = () => {
     const saveProduct = async (event) => {
         // console.log("MAKE AN API CALL", fields);
         const validationResult = schema.validate(formData, { abortEarly: false });
-        console.log(validationResult.error);
-        console.log("editData: ", editData);
+        //console.log(validationResult.error);
+        //console.log("editData: ", editData);
         if (validationResult.error) {
             const validationErrors = {};
             validationResult.error.details.forEach((error) => {

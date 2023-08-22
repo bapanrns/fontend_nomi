@@ -47,13 +47,17 @@ const Home = () => {
         console.log('getFilterOption');
     }
 
+    let subCatId = "";
+    if (localStorage.hasOwnProperty('searchTermForType')) {
+        subCatId = localStorage.getItem('searchTermForType');
+    }
     const [filterHash, setfilterHash] = useState({
         fabric: [],
         color: [],
         price: [],
         occassion: [],
         careInstruction: [],
-        type: [],
+        type: [subCatId],
         discount: [],
         serchFor: useParams()['id']
     });
@@ -73,7 +77,7 @@ const Home = () => {
                 setfilterHash({...filterHash, [type]: innerArray});
             }
         }
-        console.log(filterHash);
+        //console.log(filterHash);
     }
     const [itemsListArray, setItemsListArray] = useState([]);
     const getItemsDetails = () => {
@@ -87,7 +91,7 @@ const Home = () => {
             headers: headers
         })
         .then((response) => {
-            console.log(response.data);
+            //console.log(response.data);
             setItemsListArray(response.data);
             setIsLoading(false);
         })
@@ -96,9 +100,8 @@ const Home = () => {
             setIsLoading(false);
         })
     }
-
+    
     useEffect(() => {
-        console.log(localStorage.getItem('search'));
         getItemsDetails();
     }, [filterHash]);
 
@@ -111,8 +114,8 @@ const Home = () => {
                 
                 <Container className='HomeContainer'>
                     <Row>
-                        <Col xs={6} md={2} style={{height: '1500px'}}>
-                            <LeftNavBars itemType={parameter.id} getFilterHash={getFilterHash} />
+                        <Col xs={6} md={2} style={{/*height: '1500px'*/}}>
+                            <LeftNavBars itemType={parameter.id} getFilterHash={getFilterHash} subCatId={subCatId} />
                         </Col>
                         <Col xs={12} md={10}>
                             <Row>

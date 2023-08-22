@@ -123,3 +123,51 @@
 .homePageitemListForMobile{
     display: none;
 }
+
+.scroll-container{
+    display: none;
+}
+.homePageitemListForDesktop{
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .categoriesImgDiv {
+        height: 150px;
+    }
+
+    .categoriesImg {
+        height: 120px;
+        width: 70%;
+    }
+
+    .similarTypeProductImg {
+        width: 200px !important;
+        height: 200px !important;
+    }
+    
+    .homePageitemListForDesktop{
+        display: none;
+    }
+    .scroll-container {
+        display: flex;
+        overflow-x: auto; /* Enable horizontal scrolling */
+        /* Additional styles, if needed */
+    }
+    
+    .scroll-container {
+        display: grid;
+        grid-auto-flow: column; /* Arrange content in columns */
+        gap: 10px; /* Adjust the gap between items if desired */
+        overflow-x: auto; /* Enable horizontal scrolling */
+        /* Additional styles, if needed */
+    }
+    
+    .scroll-container {
+        /* Responsive styles for mobile */
+        @media (max-width: 768px) {
+          width: 100%; /* Full width on mobile */
+        }
+    }
+}
+

@@ -1,18 +1,55 @@
 import React, {  useEffect, useState } from 'react'
 import { Container, Row, Col, Accordion, Form, Image } from 'react-bootstrap';
-import { Lang, useFormInputValidation } from "react-form-input-validation";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../components/css/checkout.css';
 import Select from 'react-select';
 import axios from "axios";
+import global from "../components/global";
+// Notification
+import { ToastContainer, toast } from 'react-toastify';
+import Joi from 'joi';
 
 import {
     useNavigate
   } from "react-router-dom";
 
+import axiosInstance from '../components/axiosInstance';
+
 
  
-const Checkout = () => {
+const Checkout = (props) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [cartData, setCartData] = useState([]);
+    const [totalPrice, setTotalPrice] = useState(0);
+    const [deliveryCharge, setDeliveryCharge] = useState(0);
+    const [grossTotal, setGrossTotal] = useState(0);
+    useEffect(() => {
+        getCartData();
+        getAddress();
+    }, []);
+    
+    const getCartData=()=>{
+        setIsLoading(true);
+        const headers = {
+            'Content-Type': 'application/json'
+        }
+        let itemIds = localStorage.getItem('cart') || "[]"
+        let data = {itemIds: itemIds};
+        axios.post(global["axios_url"]+'/getCartData', data, {
+            headers: headers
+        })
+        .then((response) => {
+            setCartData(response.data.itemListHash);
+            setTotalPrice(response.data.total_price);
+            setDeliveryCharge(response.data.deliveryCharge);
+            setGrossTotal(response.data.grossTotal);
+            setIsLoading(false);
+        })
+        .catch((error) => {
+            console.log(error);
+            setIsLoading(false);
+        })
+    }
 
     const navigate = useNavigate();
     function productDetailsFn(id){
@@ -39,413 +76,483 @@ const Checkout = () => {
         console.log(itemCount);
     }
 
-    const [fields, errors, form] = useFormInputValidation(
-        {
-          customer_name: "",
-          phone_number: "",
-          pincode: "",
-          alternativeMobileNo: "",
-          cityTown: "",
-          landmark: ""
-        },
-        {
-          customer_name: "required|username_available",
-          phone_number: "required|numeric|digits_between:10,12",
-          pincode: "required",
-          alternativeMobileNo: "numeric|digits_between:10,12",
-          cityTown: "required",
-          landmark: "required"
-        }
-      );
-    
-      useEffect(() => {
-        form.registerAsync("username_available", function (
-          username,
-          attribute,
-          req,
-          passes
-        ) {
-          setTimeout(() => {
-            if (username === "foo")
-              passes(false, "Username has already been taken.");
-            // if username is not available
-            else passes();
-          }, 1000);
+    const [errors, setErrors] = useState({});
+    const [formData, setFormData] = useState({
+        name: '',
+        mobile_no: '',
+        pincode: '',
+        alternative_mobile_no: '',
+        village: '',
+        city: '',
+        landmark: ''
+    });
+
+    const schema = Joi.object({
+        name: Joi.string().required(),
+        mobile_no: Joi.number().required(),
+        pincode: Joi.string().required(),
+        alternative_mobile_no: Joi.number().required(),
+        village: Joi.string().required(),
+        city: Joi.string().required(),
+        landmark: Joi.string().required()
+    });
+
+    const handalChange = (e) =>{
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value,
         });
-      }, []);
+
+        setSaveData({
+            ...saveData,
+            [e.target.name]: e.target.value,
+        });
+    }
     
-      form.useLang(Lang.en);
-    
-      // let messages = form.getMessages(Lang.en);
-      // console.log(messages);
-    
-      const onSubmit = async (event) => {
-        const isValid = await form.validate(event);
-        if (isValid) {
-            setOpenNewAddress("none");
+    const onSubmit = async (event) => {
+        const validationResult = schema.validate(formData, { abortEarly: false });
+        //console.log(validationResult.error);
+        if (validationResult.error) {
+            const validationErrors = {};
+            validationResult.error.details.forEach((error) => {
+                validationErrors[error.path[0]] = error.message;
+            });
+            setErrors(validationErrors);
+
+            console.log(errors)
+        } else {
+            
            // console.log("MAKE AN API CALL", fields);
-            const name = fields.customer_name
             event.preventDefault();
-
-            console.log(fields);
-
-            const headers = {
-                'Content-Type': 'application/json'
-            }
-
-            let data = {};
-            data["name"] = fields.customer_name;
-            data["phone_number"] = fields.phone_number;
-            data["alternativeMobileNo"] = fields.alternativeMobileNo;
-            data["pincode"] = fields.pincode;
-            data["landmark"] = fields.landmark;
-            data["cityTown"] = fields.cityTown;
-              
-            axios.post('http://localhost:8081/api/new_address', data, {
-                headers: headers
-            })
+            
+            axiosInstance.post('/new_address', saveData)
             .then((response) => {
-                console.log(response);
+                if(response.data.success > 0){
+                    toast.success('Delivery address save successfully.', {
+                        position: toast.POSITION.TOP_CENTER,
+                    });
+                    setOpenNewAddress("none");
+                    getAddress();
+                }else{
+                    toast.error('Error.', {
+                        position: toast.POSITION.TOP_CENTER,
+                    });
+                }
             })
             .catch((error) => {
-                console.log(error)
-            })
-
-        }
-      };
-      const [data, setData] = useState([]);
-/*
-      useEffect(() => {
-          
-            axios.get('http://localhost:8081/api/users').then((response) => {
-                setData(response.data);
-                console.log(response.data);
+                console.log('Error:', error);
             });
 
-
-
-            console.log(data);
-
-        if (form.isValidForm) {
-           console.log("MAKE AN API CALL ==> useEffect", fields, errors, form, openNewAddress);
-           
         }
-      }, []);
-
-*/
-
+    };
 
 
     const [openNewAddress, setOpenNewAddress] = useState("none");
 
     function addNewAddress(){
+        setSaveData({
+            id: 0,
+            name: "",
+            mobile_no: "",
+            alternative_mobile_no: "",
+            pincode: "",
+            landmark: "",
+            city: "",
+            village: ""
+        });
         setOpenNewAddress("block");
     }
 
-    function editAddress(){
+     
+    const [saveData, setSaveData] = useState({
+        id: 0,
+        name: "",
+        mobile_no: "",
+        alternative_mobile_no: "",
+        pincode: "",
+        landmark: "",
+        city: "",
+        village: ""
+    });
+    function editAddress(id){
         setOpenNewAddress("block");
+        setIsLoading(true);
+        let data = {addressId: id};
+        axiosInstance.post('/getAddressById', data)
+        .then((response) => {
+            setIsLoading(false);
+
+            setSaveData({
+                id: response.data.id,
+                name: response.data.name,
+                mobile_no: response.data.mobile_no,
+                alternative_mobile_no: response.data.alternative_mobile_no,
+                pincode: response.data.pincode,
+                landmark: response.data.landmark,
+                city: response.data.city,
+                village: response.data.village
+            });
+            setFormData({
+                ...formData,
+                name: response.data.name,
+                mobile_no: response.data.mobile_no,
+                alternative_mobile_no: response.data.alternative_mobile_no,
+                pincode: response.data.pincode,
+                landmark: response.data.landmark,
+                city: response.data.city,
+                village: response.data.village
+            });
+        })
+        .catch((error) => {
+            console.log('Error:', error);
+        });
+
     }
 
-    function deliverHere(){
-        alert()
+    const deleteAddress = (id) =>{
+        let data = {addressId: id};
+        setIsLoading(true);
+        axiosInstance.post('/deleteAddress', data)
+        .then((response) => {
+            setIsLoading(false);
+            toast.success('Deleted successfully.', {
+                position: toast.POSITION.TOP_CENTER,
+            });
+            getAddress();
+        })
+        .catch((error) => {
+            console.log('Error:', error);
+        });
+    }
+    const removeItem = (keyToDeleteId, size) =>{
+        let data = {itemIds: keyToDeleteId};
+        axiosInstance.post('/removeCartData', data)
+        .then((response) => {
+            setIsLoading(false);
+            if(response.data.success){
+              props.removeCartItem(keyToDeleteId+"@"+size);
+              getCartData();
+            }else{
+              alert('Not removed');
+            }
+        })
+        .catch((error) => {
+            console.log('Error:', error);
+        });
     }
 
-    function removeBuyItem(id){
-        alert(id);
+  
+    const [showAddress, setShowAddress] = useState([]);
+    const getAddress = () =>{
+        let data = {};
+        axiosInstance.post('/getAddress', data)
+        .then((response) => {
+            setIsLoading(false);
+            setShowAddress(response.data);
+        })
+        .catch((error) => {
+            console.log('Error:', error);
+        });
     }
+
+    const [deliveryAddress, setDeliveryAddress] = useState("");
+    const continueToBuy =()=>{
+        const total_items = Object.keys(cartData) || [];
+        console.log(total_items.length);
+        if(total_items.length === 0){
+            toast.warn('There are no items in the cart. Please add items to your cart.', {
+                position: toast.POSITION.TOP_CENTER,
+            });
+        }else if(deliveryAddress !== ""){
+            console.log(total_items);
+
+            let data = {deliveryAddress: deliveryAddress, items: total_items};
+            //console.log(data);
+            axiosInstance.post('/continueToBuy', data)
+            .then((response) => {
+                setIsLoading(false);
+            })
+            .catch((error) => {
+                console.log('Error:', error);
+            });
+        }else{
+            toast.warn('Please select a delivery address.', {
+                position: toast.POSITION.TOP_CENTER,
+            });
+            setActiveKey("1")
+        }
+    }
+
 /*
     function productDetailsFn(pid){
         navigate("../product-details/"+pid);
     }
     */
 
+    let myStyle = {
+        display: "block",
+        backgroundColor: "#cccc"
+    };
+    const [activeKey, setActiveKey] = useState(0);
+
     return (
         <>
             <Container className='HomeContainer'>
                 <Row>
                     <Col md={9}>
-                        <Accordion defaultActiveKey="0">
+                        <Accordion defaultActiveKey={activeKey.toString()}>
                             <Accordion.Item eventKey="0">
-                                <Accordion.Header><b>1 &nbsp;&nbsp;&nbsp; Delivery Address</b></Accordion.Header>
+                                <Accordion.Header><b>1 &nbsp;&nbsp;&nbsp; Item Details</b></Accordion.Header>
                                 <Accordion.Body>
-                                    <h5>Address</h5>
-                                    <div className='deliveryAddress'>
-                                        <label>
-                                            <Form.Check
-                                                label=""
-                                                name="deleveryAddress"
-                                                type="radio"
-                                                id="deleveryAddress1"
-                                                value="1"
-                                                defaultChecked
-                                            />
-                                            <span>Bapan Samanta Vi+po: mirpur, Dhonipur bazar, TAMLUK, WEST BENGAL, 721648, India, Phone number: 8240916332 </span>
-                                        </label>
-                                        <span style={{color: '#00cfff', cursor: 'pointer', paddingLeft: '5px'}} onClick={editAddress}>Edit Address</span>
-                                        <label>
-                                            <Form.Check
-                                                label=""
-                                                name="deleveryAddress"
-                                                type="radio"
-                                                id="deleveryAddress1"
-                                                value="1"
-                                            />
-                                            <span>Tapas Vi+po: mirpur, Dhonipur bazar, TAMLUK, WEST BENGAL, 721648, India, Phone number: 8240916332 </span>
-                                        </label>
-                                        <label>
-                                            <Form.Check
-                                                label=""
-                                                name="deleveryAddress"
-                                                type="radio"
-                                                id="deleveryAddress1"
-                                                value="1"
-                                            />
-                                            <span>Rofic Vi+po: mirpur, Dhonipur bazar, TAMLUK, WEST BENGAL, 721648, India, Phone number: 8240916332 </span>
-                                        </label>
-                                        
-                                    </div>
-                                    <button type="button" style={{float: 'left'}} className="signupButton btn btn-primary" onClick={deliverHere}>Deliver Here</button>
-                                    <div className='addNewAddressLink' onClick={addNewAddress}>+ Add a new address </div>
-                                    <div className='addNewAddress' style={{display: openNewAddress, marginBottom: '70px'}}>
-                                        <form
-                                            className="myForm"
-                                            noValidate
-                                            autoComplete="off"
-                                            onSubmit={onSubmit}
-                                        >
-                                            <div className="mb-3 formValidation">
-                                                <label className="form-label" htmlFor="customer_name.ControlInput1">Name: <span className='requiredfield'> *</span></label>
-                                                <input 
-                                                    placeholder="" 
-                                                    type="text" 
-                                                    name='customer_name'
-                                                    id="customer_name.ControlInput1" 
-                                                    className="form-control" 
-                                                    onBlur={form.handleBlurEvent}
-                                                    onChange={form.handleChangeEvent}
-                                                    value={fields.customer_name}
-                                                    // To override the attribute name
-                                                data-attribute-name="Customer Name"
-                                                data-async
-                                                    />
-                                                    {errors.customer_name ? <label className="error"> {errors.customer_name} </label> : ""}
-                                            </div>
-
-                                            <div className="mb-3 formValidation">
-                                                <label className="form-label" htmlFor="phone_number.ControlInput1">Mobile No: <span className='requiredfield'> *</span></label>
-                                                <input 
-                                                    placeholder="" 
-                                                    type="tel" 
-                                                    name='phone_number'
-                                                    id="phone_number.ControlInput1" 
-                                                    className="form-control" 
-                                                    onBlur={form.handleBlurEvent}
-                                                    onChange={form.handleChangeEvent}
-                                                    value={fields.phone_number}
-                                                    // To override the attribute name
-                                                data-attribute-name="Mobile No."
-                                                data-async
-                                                    />
-                                                    {errors.phone_number ? <label className="error"> {errors.phone_number} </label> : ""}
-                                            </div>
-
-                                            <div className="mb-3 formValidation">
-                                                <label className="form-label" htmlFor="alternativeMobileNo.ControlInput1">Alternative Mobile No.<span style={{fontSize: "10px", fontWeight: 'bold'}}>( or Whatsapp No.)</span>: </label>
-                                                <input 
-                                                    placeholder="" 
-                                                    type="tel" 
-                                                    name='alternativeMobileNo'
-                                                    id="alternativeMobileNo.ControlInput1" 
-                                                    className="form-control" 
-                                                    onBlur={form.handleBlurEvent}
-                                                    onChange={form.handleChangeEvent}
-                                                    value={fields.alternativeMobileNo}
-                                                    // To override the attribute name
-                                                data-attribute-name="Alternative Mobile No."
-                                                data-async
-                                                    />
-                                                    {errors.alternativeMobileNo ? <label className="error"> {errors.alternativeMobileNo} </label> : ""}
-                                            </div>
-
-                                            <div className="mb-3 formValidation">
-                                                <label className="form-label" htmlFor="pincode.ControlInput1">Pincode: <span className='requiredfield'> *</span></label>
-                                                <input 
-                                                    placeholder="" 
-                                                    type="text" 
-                                                    name='pincode'
-                                                    id="pincode.ControlInput1" 
-                                                    className="form-control" 
-                                                    onBlur={form.handleBlurEvent}
-                                                    onChange={form.handleChangeEvent}
-                                                    value={fields.pincode}
-                                                    // To override the attribute name
-                                                    />
-                                                    {errors.pincode ? <label className="error"> {errors.pincode} </label> : ""}
-                                            </div>
-
-                                            <div className="mb-3 formValidation">
-                                                <label className="form-label" htmlFor="landmark.ControlInput1">Landmark: </label>
-                                                <input 
-                                                    placeholder="" 
-                                                    type="text" 
-                                                    name='landmark'
-                                                    id="landmark.ControlInput1" 
-                                                    className="form-control"  
-                                                    onBlur={form.handleBlurEvent}
-                                                    onChange={form.handleChangeEvent}
-                                                    value={fields.landmark}
-                                                    // To override the attribute name
-                                                    />
-
-                                                    {errors.landmark ? <label className="error"> {errors.landmark} </label> : ""}
-                                                    
-                                            </div>
-                                            <div className="mb-3 formValidation">
-                                                <label className="form-label" htmlFor="cityTown.ControlInput1">City / Town: </label>
-                                                <input 
-                                                    placeholder="" 
-                                                    type="text" 
-                                                    name='cityTown'
-                                                    id="cityTown.ControlInput1" 
-                                                    className="form-control"  
-                                                    onBlur={form.handleBlurEvent}
-                                                    onChange={form.handleChangeEvent}
-                                                    value={fields.cityTown}
-                                                    // To override the attribute name
-                                                    />
-                                                     {errors.cityTown ? <label className="error"> {errors.cityTown} </label> : ""}
-                                            </div>
-                                            {/*
-                                            <div className="mb-3 formValidation">
-                                                <label className="form-label" htmlFor="address.ControlInput1">Address<span style={{fontSize: "10px", fontWeight: 'bold'}}>(Area, Street, Sector, Village)</span>: </label>
-                                                <textarea 
-                                                    className="form-control" 
-                                                    id="address.ControlInput1" 
-                                                    rows="3"
-                                                    name="address"
-                                                    value={fields.address}
-                                                    onChange={form.handleChangeEvent}
-                                                    onBlur={form.handleBlurEvent}
-                                                    ></textarea>
-                                                    {errors.address ? <label className="error"> {errors.address} </label> : ""}
-                                            </div>
-
-                                            <div className="mb-3 formValidation">
-                                                <label className="form-label" htmlFor="pickup_place.ControlInput1">Street: </label>
-                                                <select
-                                                className='form-select'
-                                                id="pickup_place"
-                                                name="pickup_place"
-                                                value={fields.pickup_place}
-                                                onChange={form.handleChangeEvent}
-                                                onBlur={form.handleBlurEvent}
-                                                >
-                                                    <option value="">Select One</option>
-                                                    <option value="office">Taxi Office</option>
-                                                    <option value="town_hall">Town Hall</option>
-                                                    <option value="telepathy">We'll Guess!</option>
-                                                </select>
-
-                                                {errors.pickup_place ? <label className="error"> {errors.pickup_place} </label> : ""}
-                                            </div>
-                                        */}
-                                            <div className="mb-3 formValidation">
-                                                <button type="submit" className="signupButton btn btn-primary">Save Address</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </Accordion.Body>
-                            </Accordion.Item>
-                            <Accordion.Item eventKey="1">
-                                <Accordion.Header><b>2 &nbsp;&nbsp;&nbsp; Item Details</b></Accordion.Header>
-                                <Accordion.Body>
-                                    <div className='col-md-12 buyOderDetails'>
+                                    {Object.keys(cartData).map((product_id, key) => (
+                                    <div className='col-md-12 buyOderDetails' key={"buyOderDetails-"+key}>
+                                        <div className={(cartData[product_id].quantity === 0)?"outOfStockItem":""}>
+                                            <span>{(cartData[product_id].quantity === 0)?"Out OF Stock":""}</span>
+                                        </div>
                                         <div style={{float: 'left'}}>
                                             <Image 
                                                 style={{width: '130px', height: '130px'}}
-                                                src={`${process.env.PUBLIC_URL}/assets/images/3.png`}
+                                                src={require(`../images/product/${cartData[product_id].image_name}`)} 
                                             />
                                         </div>
                                         <div className='buyProductInfo'>
-                                            <div className='productName' onClick={() => productDetailsFn(1)}>Huggies Dry Pant Diapers with Bubble Bed Technology - S</div>
+                                            <div className='productName' onClick={() => productDetailsFn(cartData[product_id].item_id)}>{cartData[product_id].company_name}</div>
                                             <div className='productNoPack'>Pack of 1</div>
                                             <div className='productDeliveryOn'>Delivery by Fri Apr 28 | ₹61</div>
-                                            <div className='productPrice'><span>₹500</span><span>₹400</span><span>20% OFF</span></div>
+                                            <div className='productPrice'><span>₹{cartData[product_id].offerPrice}</span><span>₹{cartData[product_id].price}</span><span>{cartData[product_id].newPercentage}{(cartData[product_id].newPercentage)>0?"% OFF":""}</span></div>
                                         </div>
                                         <div style={{ clear: 'both', marginTop: '135px'}}>
-                                            <div className='productAddRemoveImg' onClick={() => productAddRemoveImgFn('remove', 'x')}>
-                                                <Image 
-                                                    src={`${process.env.PUBLIC_URL}/assets/images/negative.png`}
-                                                    
-                                                />
+                                            { cartData[product_id].quantity > 0 &&
+                                            
+                                            <div>
+                                                <div className='productAddRemoveImg' onClick={() => productAddRemoveImgFn('remove', 'x')}>
+                                                    <Image 
+                                                        src={`${process.env.PUBLIC_URL}/assets/images/negative.png`}
+                                                        
+                                                    />
+                                                </div>
+                                                <div className='itemCartCount'>
+                                                    {itemCount["x"]}
+                                                </div>
+                                                <div className='productAddRemoveImg' onClick={() => productAddRemoveImgFn('add', 'x')}>
+                                                    <Image 
+                                                        src={`${process.env.PUBLIC_URL}/assets/images/posative.png`}
+                                                    />
+                                                </div>
                                             </div>
-                                            <div className='itemCartCount'>
-                                                {itemCount["x"]}
-                                            </div>
-                                            <div className='productAddRemoveImg' onClick={() => productAddRemoveImgFn('add', 'x')}>
-                                                <Image 
-                                                    src={`${process.env.PUBLIC_URL}/assets/images/posative.png`}
-                                                />
-                                            </div>
-                                            <div style={{marginLeft: '160px', fontWeight: 'bold', color: 'red', cursor: 'pointer'}} onClick={() => removeBuyItem('x')}>REMOVE</div>
+                                            }
+                                            <div style={{marginLeft: '160px', fontWeight: 'bold', color: 'red', cursor: 'pointer'}} onClick={() => removeItem(product_id, cartData[product_id].size)}>REMOVE</div>
                                             
                                         </div>
 
                                     </div>
+
+                                    ))}
+                                </Accordion.Body>
+                            </Accordion.Item>
+                            <Accordion.Item eventKey="1" disabled>
+                                <Accordion.Header><b>2 &nbsp;&nbsp;&nbsp; Enter Delivery Address</b></Accordion.Header>
+                                <Accordion.Body>
+                                    <h5>Address</h5>
+                                    {showAddress.length > 0 &&
+                                    showAddress.map((addressObj, key) => (
+                                        <div className='deliveryAddress' key={key+"-deliveryAddress"}>
+                                            <label>
+                                                <Form.Check
+                                                    label=""
+                                                    name="deleveryAddress"
+                                                    type="radio"
+                                                    id="deleveryAddress1"
+                                                    value={addressObj.id}
+                                                    onChange={(e) => { 
+                                                        setDeliveryAddress(addressObj.id+"-"+addressObj.pincode)
+                                                    }}
+                                                />
+                                              
+                                                <span className='fullAddressDetails'>{addressObj.name}, {addressObj.village}, {addressObj.landmark}, {addressObj.pincode}, {addressObj.mobile_no}, {addressObj.alternative_mobile_no}</span>
+                                            </label>
+                                            <span 
+                                                className='addressEdit'
+                                                onClick={(e) => { 
+                                                    editAddress(addressObj.id)
+                                                }}>Edit Address</span>
+
+                                            <span 
+                                                className='addressDelete'
+                                                onClick={(e) => { 
+                                                    deleteAddress(addressObj.id)
+                                                }}>Delete Address</span>
+                                            
+                                        </div>
+                                    ))}
                                     
-                                    <div className='col-md-12 buyOderDetails'>
-                                        <Image 
-                                            style={{width: '130px', height: '130px'}}
-                                            src={`${process.env.PUBLIC_URL}/assets/images/3.png`}
-                                        />
-                                        <div style={{marginTop: '5px'}}>
-                                            <div className='productAddRemoveImg' onClick={() => productAddRemoveImgFn('remove', 'y')}>
-                                                <Image 
-                                                    src={`${process.env.PUBLIC_URL}/assets/images/negative.png`}
-                                                />
+                                    <div className='addNewAddressLink' onClick={addNewAddress}>+ Add a new address </div>
+                                    <div className='addNewAddress' style={{display: openNewAddress, marginBottom: '70px'}}>
+                                        <div role="dialog" aria-modal="true" className="fade modal show" style={myStyle}>
+                                            <div className="modal-dialog">
+                                                <div className="modal-content">
+                                                    <div className="modal-header modalHeader">
+                                                        <div className="modal-title h4">Delivery Address</div>
+                                                        <button type="button" className="btn-close closeBtn" aria-label="Close"
+                                                        onClick={(e) => { 
+                                                            setOpenNewAddress("none")
+                                                        }}
+                                                        ></button>
+                                                    </div>
+                                                    <div className="modal-body" style={{paddingBottom: 0}}>  
+                                                        <div className="mb-3 formValidation">
+                                                            <label className="form-label" htmlFor="name.ControlInput1">Name: <span className='requiredfield'> *</span></label>
+                                                            <input 
+                                                                placeholder="" 
+                                                                type="text" 
+                                                                name='name'
+                                                                id="name.ControlInput1" 
+                                                                className="form-control" 
+                                                                onChange={handalChange}
+                                                                value={saveData.name}
+                                                                maxLength={255}
+                                                                // To override the attribute name
+                                                            data-attribute-name="Customer Name"
+                                                            data-async
+                                                                />
+                                                                {errors.name ? <label className="error"> {errors.name} </label> : ""}
+                                                        </div>
+
+                                                        <div className="mb-3 formValidation">
+                                                            <label className="form-label" htmlFor="mobile_no.ControlInput1">Mobile No: <span className='requiredfield'> *</span></label>
+                                                            <input 
+                                                                placeholder="" 
+                                                                type="tel" 
+                                                                name='mobile_no'
+                                                                id="mobile_no.ControlInput1" 
+                                                                className="form-control" 
+                                                                onChange={handalChange}
+                                                                value={saveData.mobile_no}
+                                                                maxLength={10}
+                                                                // To override the attribute name
+                                                            data-attribute-name="Mobile No."
+                                                            data-async
+                                                                />
+                                                                {errors.mobile_no ? <label className="error"> {errors.mobile_no} </label> : ""}
+                                                        </div>
+
+                                                        <div className="mb-3 formValidation">
+                                                            <label className="form-label" htmlFor="alternative_mobile_no.ControlInput1">Alternative Mobile No.<span style={{fontSize: "10px", fontWeight: 'bold'}}>( or Whatsapp No.)</span>: </label>
+                                                            <input 
+                                                                placeholder="" 
+                                                                type="tel" 
+                                                                name='alternative_mobile_no'
+                                                                id="alternative_mobile_no.ControlInput1" 
+                                                                className="form-control" 
+                                                                
+                                                                onChange={handalChange}
+                                                                value={saveData.alternative_mobile_no}
+                                                                maxLength={10}
+                                                                // To override the attribute name
+                                                            data-attribute-name="Alternative Mobile No."
+                                                            data-async
+                                                                />
+                                                                {errors.alternative_mobile_no ? <label className="error"> {errors.alternative_mobile_no} </label> : ""}
+                                                        </div>
+                                                        
+                                                        <div className="mb-3 formValidation">
+                                                            <label className="form-label" htmlFor="landmark.village">Village/Ward no.: <span className='requiredfield'> *</span></label>
+                                                            <input 
+                                                                placeholder="" 
+                                                                type="text" 
+                                                                name='village'
+                                                                id="landmark.village" 
+                                                                className="form-control"  
+                                                                
+                                                                onChange={handalChange}
+                                                                value={saveData.village}
+                                                                // To override the attribute name
+                                                                maxLength={255}
+                                                                />
+                                                            {errors.village ? <label className="error"> {errors.village} </label> : ""}
+                                                        </div>
+
+                                                        <div className="mb-3 formValidation">
+                                                            <label className="form-label" htmlFor="pincode.ControlInput1">Pincode: <span className='requiredfield'> *</span></label>
+                                                            <input 
+                                                                placeholder="" 
+                                                                type="text" 
+                                                                name='pincode'
+                                                                id="pincode.ControlInput1" 
+                                                                className="form-control" 
+                                                                
+                                                                onChange={handalChange}
+                                                                value={saveData.pincode}
+                                                                maxLength={6}
+                                                                // To override the attribute name
+                                                                />
+                                                                {errors.pincode ? <label className="error"> {errors.pincode} </label> : ""}
+                                                        </div>
+
+                                                        <div className="mb-3 formValidation">
+                                                            <label className="form-label" htmlFor="landmark.ControlInput1">Landmark: <span className='requiredfield'> *</span></label>
+                                                            <input 
+                                                                placeholder="" 
+                                                                type="text" 
+                                                                name='landmark'
+                                                                id="landmark.ControlInput1" 
+                                                                className="form-control"  
+                                                                
+                                                                onChange={handalChange}
+                                                                value={saveData.landmark}
+                                                                // To override the attribute name
+                                                                maxLength={255}
+                                                                />
+
+                                                                {errors.landmark ? <label className="error"> {errors.landmark} </label> : ""}
+                                                                
+                                                        </div>
+                                                        <div className="mb-3 formValidation">
+                                                            <label className="form-label" htmlFor="city.ControlInput1">City / Town: <span className='requiredfield'> *</span></label>
+                                                            <input 
+                                                                placeholder="" 
+                                                                type="text" 
+                                                                name='city'
+                                                                id="city.ControlInput1" 
+                                                                className="form-control"  
+                                                                
+                                                                onChange={handalChange}
+                                                                value={saveData.city}
+                                                                maxLength={255}
+                                                                // To override the attribute name
+                                                                />
+                                                                {errors.city ? <label className="error"> {errors.city} </label> : ""}
+                                                        </div>
+                                                        
+                                                        <div className="mb-3 formValidation">
+                                                            <button type="button" onClick={onSubmit} className="signupButton btn btn-primary">Save Address</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div className='itemCartCount'>
-                                             {itemCount["y"]}
-                                            </div>
-                                            <div className='productAddRemoveImg' onClick={() => productAddRemoveImgFn('add', 'y')}>
-                                                <Image 
-                                                    src={`${process.env.PUBLIC_URL}/assets/images/posative.png`}
-                                                />
-                                            </div>
-                                            
                                         </div>
-                                        
-                                    </div>
-                                    <div className='col-md-12 buyOderDetails'>
-                                        <Image 
-                                            style={{width: '130px', height: '130px'}}
-                                            src={`${process.env.PUBLIC_URL}/assets/images/3.png`}
-                                        />
-                                        <div style={{marginTop: '5px'}}>
-                                            <div className='productAddRemoveImg' onClick={() => productAddRemoveImgFn('remove', 'z')}>
-                                                <Image 
-                                                    src={`${process.env.PUBLIC_URL}/assets/images/negative.png`}
-                                                />
-                                            </div>
-                                            <div className='itemCartCount'>
-                                            {itemCount["z"]}
-                                            </div>
-                                            <div className='productAddRemoveImg' onClick={() => productAddRemoveImgFn('add', 'z')}>
-                                                <Image 
-                                                    src={`${process.env.PUBLIC_URL}/assets/images/posative.png`}
-                                                />
-                                            </div>
-                                            
-                                        </div>
-                                        
                                     </div>
                                 </Accordion.Body>
                             </Accordion.Item>
                             
+                            
                             <Accordion.Item eventKey="2">
                                 <Accordion.Header><b>3 &nbsp;&nbsp;&nbsp;Payment Option</b></Accordion.Header>
                                 <Accordion.Body>
-                                Option
+                                <div className='deliveryAddress'>
+                                    <label>
+                                        <Form.Check
+                                            label=""
+                                            name="payment"
+                                            type="radio"
+                                            id="payment"
+                                            value="1"
+                                            defaultChecked
+                                        />
+                                        
+                                        <span className='fullAddressDetails'>Cash on Delivery</span>
+                                    </label>
+                                    </div>
                                 </Accordion.Body>
                             </Accordion.Item>
                         </Accordion>
@@ -455,17 +562,21 @@ const Checkout = () => {
                             <div className='orderPriceDetails'>Order Price Details</div>
                             <div className='PriceDetailsItemCount'>
                                 <div className='PriceDetailsLeft'>Items: </div>
-                                <div className='PriceDetailsRight'>Rs: 3000/-</div>
+                                <div className='PriceDetailsRight'>Rs: {totalPrice}/-</div>
                             </div>
                             
                             <div className='PriceDetailsDeliveryCharge'>
                                 <div className='PriceDetailsLeft'>Delivery Charges: </div>
-                                <div className='PriceDetailsRight'>Rs: 0/-</div>
+                                <div className='PriceDetailsRight'>Rs: {deliveryCharge}/-</div>
                             </div>
 
                             <div className='PriceDetailsTotalAmount'>
                                 <div className='PriceDetailsLeft'>Total Amount: </div>
-                                <div className='PriceDetailsRight'>Rs: 3000/-</div>
+                                <div className='PriceDetailsRight'>Rs: {grossTotal}/-</div>
+                            </div>
+
+                            <div className='continueToBuy' onClick={continueToBuy}>
+                                Continue To Buy
                             </div>
                         </div>
                     </Col>

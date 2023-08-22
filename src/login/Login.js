@@ -8,6 +8,8 @@ import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import axiosInstance from '../components/axiosInstance';
+
 
 
 //export class Index extends Component {
@@ -54,10 +56,22 @@ const Login = (props) => {
             // Encode the JSON string using Base64
             const encodedData = window.btoa(jsonData);
             localStorage.setItem("ioc", encodedData);
+
+            let cartArray = JSON.parse(localStorage.getItem('cart')) || [];
+            if(cartArray.length > 0){
+              saveCartDataWhenLogin(cartArray);
+            }
+            const mergedArray = cartArray.concat(responseData.product_ids);
+            
+            localStorage.setItem('cart', JSON.stringify(Array.from(new Set(mergedArray))));
+
             toast.success("Login successfully", {
               position: toast.POSITION.TOP_CENTER,
             });
             props.modalHide();
+            if(cartArray.length === 0){
+              window.location.reload();
+            }
           })
           .catch((error) => {
             //console.log(error);
@@ -68,6 +82,18 @@ const Login = (props) => {
           })
         }
       };
+
+    // Before login cat data to be insert
+    const saveCartDataWhenLogin = (cartArray) =>{
+      let data = {product_ids: cartArray};
+      axiosInstance.post('/saveCartDataWhenLogin', data)
+      .then((response) => {
+        window.location.reload();
+      })
+      .catch((error) => {
+          console.log('Error:', error);
+      });
+    }
     
     /* Form Validation end */
     let myStyle = {
@@ -77,7 +103,6 @@ const Login = (props) => {
         
     return (
       <>
-        <ToastContainer />
         {isLoading ? <Loader /> : ""}
         <div role="dialog" aria-modal="true" className="fade modal show" style={myStyle}>
             <div className="modal-dialog">

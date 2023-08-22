@@ -126,7 +126,6 @@ const SignUp = (props) => {
 
     return (
      <>
-        <ToastContainer />
         {isLoading ? <Loader /> : ""}
         <div role="dialog" aria-modal="true" className="fade modal show" style={myStyle}>
             <div className="modal-dialog">

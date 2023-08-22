@@ -35,8 +35,8 @@ const Home = ({data2}) => {
     }, [paramValue]);
     const navigate = useNavigate();
     function productDetailsFn(id){
-       // navigate("items/"+id);
-        window.open("items/"+id, "_blank");
+        navigate("items/"+id);
+        //window.open("items/"+id, "_blank");
         console.log("productDetailsFn", id);
     }
 
@@ -106,12 +106,13 @@ const Home = ({data2}) => {
                                             style={{borderRadius: "50%"}}
                                             src={require(`../images/categories/${object.cat_image}`)} 
                                             onClick={(e) => { 
-                                                productDetailsFn(object.category_name)
+                                                productDetailsFn(object.category_name);
+                                                localStorage.removeItem("searchTermForType")
                                             }}
                                         />
                                     }
                                 </div>
-                                <div className='categoriesDesc' title='Satrani Art Silk Saree with Blouse Piece' style={{height: '30px'}}>{object.category_name} </div>                             
+                                <div className='categoriesDesc' title='Satrani Art Silk Saree with Blouse Piece' style={{height: '30px'}}>All {object.category_name} </div>                             
                             </div>
                         </Col>
                     ))}
@@ -122,6 +123,7 @@ const Home = ({data2}) => {
                             {Object.keys(xxx).length > 0 && 
                             Object.keys(xxx).map((mainObj, key) => (
                                 <>
+                                {/* For Desktop */}
                                 <Col md={12} className='homePageitemList homePageitemListForDesktop' key={"homePageitemList"+key}>
                                     <div className='SimilarProducts'>
                                         <div id="SimilarProductsScrollMenu">
@@ -132,9 +134,11 @@ const Home = ({data2}) => {
                                                     className='similarTypeProductImg'
                                                     src={require(`../images/product/${obj.image_name}`)} 
                                                     onClick={(e) => { 
-                                                        productDetailsFn(obj.item_id)
+                                                        productDetailsFn(obj.category_name);
+                                                        localStorage.setItem("searchTermForType", obj.sub_category_id);
                                                     }}
                                                 />
+                                                <div>{obj.sub_category_name}</div>
                                                 <div id={index} className='productPrice'>
                                                     <span className='offerPrice'>₹{obj.price}</span>
                                                     <span className='actualPrice'>₹{obj.offerPrice}</span>
@@ -146,12 +150,34 @@ const Home = ({data2}) => {
                                         </div>
                                     </div>
                                 </Col>
+                                <React.StrictMode>
+                                    <div className="scroll-container">
+                                     {xxx[mainObj].map((obj, index) => (
+                                            <div key={"Jewellery-scroll-container-"+index}>
+                                                <Image
+                                                    className='similarTypeProductImg'
+                                                    src={require(`../images/product/${obj.image_name}`)} 
+                                                    onClick={(e) => { 
+                                                        productDetailsFn(obj.category_name);
+                                                        localStorage.setItem("searchTermForType", obj.sub_category_id);
+                                                    }}
+                                                />
+                                                <div>{obj.sub_category_name}</div>
+                                                <div id={index} className='productPrice'>
+                                                    <span className='offerPrice'>₹{obj.price}</span>
+                                                    <span className='actualPrice'>₹{obj.offerPrice}</span>
+                                                    <span className='offerPercentage'>20% OFF</span>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </React.StrictMode>
                                 
                                 {/** For Mobile */}
 
-                                <Col md={12} className='homePageitemListForMobile' key={"homePageitemListMobile_"+key}>
+                               {/* <Col md={12} className='homePageitemListForMobile' key={"homePageitemListMobile_"+key}>
                                 
-                                    {/* For Mobile */}
+                                    
                                     <ImageCarousel
                                         showThumbs={false}
                                         showStatus={false}
@@ -169,13 +195,14 @@ const Home = ({data2}) => {
                                                     src={require(`../images/product/${obj.image_name}`)} 
                                                     alt={`Image ${index + 1}`}
                                                     onClick={(e) => { 
-                                                        productDetailsFn(obj.item_id)
+                                                        productDetailsFn(obj.category_name);
+                                                        localStorage.setItem("searchTermForType", obj.sub_category_id);
                                                     }}
                                                 />
                                             </div>
                                         ))}
                                     </ImageCarousel>
-                                </Col>
+                                </Col>*/}
                                 </>
                             ))
                             }

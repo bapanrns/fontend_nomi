@@ -8,11 +8,13 @@ import Accordion from 'react-bootstrap/Accordion';
 import '../../components/css/leftNavBars.css';
 
 const LeftNavBars = (props) => {
-    const { itemType } = props;
-    console.log("param1:", itemType);
+    const { itemType, subCatId } = props;
+    console.log("subCatId:", subCatId);
     useEffect(() => {
         getFabricDetails();
         getItemsList(itemType);
+        ///console.log(localStorage);
+        setSelectedItemsForType([...selectedItemsForType, subCatId.toString()]);
     }, []);
 
     /* ============================ Fabric Start ============================ */
@@ -194,7 +196,7 @@ const LeftNavBars = (props) => {
     }
     /* ================================= Discount end ========================  */
         return (
-            <Accordion defaultActiveKey={['2']} alwaysOpen>
+            <Accordion defaultActiveKey={['1']} className='leftNavBarsForItems'>
                 <Accordion.Item eventKey="0">
                     <Accordion.Header>Fabric</Accordion.Header>
                     <Accordion.Body className='accordionBody'>
@@ -221,33 +223,31 @@ const LeftNavBars = (props) => {
                     </Accordion.Body>
                 </Accordion.Item>
                 <Accordion.Item eventKey="1">
-                    <Accordion.Header>Color</Accordion.Header>
+                    <Accordion.Header>Type</Accordion.Header>
                     <Accordion.Body className='accordionBody'>
                         <Form.Group className='search-container'>
                             <Form.Control
                                 type="text"
                                 placeholder="Search"
                                 className='search-input'
-                                value={searchTermForColor}
-                                onChange={handleSearchChangeForColor}
+                                value={searchTermForType}
+                                onChange={handleSearchChangeForType}
                             />
                         </Form.Group>
-
-                        {filteredOptionsForColor.map((option) => (
-                            <div className='colorPanel' key={option.code}>
-                                <Form.Check
-                                    type="checkbox"
-                                    id={`checkbox-color-${option.code}`}
-                                    label={option.label}
-                                    value={option.label}
-                                    checked={selectedItemsForColor.includes(option.label)}
-                                    onChange={handleCheckboxChangeForColor}
-                                />
-                                <span  className='colorSpan' style={{background: option.code}}></span>
-                            </div>
+                        {filteredOptionsForType.map((option, key) => (
+                            <Form.Check
+                                key={"type"+key}
+                                type="checkbox"
+                                id={`checkbox-type-${key}`}
+                                label={option.label}
+                                value={option.id}
+                                checked={selectedItemsForType.includes(option.id.toString())}
+                                onChange={handleCheckboxChangeForType}
+                            />
                         ))}
                     </Accordion.Body>
                 </Accordion.Item>
+                
                 <Accordion.Item eventKey="2">
                     <Accordion.Header>Price</Accordion.Header>
                     <Accordion.Body className='accordionBody'>
@@ -281,27 +281,30 @@ const LeftNavBars = (props) => {
                     </Accordion.Body>
                 </Accordion.Item>
                 <Accordion.Item eventKey="4">
-                    <Accordion.Header>Type</Accordion.Header>
+                    <Accordion.Header>Color</Accordion.Header>
                     <Accordion.Body className='accordionBody'>
                         <Form.Group className='search-container'>
                             <Form.Control
                                 type="text"
                                 placeholder="Search"
                                 className='search-input'
-                                value={searchTermForType}
-                                onChange={handleSearchChangeForType}
+                                value={searchTermForColor}
+                                onChange={handleSearchChangeForColor}
                             />
                         </Form.Group>
-                        {filteredOptionsForType.map((option, key) => (
-                            <Form.Check
-                                key={"type"+key}
-                                type="checkbox"
-                                id={`checkbox-type-${key}`}
-                                label={option.label}
-                                value={option.id}
-                                checked={selectedItemsForType.includes(option.id.toString())}
-                                onChange={handleCheckboxChangeForType}
-                            />
+
+                        {filteredOptionsForColor.map((option) => (
+                            <div className='colorPanel' key={option.code}>
+                                <Form.Check
+                                    type="checkbox"
+                                    id={`checkbox-color-${option.code}`}
+                                    label={option.label}
+                                    value={option.label}
+                                    checked={selectedItemsForColor.includes(option.label)}
+                                    onChange={handleCheckboxChangeForColor}
+                                />
+                                <span  className='colorSpan' style={{background: option.code}}></span>
+                            </div>
                         ))}
                     </Accordion.Body>
                 </Accordion.Item>

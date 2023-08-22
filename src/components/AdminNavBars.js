@@ -10,7 +10,7 @@ import NewPasswordModal from '../login/NewPassword';
 import SignUp from '../login/SignUp';
 
 
-import './profile.css';
+import '../components/css/profile.css';
 
   const AdminNavBars = () => {
 

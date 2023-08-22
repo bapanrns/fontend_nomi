@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ReactFormInputValidation from "react-form-input-validation";
 
-import '../components/profile.css';
+import '../components/css/profile.css';
 
 export class ForgotPassword extends Component {
     constructor(props) {
