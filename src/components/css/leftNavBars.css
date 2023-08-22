@@ -29,3 +29,10 @@
     background-position-y: 7px;
     background-position-x: 4px;
 }
+
+@media (max-width: 768px) {
+
+    .leftNavBarsForItems{
+        display: none;
+    }
+}
