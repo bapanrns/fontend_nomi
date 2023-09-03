@@ -46,6 +46,9 @@ const ItemDetails = (e) => {
         youtube_link: "",
         quantity: []
     }); 
+    const [sellPrice, setSellPrice] = useState(0);
+    const [offerPrice, setOfferPrice] = useState(0);
+    const [newPercentage, setNewPercentage] = useState(0);
     const getItemDetails = (id) => {
         setIsLoading(true);
         setItemSize("");
@@ -61,6 +64,11 @@ const ItemDetails = (e) => {
             //console.log(response.data[0]);
             setItemObj(response.data[0]);
             setIsLoading(false);
+            // select size
+            setItemSize(response.data[0]["quantity"][0]["size"]);
+            setSellPrice(response.data[0]["quantity"][0]['sell_price']);
+            setOfferPrice(response.data[0]["quantity"][0]['offerPrice']);
+            setNewPercentage(response.data[0]["quantity"][0]['newPercentage']);
             if(response.data[0]["group_id"] > 0){
                 getSameColorWiseItem( response.data[0]["group_id"]);
             }else{
@@ -247,6 +255,10 @@ const ItemDetails = (e) => {
         .then((response) => {
             if(response.data.total_item > 0){
                 setItemSize(size);
+                //console.log(response.data);
+                setSellPrice(response.data['price']);
+                setOfferPrice(response.data['offerPrice']);
+                setNewPercentage(response.data['newPercentage']);
             }else{
                 setItemSize("");
                 toast.error('Out of Stock', {
@@ -316,9 +328,20 @@ const ItemDetails = (e) => {
                             <div style={{marginTop: "25px", marginBottom: "25px"}}>
                                 <p className='headdingP' style={{color: '#00cfff', fontWeight: 'bold'}}>Spacial Price: </p>
                                 
-                                <h5>Rs: <b>
+                                
                                     {itemsObj["quantity"].length > 0 &&
-                                    itemsObj["quantity"][0]["sell_price"]}/-</b></h5>
+                                    
+                                    
+                                    <div id="123" className='productPrice'>
+                                        <span className='offerPrice' style={{fontSize: "18px"}}>₹{sellPrice}</span>
+                                        <span className='actualPrice' style={{fontSize: "18px"}}>₹{offerPrice}</span>
+                                        <span className='offerPercentage' style={{fontSize: "18px"}}>{newPercentage} {newPercentage>0?"% OFF":""}</span>
+                                    </div>
+                                    
+                                    }
+
+
+                                    
                             </div>
                             <div style={{marginBottom: "25px"}}>
                                 <p className='headdingP'>More Colors: </p>
@@ -398,7 +421,7 @@ const ItemDetails = (e) => {
                                 </div>
                                 <div style={{width: "auto", display: "flex", marginBottom: "5px"}}>
                                     {
-                                        ["M", "L", "XL", "XXL"].map(( size, index ) => (
+                                        ["M", "L", "XL", "2XL"].map(( size, index ) => (
                                     
                                     <div className={(itemSize.toString() === size.toString())?"form-check check-size active-size":"form-check check-size"} key={"check-size-key-"+index}>
                                         <label className={itemsObj.productSize.includes(size.toString())?"form-check-label check-size-label":"form-check-label check-size-label check-size-label-desiabled"} htmlFor={size.toString()}>
@@ -514,7 +537,7 @@ const ItemDetails = (e) => {
                                             <div id={index} className='productPrice'>
                                                 <span className='actualPrice'>₹{obj.offerPrice}</span>
                                                 <span className='offerPrice'>₹{obj.price}</span>
-                                                <span className='offerPercentage'>% OFF{obj.item_id}</span>
+                                                <span className='offerPercentage'>{obj.newPercentage} {obj.newPercentage>0?"% OFF":""}</span>
                                             </div>
                                         </div>
                                     ))}

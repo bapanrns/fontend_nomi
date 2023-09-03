@@ -135,7 +135,7 @@ const Home = () => {
                                             <div className='productPrice'>
                                                 <span className='offerPrice'>₹{object.price}</span>
                                                 <span className='actualPrice'>₹{object.offerPrice}</span>
-                                                <span className='offerPercentage'>{object.product_offer_percentage}% OFF</span>
+                                                <span className='offerPercentage'>{object.newPercentage} {(object.newPercentage > 0)?"% OFF":""}</span>
                                             </div>       
                                         </div>
                                     </Col>

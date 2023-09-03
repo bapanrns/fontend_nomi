@@ -88,6 +88,10 @@ import '../components/css/profile.css';
         }
     }
 
+    const myOrder=()=>{
+        navigate("/my-order");
+    }
+
         return (
             <Navbar bg="light" expand="lg" className='navbarBg'>
                 <Container fluid>
@@ -105,7 +109,7 @@ import '../components/css/profile.css';
                                 <NavDropdown title="User Name" id="navbarScrollingDropdown">
                                     <NavDropdown.Item href="#action3">My Profile</NavDropdown.Item>
                                     <NavDropdown.Divider />
-                                    <NavDropdown.Item href="#action4">
+                                    <NavDropdown.Item href="my-order" onClick={myOrder}>
                                         Orders
                                     </NavDropdown.Item>
                                     <NavDropdown.Divider />

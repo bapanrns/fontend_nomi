@@ -94,6 +94,7 @@ const Products = () => {
             checkboxSelection: checkboxSelection,
             headerCheckboxSelection: headerCheckboxSelection,
         },
+        { field: 'id', headerName: "PID", width: 90 },
         { field: 'category_id', headerName: "Category", width: 150 },
         { field: 'sub_category_id', headerName: "Sub Category", width: 150 },
         { field: 'group_id', headerName: "Group Id", width: 90 },

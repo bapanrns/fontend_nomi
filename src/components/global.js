@@ -42,6 +42,15 @@ const careInstruction = [
     {"value": "Machine Wash", label: "Machine Wash"},
 ]
 
+const reasonsForCancellation = {}
+reasonsForCancellation["1"]="Expected delivery time is too long"
+reasonsForCancellation["2"]="Wrong address Selected"
+reasonsForCancellation["3"]="Incorrect product size/color/type ordered"
+reasonsForCancellation["4"]="Product not required anymore"
+reasonsForCancellation["5"]="Product price has mistake"
+reasonsForCancellation["6"]="Ordered by mistake"
+reasonsForCancellation["7"]="Purchased product from somewhere else"
+
 const globalVariable = {
     "admin_product_image_url": "/images/product/",
     "product_bill": "",
@@ -49,6 +58,7 @@ const globalVariable = {
     "color": colorObj,
     "priceOptionForWomen": priceOptionForWomen,
     "occassion": occassion,
-    "careInstruction": careInstruction
+    "careInstruction": careInstruction,
+    "reasonsForCancellation": reasonsForCancellation
 };
 export default globalVariable;

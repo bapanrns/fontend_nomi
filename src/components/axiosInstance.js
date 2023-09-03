@@ -54,7 +54,7 @@ instance.interceptors.response.use(
           localStorage.setItem("cart","[]");
         }
         localStorage.setItem("login", false);
-        localStorage.removeItem('ioc');
+        //localStorage.removeItem('ioc');
          // Redirect to login page
     }else if(error.response && error.response.status === 403){
         toast.error('Unauthorized: Insufficient privileges.', {

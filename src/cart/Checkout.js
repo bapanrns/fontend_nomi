@@ -121,27 +121,32 @@ const Checkout = (props) => {
 
             console.log(errors)
         } else {
-            
-           // console.log("MAKE AN API CALL", fields);
-            event.preventDefault();
-            
-            axiosInstance.post('/new_address', saveData)
-            .then((response) => {
-                if(response.data.success > 0){
-                    toast.success('Delivery address save successfully.', {
-                        position: toast.POSITION.TOP_CENTER,
-                    });
-                    setOpenNewAddress("none");
-                    getAddress();
-                }else{
-                    toast.error('Error.', {
-                        position: toast.POSITION.TOP_CENTER,
-                    });
-                }
-            })
-            .catch((error) => {
-                console.log('Error:', error);
-            });
+            if(["721648", "721636"].includes(saveData.pincode)){
+            // console.log("MAKE AN API CALL", fields);
+                event.preventDefault();
+                
+                axiosInstance.post('/new_address', saveData)
+                .then((response) => {
+                    if(response.data.success > 0){
+                        toast.success('Delivery address save successfully.', {
+                            position: toast.POSITION.TOP_CENTER,
+                        });
+                        setOpenNewAddress("none");
+                        getAddress();
+                    }else{
+                        toast.error('Error.', {
+                            position: toast.POSITION.TOP_CENTER,
+                        });
+                    }
+                })
+                .catch((error) => {
+                    console.log('Error:', error);
+                });
+            }else{
+                toast.warn('We are not available in the '+saveData.pincode+' postal code.', {
+                    position: toast.POSITION.TOP_CENTER,
+                });
+            }
 
         }
     };
@@ -225,20 +230,23 @@ const Checkout = (props) => {
         });
     }
     const removeItem = (keyToDeleteId, size) =>{
-        let data = {itemIds: keyToDeleteId};
-        axiosInstance.post('/removeCartData', data)
-        .then((response) => {
-            setIsLoading(false);
-            if(response.data.success){
-              props.removeCartItem(keyToDeleteId+"@"+size);
-              getCartData();
-            }else{
-              alert('Not removed');
-            }
-        })
-        .catch((error) => {
-            console.log('Error:', error);
-        });
+        const confirmed = window.confirm('Are you sure you want to removed this item?');
+        if (confirmed) {
+            let data = {itemIds: keyToDeleteId};
+            axiosInstance.post('/removeCartData', data)
+            .then((response) => {
+                setIsLoading(false);
+                if(response.data.success){
+                props.removeCartItem(keyToDeleteId+"@"+size);
+                getCartData();
+                }else{
+                alert('Not removed');
+                }
+            })
+            .catch((error) => {
+                console.log('Error:', error);
+            });
+        }
     }
 
   
@@ -266,14 +274,30 @@ const Checkout = (props) => {
         }else if(deliveryAddress !== ""){
             console.log(total_items);
 
-            let data = {deliveryAddress: deliveryAddress, items: total_items};
+            let data = {deliveryAddress: deliveryAddress, items: JSON.parse(localStorage.getItem("cart"))};
             //console.log(data);
+            console.log("===", data.items.length)
+            setIsLoading(true);
             axiosInstance.post('/continueToBuy', data)
             .then((response) => {
                 setIsLoading(false);
+                if(parseInt(data.items.length) === parseInt(response.data.outOfStockItemArray.length)){
+                    toast.warn('All items are out of stack.', {
+                        position: toast.POSITION.TOP_CENTER,
+                    });
+                }else{
+                    for(let i=0; i<response.data.buy_item.length; i++){
+                        props.removeCartItem(response.data.buy_item[i], true);
+                    }
+                    toast.success('Order place successfully.', {
+                        position: toast.POSITION.TOP_CENTER,
+                    });
+                    navigate("../my-order/");
+                }
             })
             .catch((error) => {
                 console.log('Error:', error);
+                setIsLoading(false);
             });
         }else{
             toast.warn('Please select a delivery address.', {
@@ -309,17 +333,18 @@ const Checkout = (props) => {
                                         <div className={(cartData[product_id].quantity === 0)?"outOfStockItem":""}>
                                             <span>{(cartData[product_id].quantity === 0)?"Out OF Stock":""}</span>
                                         </div>
-                                        <div style={{float: 'left'}}>
+                                        <div style={{float: 'left', position: "relative"}}>
                                             <Image 
                                                 style={{width: '130px', height: '130px'}}
                                                 src={require(`../images/product/${cartData[product_id].image_name}`)} 
                                             />
+                                            <span className='nId'>N{product_id}</span>
                                         </div>
                                         <div className='buyProductInfo'>
                                             <div className='productName' onClick={() => productDetailsFn(cartData[product_id].item_id)}>{cartData[product_id].company_name}</div>
                                             <div className='productNoPack'>Pack of 1</div>
                                             <div className='productDeliveryOn'>Delivery by Fri Apr 28 | ₹61</div>
-                                            <div className='productPrice'><span>₹{cartData[product_id].offerPrice}</span><span>₹{cartData[product_id].price}</span><span>{cartData[product_id].newPercentage}{(cartData[product_id].newPercentage)>0?"% OFF":""}</span></div>
+                                            <div className='productPrice'><span>₹{cartData[product_id].offerPrice}</span><span>₹{cartData[product_id].price}</span><span>{(cartData[product_id].newPercentage >0)?cartData[product_id].newPercentage:""}{(cartData[product_id].newPercentage)>0?"% OFF":""}</span></div>
                                         </div>
                                         <div style={{ clear: 'both', marginTop: '135px'}}>
                                             { cartData[product_id].quantity > 0 &&

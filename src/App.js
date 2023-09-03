@@ -17,6 +17,7 @@ import Checkout from './cart/Checkout';
 import Product from './admin/product/Product';
 import ProductAdd from './admin/product/ProductAdd';
 import ProductActive from './admin/product/ProductActive';
+import MyOrder from './cart/Order';
 
 import Category from './admin/category/Category';
 import AddCategory from './admin/category/AddCategory';
@@ -76,7 +77,17 @@ function App() {
         axiosInstance.post('/saveCartData', data)
         .then((response) => {
             setIsLoading(false);
-            setAddToCartData(itemIds, cartArray, itemSize);
+            if(response.data.errorMessage !==""){
+              // Items are not available.
+              toast.warn(response.data.errorMessage, {
+                position: toast.POSITION.TOP_CENTER,
+              }); 
+            }else{
+              setAddToCartData(itemIds, cartArray, itemSize);
+              toast.success('Item added to cart successfully.', {
+                position: toast.POSITION.TOP_CENTER,
+              }); 
+            }
         })
         .catch((error) => {
             console.log('Error:', error);
@@ -90,23 +101,21 @@ function App() {
   const setAddToCartData=(itemIds, cartArray, size)=>{
     cartArray.push(itemIds+"@"+size);
     setCartValu(cartArray.length);
-    localStorage.setItem('cart', JSON.stringify(cartArray));
-
-    toast.success('Item added to cart successfully.', {
-      position: toast.POSITION.TOP_CENTER,
-    });      
+    localStorage.setItem('cart', JSON.stringify(cartArray));     
   }
 
-  const removeCartItem=(itemToRemove)=>{
+  const removeCartItem=(itemToRemove, buyCompleted=false)=>{
     
     if(localStorage.getItem("login")){
       removeAddToCartData(itemToRemove);
     }else{
       removeAddToCartData(itemToRemove);
     }
-    toast.success('Item removed from cart successfully.', {
-      position: toast.POSITION.TOP_CENTER,
-    });
+    if(!buyCompleted){
+      toast.success('Item removed from cart successfully.', {
+        position: toast.POSITION.TOP_CENTER,
+      });
+    }
   }
 
   const removeAddToCartData=(itemToRemove)=>{
@@ -133,6 +142,7 @@ function App() {
           
           <Route path="items/:id" element={<Items />} />
 
+          <Route path="my-order" element={<MyOrder />} />
 
           {/* -------------------------------- Admin --------------------------------- */}
 
