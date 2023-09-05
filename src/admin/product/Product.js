@@ -108,7 +108,7 @@ const Products = () => {
         { field: 'quantity_m', headerName: "M", width: 150, cellRendererFramework: TooltipRenderer },
         { field: 'quantity_xl', headerName: "XL", width: 150, cellRendererFramework: TooltipRenderer },
         { field: 'quantity_2xl', headerName: "2XL", width: 150, cellRendererFramework: TooltipRenderer },
-        { field: 'id', headerName: "Action", cellRenderer: ActionCellRenderer, width: 300 }
+        { field: 'id', headerName: "Action", cellRenderer: ActionCellRenderer, width: 400 }
     ])
 
     function UpdateGroupIdHandleClick(){

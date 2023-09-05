@@ -17,7 +17,11 @@ import Checkout from './cart/Checkout';
 import Product from './admin/product/Product';
 import ProductAdd from './admin/product/ProductAdd';
 import ProductActive from './admin/product/ProductActive';
+import StocksAdd from './admin/Stock/StocksAdd';
+import Stocks from './admin/Stock/Stocks';
+
 import MyOrder from './cart/Order';
+
 
 import Category from './admin/category/Category';
 import AddCategory from './admin/category/AddCategory';
@@ -32,6 +36,8 @@ import BuyDetailsAdd from "./admin/productBuyDetails/BuyDetailsAdd";
 import ShopDetailsAdd from "./admin/productBuyDetails/ShopAdd";
 import ShopDetails from "./admin/productBuyDetails/ShopDetails";
 import BuyDetails from "./admin/productBuyDetails/BuyDetails";
+
+import Order from "./admin/order/order";
 
 
 // Notification
@@ -180,6 +186,28 @@ function App() {
             }
           />
           {/*<Route path="admin/product" element={<Product />} />*/}
+
+          <Route
+            path="admin/stocks/:id"
+            element={
+              isAuthorized('Admin') ? (
+                <Stocks />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            }
+          />
+          
+          <Route
+            path="admin/stocks_add/:id"
+            element={
+              isAuthorized('Admin') ? (
+                <StocksAdd />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            }
+          />
 
           <Route
             path="admin/product_active/:id"
@@ -370,7 +398,22 @@ function App() {
                 <Navigate to="/" replace />
               )
             }
+
+            
           />
+          <Route
+            path="admin/order"
+            element={
+              isAuthorized('Admin') ? (
+                <Order />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            }
+
+            
+          />
+
           {/*<Route path="admin/buy_details" element={<BuyDetails />} />*/}
         </Routes>
       </BrowserRouter>

@@ -527,13 +527,16 @@ const ItemDetails = (e) => {
                                     <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>
                                     {similarProducts.map(( obj, index ) => (
                                         <div key={index}>
-                                            <Image
-                                                className='similarTypeProductImg'
-                                                src={require(`../images/product/${obj.image_name}`)} 
-                                                onClick={(e) => { 
-                                                    productDetailsFn(`${obj.item_id}`)
-                                                }}
-                                            />
+                                            <div style={{position: "relative"}}>
+                                                <Image
+                                                    className='similarTypeProductImg'
+                                                    src={require(`../images/product/${obj.image_name}`)} 
+                                                    onClick={(e) => { 
+                                                        productDetailsFn(`${obj.item_id}`)
+                                                    }}
+                                                />
+                                                <span className='nId'>N{obj.item_id}</span>
+                                            </div>
                                             <div id={index} className='productPrice'>
                                                 <span className='actualPrice'>₹{obj.offerPrice}</span>
                                                 <span className='offerPrice'>₹{obj.price}</span>

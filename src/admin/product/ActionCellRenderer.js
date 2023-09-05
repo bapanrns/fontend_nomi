@@ -20,7 +20,6 @@ const ActionCellRenderer = (props) => {
     navigate("../admin/product-add/"+pid);
   }
 
-
   const cellValue = props.valueFormatted ? props.valueFormatted : props.value;
   const EditHandleClick = (e) => {
       console.log("Edit", cellValue);
@@ -80,12 +79,18 @@ const ActionCellRenderer = (props) => {
     })
   }
 
+  const productStock=()=>{
+   // navigate("../admin/stocks_add/"+cellValue);
+    window.open("../admin/stocks/"+cellValue, '_blank');
+  }
+
   return (
     <>
     <span>
         <button className="btn btn-primary" style={{padding: '2px 9px 2px 9px', fontWeight: 'bold', fontSize: '12px'}} onClick={EditHandleClick}> Edit </button>
         <button className="btn btn-success" style={{padding: '2px 9px 2px 9px', margin: '5px', fontWeight: 'bold', fontSize: '12px'}} onClick={ActiveHandleClick}> Active/view </button>
         <button className="btn btn-danger" style={{padding: '2px 9px 2px 9px', fontWeight: 'bold', fontSize: '12px'}} onClick={showImages}>Set Primary Image </button>
+        <button className={(props.data.stock > 0)?"btn btn-warning":"btn btn-success"} style={{padding: '2px 9px 2px 9px', fontWeight: 'bold', fontSize: '12px', marginLeft: "5px"}} onClick={productStock}>Stock </button>
     </span>
 
     <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>

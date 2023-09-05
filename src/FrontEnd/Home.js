@@ -130,6 +130,7 @@ const Home = ({data2}) => {
                                         <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>
                                         {xxx[mainObj].map((obj, index) => (
                                             <div key={"Jewellery-"+index}>
+                                                <div style={{position: "relative"}}>
                                                 <Image
                                                     className='similarTypeProductImg'
                                                     src={require(`../images/product/${obj.image_name}`)} 
@@ -138,6 +139,8 @@ const Home = ({data2}) => {
                                                         localStorage.setItem("searchTermForType", obj.sub_category_id);
                                                     }}
                                                 />
+                                                <span className='nId'>N{obj.item_id}</span>
+                                                </div>
                                                 <div>{obj.sub_category_name}</div>
                                                 <div id={index} className='productPrice'>
                                                     <span className='offerPrice'>₹{obj.price}</span>
