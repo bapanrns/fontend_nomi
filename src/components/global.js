@@ -18,7 +18,11 @@ const colorObj = [
 	{"label": "Mustard", "code": "#C0B078", "color": "#FFFFFF"},
 	{"label": "Gold", "code": "#FFD700", "color": "#000000"},
 	{"label": "Magenta", "code": "#FF00FF", "color": "#FFFFFF"},
-	{"label": "Olive", "code": "#808000", "color": "#FFFFFF"}
+	{"label": "Olive", "code": "#808000", "color": "#FFFFFF"},
+	{"label": "Deep Ocean Blue", "code": "#107889", "color": "#FFFFFF"},
+    {"label": "Cerulean Blue", "code": "#0286c9", "color": "#FFFFFF"},
+    {"label": "Royal Blue", "code": "#0649b0", "color": "#FFFFFF"},
+    {"label": "Moon Glow", "code": "#FCFEDA", "color": "#000000"}
     ];
 
 const priceOptionForWomen = [
@@ -30,10 +34,13 @@ const priceOptionForWomen = [
     {"price": "1500-100000", label: "Over ₹1,500"}
 ]
 
-const occassion = [
+const occasion = [
     {"value": "Evening", label: "Evening"},
     {"value": "Ceremony", label: "Ceremony"},
-    {"value": "Casual", label: "Casual"}
+    {"value": "Casual", label: "Casual"},
+    {"value": "Party & Festive", label: "Party & Festive"},
+    {"value": "Wedding & Festive", label: "Wedding & Festive"},
+    {"value": "Daily Wear", label: "Daily Wear"}
 ];
 
 const careInstruction = [
@@ -54,11 +61,17 @@ reasonsForCancellation["7"]="Purchased product from somewhere else"
 const globalVariable = {
     "admin_product_image_url": "/images/product/",
     "product_bill": "",
-    "axios_url": "http://localhost:8081/api",
+    //"axios_url": "http://localhost:8081/api",
+	"axios_url": "http://backendnode.nomimart.in:80/api",
     "color": colorObj,
     "priceOptionForWomen": priceOptionForWomen,
-    "occassion": occassion,
+    "occasion": occasion,
     "careInstruction": careInstruction,
-    "reasonsForCancellation": reasonsForCancellation
+    "reasonsForCancellation": reasonsForCancellation,
+    //"productImageUrl": "images/product/"
+    "productImageUrl": "http://bskart.com/images/product/",
+    "categoriesImageUrl": "http://bskart.com/images/categories/",
+    "billImageUrl": "http://bskart.com/images/bill/",
+    "kurtiCatIds": [2, 6] 
 };
 export default globalVariable;

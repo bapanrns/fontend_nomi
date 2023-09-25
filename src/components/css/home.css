@@ -66,8 +66,7 @@
     white-space: nowrap;
     padding-left: 5px;
     text-align: center;
-   /* font-weight: bold;
-    font-size: 23px;*/
+    font-size: 14px;
 }
 
 .productRs{
@@ -111,6 +110,7 @@
 .productPrice{
     text-align: left;
     padding-left: 5px;
+    font-size: 12px;
 }
 
 .homePageitemList{
@@ -129,6 +129,40 @@
 }
 .homePageitemListForDesktop{
     display: block;
+}
+
+.leftPanelOpenShowFn{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border: 2px solid #00cfff;
+    width: 270px;
+    border-radius: 5px;
+    margin-bottom: 3px;
+    background-color: #fff;
+    color: #000;
+    display: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 12px;
+    text-align: center;
+}
+
+.productShare .shareLink{
+    position: absolute;
+    top: 14px;
+    right: 17px;
+    cursor: pointer;
+}
+
+.HomeShareLink{
+    position: relative;
+}
+
+.HomeShareLink .shareLink{
+    position: absolute;
+    top: 14px;
+    right: 17px;
+    cursor: pointer;
 }
 
 @media (max-width: 768px) {
@@ -168,6 +202,30 @@
         @media (max-width: 768px) {
           width: 100%; /* Full width on mobile */
         }
+    }
+
+    .leftPanelOpenShowFn{
+        display: block;
+        margin-left: 11px;
+        margin-bottom: 6px;
+    }
+
+   
+}
+
+@media (min-width: 450px) and (max-width: 768px) {
+    .itemsClMd3{
+        width: 30%;
+        padding: 0px;
+        padding-right: 2px;
+    }
+}
+
+@media (min-width: 350px) and (max-width: 450px) {
+    .itemsClMd3{
+        width: 50%;
+        padding: 0px;
+        padding-right: 2px;
     }
 }
 

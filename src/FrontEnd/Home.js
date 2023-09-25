@@ -13,6 +13,7 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
 import { ScrollMenu, VisibilityContext } from "react-horizontal-scrolling-menu";
 import 'react-horizontal-scrolling-menu/dist/styles.css';
+import ShareLink from '../components/ShareLink';
 
 
 import {
@@ -91,6 +92,8 @@ const Home = ({data2}) => {
         });
     }
 
+    let xurl = "../";
+
         return (
             <div>
                 {isLoading ? <Loader /> : ""}
@@ -104,7 +107,9 @@ const Home = ({data2}) => {
                                         <Image className='categoriesImg'
                                             key={object.cat_image}
                                             style={{borderRadius: "50%"}}
-                                            src={require(`../images/categories/${object.cat_image}`)} 
+                                            //src={require(`../images/categories/${object.cat_image}`)} 
+                                            src={`${global.categoriesImageUrl}${object.cat_image}`} 
+                                            alt="No Category image"
                                             onClick={(e) => { 
                                                 productDetailsFn(object.category_name);
                                                 localStorage.removeItem("searchTermForType")
@@ -130,22 +135,27 @@ const Home = ({data2}) => {
                                         <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>
                                         {xxx[mainObj].map((obj, index) => (
                                             <div key={"Jewellery-"+index}>
-                                                <div style={{position: "relative"}}>
-                                                <Image
-                                                    className='similarTypeProductImg'
-                                                    src={require(`../images/product/${obj.image_name}`)} 
-                                                    onClick={(e) => { 
-                                                        productDetailsFn(obj.category_name);
-                                                        localStorage.setItem("searchTermForType", obj.sub_category_id);
-                                                    }}
-                                                />
-                                                <span className='nId'>N{obj.item_id}</span>
+                                                <div className='HomeShareLink'>
+                                                    <img
+                                                        className='similarTypeProductImg'
+                                                        //src={require(`../images/product/${obj.image_name}`)}
+                                                        src={`${global.productImageUrl}${obj.image_name}`}
+                                                        alt='no image'
+                                                        onClick={(e) => { 
+                                                            productDetailsFn(obj.category_name);
+                                                            localStorage.setItem("searchTermForType", obj.sub_category_id);
+                                                        }}
+                                                    />
+                                                    <span className='nId'>N{obj.item_id}</span>
+                                                    <ShareLink title={obj.product_name} text={obj.company_name} url={`http://www.bskart.com/product-details/${obj.item_id}`}></ShareLink>
                                                 </div>
                                                 <div>{obj.sub_category_name}</div>
                                                 <div id={index} className='productPrice'>
                                                     <span className='offerPrice'>₹{obj.price}</span>
-                                                    <span className='actualPrice'>₹{obj.offerPrice}</span>
-                                                    <span className='offerPercentage'>20% OFF</span>
+                                                    
+                                                        <span className='actualPrice'>₹{obj.offerPrice}</span>
+                                                        <span className='offerPercentage'>{obj.product_offer_percentage}% OFF</span>
+                                                        
                                                 </div>
                                             </div>
                                         ))}
@@ -156,15 +166,18 @@ const Home = ({data2}) => {
                                 <React.StrictMode>
                                     <div className="scroll-container">
                                      {xxx[mainObj].map((obj, index) => (
-                                            <div key={"Jewellery-scroll-container-"+index}>
+                                            <div key={"Jewellery-scroll-container-"+index} className='HomeShareLink'>
                                                 <Image
                                                     className='similarTypeProductImg'
-                                                    src={require(`../images/product/${obj.image_name}`)} 
+                                                    // src={require(`../images/product/${obj.image_name}`)} 
+                                                    src={`${global.productImageUrl}${obj.image_name}`}
+                                                    alt='No Image found'
                                                     onClick={(e) => { 
                                                         productDetailsFn(obj.category_name);
                                                         localStorage.setItem("searchTermForType", obj.sub_category_id);
                                                     }}
                                                 />
+                                                <ShareLink title={obj.product_name} text={obj.company_name} url={`http://www.bskart.com/product-details/${obj.item_id}`}></ShareLink>
                                                 <div>{obj.sub_category_name}</div>
                                                 <div id={index} className='productPrice'>
                                                     <span className='offerPrice'>₹{obj.price}</span>

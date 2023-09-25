@@ -8,6 +8,7 @@ import {
     useNavigate,
     useParams
   } from "react-router-dom";
+  import global from "../../components/global";
 
 
 const StockAdd = () => {
@@ -237,7 +238,9 @@ const StockAdd = () => {
                             <Image 
                                 className='itemDetailsMainImg'
                                 style={{width: "250px", height: "250px"}}
-                                src={require(`../../../src/images/product/${productDataImg}`)} 
+                                //src={require(`../../../src/images/product/${productDataImg}`)} 
+                                src={`${global.productImageUrl}${productDataImg}`}
+                                alt='No Image found'
                             />
                         </div>
                     </div>

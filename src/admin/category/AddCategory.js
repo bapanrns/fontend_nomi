@@ -2,12 +2,20 @@ import React, { useState, useEffect } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from "axios";
 
+import Loader from '../../components/Loader'
+import global from "../../components/global";
+import axiosInstance from '../../components/axiosInstance';
+// Notification
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import {
     useParams,
     useNavigate
   } from "react-router-dom";
 
 const AddCategory = () => {
+    const [isLoading, setIsLoading] = useState(false);
     const [editData, setEditData] = useState({
         name: "",
         status: 1
@@ -23,7 +31,7 @@ const AddCategory = () => {
     }, []);
     // Edit section
     function getCategory(id){
-        const headers = {
+       /* const headers = {
             'Content-Type': 'application/json'
         }
         let data = {};
@@ -41,6 +49,33 @@ const AddCategory = () => {
         })
         .catch((error) => {
             console.log(error)
+        })*/
+
+
+
+
+        setIsLoading(true);
+        const headers = {
+            'Content-Type': 'application/json'
+        }
+        
+        let data = {};
+        data["id"] = id;
+        axios.post(global["axios_url"]+'/categoryFindId', data, {
+            headers: headers
+        })
+        .then((response) => {
+            //console.log(response.data);
+            setIsLoading(false);
+            console.log(response.data.id);
+            setCategoryObj({...categoryObj, 
+                id: response.data.id,
+                category_name: response.data.category_name, 
+                active_status: response.data.active_status
+            });
+        }).catch((error) => {
+            console.log(error);
+            setIsLoading(false);
         })
     }
 
@@ -54,7 +89,7 @@ const AddCategory = () => {
 
     const onSubmit = async (event) => {
         event.preventDefault();
-        const headers = {
+        /*const headers = {
             'Content-Type': 'application/json'
         }
         console.log(categoryObj);
@@ -67,6 +102,27 @@ const AddCategory = () => {
         })
         .catch((error) => {
             console.log(error)
+        })
+        */
+
+        setIsLoading(true);
+        /*const headers = {
+            'Content-Type': 'application/json'
+        }*/
+        
+        let data = {};
+        axiosInstance.post('/categoryAdd', categoryObj)
+        /*axios.post(global["axios_url"]+'/categoryAdd', categoryObj, {
+            headers: headers
+        })*/
+        .then((response) => {
+            //console.log(response.data);
+            setIsLoading(false);
+            alert("Save Successfully");
+            navigate("../admin/Category/");
+        }).catch((error) => {
+            console.log(error);
+            setIsLoading(false);
         })
     };
 

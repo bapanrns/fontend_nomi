@@ -30,3 +30,42 @@
 .menuLink{
     cursor: pointer;
 }
+.MoSubCatContainerScrollable{
+    display: none;
+}
+.MoSubCat{
+    border: 1px solid #00cfff;
+    padding: 5px 15px 5px 15px;
+    margin-right: 5px;
+    background-color: #00cfff !important;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.MoSubCatScrollable{
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.MoSubCatScrollable::-webkit-scrollbar {
+  width: 0.5rem; /* Width of the scrollbar track */
+}
+
+.MoSubCatScrollable::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Color of the scrollbar track */
+}
+
+.subNavBar768{
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .MoSubCatContainerScrollable{
+        display: block;
+        margin-top: 8px;
+    }
+    .subNavBar768{
+        display: none;
+    }
+}

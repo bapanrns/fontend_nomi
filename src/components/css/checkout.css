@@ -308,6 +308,9 @@
     bottom: 10px;
     font-size: 9px;
     font-weight: bold;
+    background-color: #ffffff;
+    padding: 2px 2px 2px 2px;
+    border-radius: 2px;
 }
 .orderItemListDiv{
     float: left;

@@ -36,6 +36,8 @@ import BuyDetailsAdd from "./admin/productBuyDetails/BuyDetailsAdd";
 import ShopDetailsAdd from "./admin/productBuyDetails/ShopAdd";
 import ShopDetails from "./admin/productBuyDetails/ShopDetails";
 import BuyDetails from "./admin/productBuyDetails/BuyDetails";
+import DeliveryBoy from "./admin/deliveryBoy/DeliveryBoy";
+import AddDeliveryBoy from "./admin/deliveryBoy/AddDeliveryBoy";
 
 import Order from "./admin/order/order";
 
@@ -69,7 +71,7 @@ function App() {
   const [cartValue, setCartValu] = useState(
     (JSON.parse(localStorage.getItem('cart')) || []).length
   );
-  const getCartValue = (itemIds, itemSize) => {
+  const getCartValue = (itemIds, itemSize, buyNow) => {
     //localStorage.removeItem('cart');
     let cartArray = JSON.parse(localStorage.getItem('cart')) || []; // Initialize cartArray with the stored data or an empty array if nothing is stored
     if(cartArray.includes(itemIds+"@"+itemSize)){
@@ -79,6 +81,7 @@ function App() {
     }else{
 
       if(localStorage.getItem("login") === "true"){
+        setIsLoading(true);
         let data = {itemIds: itemIds, itemSize: itemSize};
         axiosInstance.post('/saveCartData', data)
         .then((response) => {
@@ -93,6 +96,9 @@ function App() {
               toast.success('Item added to cart successfully.', {
                 position: toast.POSITION.TOP_CENTER,
               }); 
+              if (buyNow === 1){
+                window.open("/checkout",'_blank');
+              }
             }
         })
         .catch((error) => {
@@ -100,6 +106,9 @@ function App() {
         });
       }else{
         setAddToCartData(itemIds, cartArray, itemSize);
+        toast.success('Item added to cart successfully.', {
+          position: toast.POSITION.TOP_CENTER,
+        }); 
       }
     }
   }
@@ -401,6 +410,7 @@ function App() {
 
             
           />
+          
           <Route
             path="admin/order"
             element={
@@ -412,6 +422,28 @@ function App() {
             }
 
             
+          />
+
+          <Route
+            path="admin/add_delivery_person"
+            element={
+              isAuthorized('Admin') ? (
+                <AddDeliveryBoy />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            }
+          />
+
+          <Route
+            path="admin/delivery_person"
+            element={
+              isAuthorized('Admin') ? (
+                <DeliveryBoy />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            }
           />
 
           {/*<Route path="admin/buy_details" element={<BuyDetails />} />*/}

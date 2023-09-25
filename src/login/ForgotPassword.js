@@ -3,6 +3,13 @@ import ReactFormInputValidation from "react-form-input-validation";
 
 import '../components/css/profile.css';
 
+import Loader from '../components/Loader'
+import global from "../components/global";
+import axiosInstance from '../components/axiosInstance';
+// Notification
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 export class ForgotPassword extends Component {
     constructor(props) {
         super(props);
@@ -40,9 +47,25 @@ export class ForgotPassword extends Component {
     // OTP Request
     getOTP = () => {
         if(Object.keys(this.state.errors).length === 0){
-            this.setState({resendOtp: 'Resend OTP'});
-            this.props.modalHide();
-            this.props.openNewPassword()
+            axiosInstance.post('/forgotPassword', {email: this.state.fields.email})
+            .then((response) => {
+                if(response.data.messageStatus === 0){
+                    toast.success(response.data.message, {
+                        position: toast.POSITION.TOP_CENTER,
+                    });
+                    localStorage.setItem("forgotEmail", this.state.fields.email);
+                    this.setState({resendOtp: 'Resend OTP'});
+                    this.props.modalHide();
+                    this.props.openNewPassword()
+                }else{
+                    toast.error(response.data.message, {
+                        position: toast.POSITION.TOP_CENTER,
+                    }); 
+                }
+            })
+            .catch((error) => {
+                console.log('Error:', error);
+            });
         }
     }
 

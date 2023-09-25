@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import {Container, Row, Col, Image, Carousel } from 'react-bootstrap';
+import {Container, Row, Col, Image, Carousel, Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import '../components/css/itemDetails.css';
@@ -15,6 +15,10 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { Carousel as ImageCarousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import SubNavBars from '../components/SubNavBars';
+
+import YoutubeEmbed from "../components/YoutubeEmbed";
+import ShareLink from '../components/ShareLink';
 
 import {
     useNavigate,
@@ -28,8 +32,7 @@ const ItemDetails = (e) => {
     const [isLoading, setIsLoading] = useState(false);
     const {id} = useParams();
     const [imageUrl, setImageUrl] = useState(process.env.PUBLIC_URL+"/assets/images/"+id+".png");
-    //console.log(id);
-    //console.log(imageUrl);
+    
     const [delivaryPincode, setDelivaryPincode] = useState();
     const [itemSize, setItemSize] = useState("");
 
@@ -218,21 +221,21 @@ const ItemDetails = (e) => {
     }
     const [selectSize, setSelectSize] = useState("");
     const [delivaryPincodeError, setdelivaryPincodeError] = useState("");
-    function addToCart(item_id, category_id){
+    async function addToCart(item_id, category_id, buyNow=0){
         if(deliveryCodeValid){
-            if([2].includes(category_id)){
+            if(global.kurtiCatIds.includes(category_id)){
                 if(itemSize === ""){
                     toast.error('Please select size.', {
                         position: toast.POSITION.TOP_CENTER,
                     });
                     setSelectSize("sizeError");
                 }else{
-                    e.getCartValue(item_id, itemSize);
+                   e.getCartValue(item_id, itemSize, buyNow);
                     setSelectSize("");
                     setdelivaryPincodeError("");
                 }
             }else{
-                e.getCartValue(item_id, itemSize);
+                e.getCartValue(item_id, itemSize, buyNow);
             }
         }else{
             toast.error('Please enter a valid pincode number.', {
@@ -272,9 +275,31 @@ const ItemDetails = (e) => {
         })
     }
 
+    const [showModal, setShowModal] = useState(false);
+    const [imageLink, setImageLink] = useState();
+
+    const handleShowModal = () => {
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+    };
+
+    const getFilterOption = (items="", searchFor="", search="") =>{
+        console.log('getFilterOption');
+    }
+
+    const SubNavBarsUrlChange = (items="") =>{
+        navigate("../items/"+items);
+    }
+
+    let windowHeight = window.innerHeight - 200;
+
     return (
         <div>
             {isLoading ? <Loader /> : ""}
+            <SubNavBars getFilterOption={getFilterOption} parameter={0} SubNavBarsUrlChange={SubNavBarsUrlChange}/>
             <Container className='HomeContainer'>
                     <Row>
                         <Col md={7} >
@@ -284,7 +309,13 @@ const ItemDetails = (e) => {
                                     <Col md={6} key={"itemImage"+key} className='itemDetailsMainImgDiv'>
                                         <Image 
                                             className='itemDetailsMainImg'
-                                            src={require(`../images/product/${imgName}`)} 
+                                            //src={require(`../images/product/${imgName}`)} 
+                                            src={`${global.productImageUrl}${imgName}`}
+                                            alt='No image found'
+                                            onClick={(e) => { 
+                                                setImageLink(imgName);
+                                                handleShowModal(true);
+                                            }}
                                         />
                                     </Col>
                                 ))
@@ -292,9 +323,7 @@ const ItemDetails = (e) => {
                                 
                             </Row>
                             <Row>
-                            <Col md={12} className='homePageitemListForMobile'>
-                                
-                                    
+                            <Col md={12} className='homePageitemListForMobile' style={{height: windowHeight}}>
                                     <ImageCarousel
                                         showThumbs={false}
                                         showStatus={false}
@@ -306,23 +335,36 @@ const ItemDetails = (e) => {
                                     >
                                         {itemsObj["itemImageArray"].length > 0 &&
                                          itemsObj["itemImageArray"].map((imgName, key) => (
-                                            <div>
+                                            <div
+                                            onClick={(e) => { 
+                                                setImageLink(imgName);
+                                                handleShowModal(true);
+                                            }}
+                                            >
                                                 <Image 
                                                     key={"ImageCarousel-"+key}
-                                                    style={{ marginBottom: '10px' }}
+                                                    style={{ marginBottom: '10px', maxHeight: windowHeight }}
                                                     className="img-fluid"
-                                                    src={require(`../images/product/${imgName}`)} 
+                                                    //src={require(`../images/product/${imgName}`)} 
+                                                    src={`${global.productImageUrl}${imgName}`}
                                                     alt={`Image ${key + 1}`}
+                                                    
                                                 />
                                             </div>
                                         ))}
                                     </ImageCarousel>
                                 </Col>
+                                {
+                                    itemsObj["youtube_link"] !=="" &&
+                                    <div style={{marginTop: "5px", marginBottom: "5px"}}>
+                                        <YoutubeEmbed embedId={itemsObj["youtube_link"]} />
+                                    </div>
+                                }
                             </Row>
                         </Col>
                         <Col md={5}>
                             <div>
-                                <p className='headdingP'>{itemsObj.product_name} </p>
+                                <p className='headdingP ProDetailssharelink'>{itemsObj.product_name}  <ShareLink title={itemsObj.product_name} text={itemsObj.company_name} url={`http://www.bskart.com/product-details/${itemsObj.item_id}`}></ShareLink></p>
                                 <p className='subHeaddingP'>{itemsObj.company_name}</p>
                             </div>
                             <div style={{marginTop: "25px", marginBottom: "25px"}}>
@@ -351,7 +393,9 @@ const ItemDetails = (e) => {
                                         <Image 
                                             key={"sameImage"+key}
                                             className='sameTypeProductImg'
-                                            src={require(`../images/product/${imgName.image_name}`)} 
+                                            //src={require(`../images/product/${imgName.image_name}`)}
+                                            src={`${global.productImageUrl}${imgName.image_name}`}
+                                            alt='No image found' 
                                             style={(imgName.item_id.toString() === id.toString()) ? { border: "3px solid red"} : {}}
 
                                             onClick={(e) => { 
@@ -402,13 +446,17 @@ const ItemDetails = (e) => {
                                                 src={require(`../images/cash-on-delivery.png`)} ></Image>
                                             <span style={{marginLeft: '10px'}}>Pay on delivery available</span>
                                         </div>
-                                        <div style={{width: '100%'}}>
-                                            <Image 
-                                                key={"exchange"}
-                                                className='payOnDelivery'
-                                                src={require(`../images/exchange.png`)} ></Image>
-                                            <span style={{marginLeft: '10px'}}>Easy 5 days return & exchange available</span>
-                                        </div>
+                                        {
+                                        itemsObj["return_avaliable"]=== "yes"?
+                                            <div style={{width: '100%'}}>
+                                                <Image 
+                                                    key={"exchange"}
+                                                    className='payOnDelivery'
+                                                    src={require(`../images/exchange.png`)} ></Image>
+                                                <span style={{marginLeft: '10px'}}>Easy 5 days return & exchange available</span>
+                                            </div>
+                                            : <div style={{width: '100%'}}>Return Not Avaliable</div>
+                                        }
                                         </>
                                     }
                                 </div>
@@ -439,50 +487,7 @@ const ItemDetails = (e) => {
                                         {size.toString()}</label>
                                     </div>
                                     ))}
-                                   {/* <div className={(itemSize.toString() === "L")?"form-check check-size active-size":"form-check check-size"} key="check-size-key1">
-                                        <label className="form-check-label check-size-label" htmlFor="L">
-                                            <input
-                                            type="radio"
-                                            className="form-check-input check-size-input"
-                                            id="L"
-                                            name='size'
-                                            value="L"
-                                            onChange={(e)=>{
-                                                setItemSizeFn("L", itemsObj.item_id)
-                                            }}  
-                                            />
-                                        L</label>
-                                    </div>
-                                    <div className={(itemSize.toString() === "XL")?"form-check check-size active-size":"form-check check-size"} key="check-size-key1">
-                                        <label className="form-check-label check-size-label check-size-label-desiabled" htmlFor="XL">
-                                            <input
-                                            type="radio"
-                                            className="form-check-input check-size-input"
-                                            id="XL"
-                                            name='size'
-                                            value="XL"
-                                            onChange={(e)=>{
-                                                setItemSizeFn("XL", itemsObj.item_id)
-                                            }}  
-                                            disabled
-                                            />
-                                        XL</label>
-                                    </div>
-                                    
-                                    <div className={(itemSize.toString() === "XXL")?"form-check check-size active-size":"form-check check-size"} key="check-size-key1">
-                                        <label className="form-check-label check-size-label" htmlFor="XXL">
-                                            <input
-                                            type="radio"
-                                            className="form-check-input check-size-input"
-                                            id="XXL"
-                                            name='size'
-                                            value="XXL"
-                                            onChange={(e)=>{
-                                                setItemSizeFn("XXL", itemsObj.item_id)
-                                            }}  
-                                            />
-                                        XXL</label>
-                                    </div>*/}
+                                   
                                 </div>
                             </>
                             ):""}
@@ -499,7 +504,11 @@ const ItemDetails = (e) => {
                                     </svg>
                                     ADD TO CART
                                 </div>
-                                <div className="input-group mb-6 buyNowItemDetails">
+                                <div 
+                                    className="input-group mb-6 buyNowItemDetails" 
+                                    onClick={() => { 
+                                        addToCart(itemsObj.item_id, itemsObj.category_id, 1);
+                                    }}>
                                     BUY NOW
                                 </div>
                             </div>
@@ -522,15 +531,18 @@ const ItemDetails = (e) => {
                     <Row>
                         <Col md={12} style={{marginTop: '5px'}}>
                             <div className='SimilarProducts'>
-                                <div style={{fontWeight: 'bold'}}>Similar Products</div>
+                                <div style={{fontWeight: 'bold', marginTop: '10px'}}>Similar Products</div>
                                 <div id="SimilarProductsScrollMenu">
+                                   {/*
                                     <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>
                                     {similarProducts.map(( obj, index ) => (
                                         <div key={index}>
                                             <div style={{position: "relative"}}>
                                                 <Image
                                                     className='similarTypeProductImg'
-                                                    src={require(`../images/product/${obj.image_name}`)} 
+                                                    //src={require(`../images/product/${obj.image_name}`)} 
+                                                    src={`${global.productImageUrl}${obj.image_name}`}
+                                                    alt='No image found'
                                                     onClick={(e) => { 
                                                         productDetailsFn(`${obj.item_id}`)
                                                     }}
@@ -545,19 +557,75 @@ const ItemDetails = (e) => {
                                         </div>
                                     ))}
                                     </ScrollMenu>
-                                    
+                                    */}
                                 </div>
                             </div>
+
+
+
+
                         </Col>
                     </Row>
+
+                    
+                    <div className="row">
+                        <div className="col-12">
+                            <div
+                                className="scrollable-div MoSubCatScrollable"
+                                style={{
+                                overflowX: 'auto',
+                                whiteSpace: 'nowrap',
+                                }}
+                            >
+                                {similarProducts.map(( obj, index ) => (
+                                        <div key={index} className='d-inline-block px-3 similarTypeProductImgDiv' style={{padding: "0px"}}>
+                                            <div style={{position: "relative"}}>
+                                                <Image
+                                                    className='similarTypeProductImg'
+                                                    //src={require(`../images/product/${obj.image_name}`)} 
+                                                    src={`${global.productImageUrl}${obj.image_name}`}
+                                                    alt='No image found'
+                                                    onClick={(e) => { 
+                                                        productDetailsFn(`${obj.item_id}`)
+                                                    }}
+                                                />
+                                                <span className='nId'>N{obj.item_id}</span>
+                                                <ShareLink title={obj.product_name} text={obj.company_name} url={`http://www.bskart.com/product-details/${obj.item_id}`}></ShareLink>
+                                            </div>
+                                            <div id={index} className='productPrice'>
+                                                <span className='actualPrice'>₹{obj.offerPrice}</span>
+                                                <span className='offerPrice'>₹{obj.price}</span>
+                                                <span className='offerPercentage'>{obj.newPercentage} {obj.newPercentage>0?"% OFF":""}</span>
+                                            </div>
+                                        </div>
+                                    ))}
+                            </div>
+                        </div>
+                    </div>
                 </Container>
+
+                <Modal show={showModal} onHide={handleCloseModal}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Product Image</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {
+                        imageLink &&
+                        (<img 
+                            //src={require("../../images/bill/"+imageLink)} 
+                            src={`${global.productImageUrl}${imageLink}`}
+                            alt="No bill to show" 
+                            style={{ height: '100%', width: '100%' }} 
+                        />)}
+                    </Modal.Body>
+                </Modal>
         </div>
     )
     
 }
 
 export default ItemDetails
-
+/*
 
 function LeftArrow() {
     const { isFirstItemVisible, scrollPrev } =
@@ -585,4 +653,4 @@ function RightArrow() {
 
       </button>
     );
-}
+}*/

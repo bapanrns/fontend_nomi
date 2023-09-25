@@ -65,7 +65,7 @@ instance.interceptors.response.use(
         localStorage.setItem("login", false);
         localStorage.setItem("cart","[]");
     }
-    localStorage.removeItem('ioc');
+    //localStorage.removeItem('ioc');
     //localStorage.clear();
     setTimeout(() => {
       //  window.location.href = '/';

@@ -9,6 +9,7 @@ import global from "../components/global";
 import SubNavBars from '../components/SubNavBars';
 
 import LeftNavBars from '../components/NavBars/LeftNavBars';
+import ShareLink from '../components/ShareLink';
 
 
 import {
@@ -47,15 +48,21 @@ const Home = () => {
         console.log('getFilterOption');
     }
 
+    const SubNavBarsUrlChange = (items="") =>{
+        navigate("../items/"+items);
+        setfilterHash({...filterHash, ['serchFor']: [items], ["type"]: []});
+    }
+
     let subCatId = "";
     if (localStorage.hasOwnProperty('searchTermForType')) {
         subCatId = localStorage.getItem('searchTermForType');
     }
+
     const [filterHash, setfilterHash] = useState({
         fabric: [],
         color: [],
         price: [],
-        occassion: [],
+        occasion: [],
         careInstruction: [],
         type: [subCatId],
         discount: [],
@@ -64,7 +71,7 @@ const Home = () => {
 
     /** Collect filter hash from leftNavBar js */
     const getFilterHash = (type, checked, value) =>{
-        console.log("getFilterHash", type, checked, value);
+        //console.log("getFilterHash", type, checked, value);
         if(type === "discount"){
             setfilterHash({...filterHash, [type]: [value]});
         }else{
@@ -100,35 +107,74 @@ const Home = () => {
             setIsLoading(false);
         })
     }
+
+    useEffect(() => {
+        leftPanelOpenShowFnOnload();
+    }, []); 
     
     useEffect(() => {
         getItemsDetails();
     }, [filterHash]);
+
+    const [leftPanelOpenShow, setLeftPanelOpenShow] = useState(true);
+    const [leftPanelOpenShowTest, setLeftPanelOpenShowText] = useState("Hide Filter");
+    const leftPanelOpenShowFn = () =>{
+        if(leftPanelOpenShow){
+            setLeftPanelOpenShow(false);
+            setLeftPanelOpenShowText("Show Filter");
+        }else{
+            setLeftPanelOpenShow(true);
+            setLeftPanelOpenShowText("Hide Filter");
+        }
+    }
+
+    console.log(window.innerWidth);
+    const leftPanelOpenShowFnOnload = () =>{
+        if(window.innerWidth <= 768){
+            setLeftPanelOpenShow(false);
+            setLeftPanelOpenShowText("Show Filter");
+            console.log("-------------------------------");
+        }
+    }
 
     const parameter = useParams();
 
         return (
             <div>
                 {isLoading ? <Loader /> : ""}
-                <SubNavBars getFilterOption={getFilterOption} parameter={parameter.id} />
+                <SubNavBars getFilterOption={getFilterOption} parameter={parameter.id} SubNavBarsUrlChange={SubNavBarsUrlChange}/>
                 
                 <Container className='HomeContainer'>
                     <Row>
                         <Col xs={6} md={2} style={{/*height: '1500px'*/}}>
-                            <LeftNavBars itemType={parameter.id} getFilterHash={getFilterHash} subCatId={subCatId} />
+                            <div className='leftPanelOpenShowFn' onClick={leftPanelOpenShowFn} >
+
+                                <Image 
+                                    style={{width: '18px', marginRight: '15px', height: '12px'}}
+                                    src={require(`../images/filter.png`)} 
+                                />
+                            
+                               <span style={{color: 'Red'}}>{leftPanelOpenShowTest} </span> (Price | Color | Discount)</div>
+                            {
+                                leftPanelOpenShow === true ? <LeftNavBars itemType={parameter.id} getFilterHash={getFilterHash} subCatId={subCatId} />: ""
+                            }
+                            
                         </Col>
                         <Col xs={12} md={10}>
                             <Row>
                                 {itemsListArray.map((object, key) => (
-                                    <Col md={3} key={"list"+key}>
+                                    <Col className='itemsClMd3' md={3} key={"list"+key}>
                                         <div className='sareeList'>
-                                            <div className='product'>
+                                            <div className='product productShare'>
                                                 <Image className='saree'
-                                                    src={require(`../images/product/${object.image_name}`)} 
+                                                    //src={require(`../images/product/${object.image_name}`)} 
+                                                    src={`${global.productImageUrl}${object.image_name}`}
+                                                    alt='No image found'
                                                     onClick={(e) => { 
                                                         productDetailsFn(object.items_id)
                                                     }}
                                                 />
+                                                <ShareLink title={object.product_name} text={object.company_name} url={`http://www.bskart.com/product-details/${object.item_id}`}></ShareLink>
                                             </div>
                                             <div className='productDesc' title={object.product_name}>{object.product_name} </div>
                                             <div className='productDesc' title={object.company_name}>{object.company_name} </div>  

@@ -82,7 +82,14 @@
 }
 /* Item Details */
 
+.NavBarManMenu{
+    padding: 0px;
+    border: 0px;
+}
 
+.NavBarManMenuImg{
+    width: 20px;
+}
 
 @media screen and (min-device-width: 481px) and (max-device-width: 768px) { 
     .HomeContainer .row .col-md-2{

@@ -1,6 +1,13 @@
 import React, { Component } from 'react'
 import ReactFormInputValidation from "react-form-input-validation";
 
+import Loader from '../components/Loader'
+import global from "../components/global";
+import axiosInstance from '../components/axiosInstance';
+// Notification
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 export class NewPassword extends Component {
     constructor(props) {
         super(props);
@@ -14,7 +21,8 @@ export class NewPassword extends Component {
         this.state = {
             fields: {
                 password: "",
-                confirmPassword: ""
+                confirmPassword: "",
+                otp: ""
             },
             errors: {}
         };
@@ -22,16 +30,29 @@ export class NewPassword extends Component {
         this.form = new ReactFormInputValidation(this);
         this.form.useRules({
             password: "required",
-            confirmPassword: "required"
+            confirmPassword: "required",
+            otp: "required"
         });
         this.form.onformsubmit = (fields) => {
-            console.log(fields)
             if(fields.password === fields.confirmPassword){
                 if(Object.keys(this.state.errors).length === 0){
-                /* this.getOTP()
-                    this.setState ( {
-                        NewPassword: true
-                    } );*/
+                    axiosInstance.post('/setNewPassword', {email: localStorage.getItem("forgotEmail"), otp: fields.otp, password: fields.password})
+                    .then((response) => {
+                        if(response.data.messageStatus === 0){
+                            toast.success(response.data.message, {
+                                position: toast.POSITION.TOP_CENTER,
+                            });
+                            this.props.modalHide();
+                            this.props.openLogin();
+                        }else{
+                            toast.error(response.data.message, {
+                                position: toast.POSITION.TOP_CENTER,
+                            }); 
+                        }
+                    })
+                    .catch((error) => {
+                        console.log('Error:', error);
+                    });
                 }
             }else{
                 this.setState({
@@ -80,6 +101,19 @@ export class NewPassword extends Component {
                                             value={this.state.fields.confirmPassword}
                                             />
                                         {this.state.errors.confirmPassword ? <label className="error"> {this.state.errors.confirmPassword} </label> : ""}
+                                    </div>
+                                    <div className="mb-3 formValidation">
+                                        <label className="form-label" htmlFor="otp">OTP</label>
+                                            <input 
+                                            type="text" 
+                                            name="otp"
+                                            id="otp" 
+                                            className="form-control" 
+                                            onBlur={this.form.handleBlurEvent}
+                                            onChange={this.form.handleChangeEvent}
+                                            value={this.state.fields.otp}
+                                            />
+                                        {this.state.errors.otp ? <label className="error"> {this.state.errors.otp} </label> : ""}
                                     </div>
                                     <div className="mb-3">
                                         

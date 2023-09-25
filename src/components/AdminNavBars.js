@@ -69,7 +69,7 @@ import '../components/css/profile.css';
         return (
             <Navbar bg="light" expand="lg" className='navbarBg'>
                 <Container fluid>
-                    <Navbar.Brand href="/">MoreBuy</Navbar.Brand>
+                    <Navbar.Brand href="/">BsKart</Navbar.Brand>
                     <Navbar.Toggle aria-controls="navbarScroll" />
                     <Navbar.Collapse id="navbarScroll">
                     <Nav
@@ -123,18 +123,18 @@ import '../components/css/profile.css';
                             <Link className="dropdown-item" to="/admin/shop">Shop Details</Link>
                             <Link className="dropdown-item" to="/admin/shop_details_add">Add Shop Details</Link>
                         </NavDropdown>
+
+                        <NavDropdown title="Order Details" id="basic-nav-dropdown">
+                            <Link className="dropdown-item" to="/admin/order">Order</Link>
+                        </NavDropdown>
                         
+                        <NavDropdown title="Delivery Person" id="basic-nav-dropdown">
+                            <Link className="dropdown-item" to="/admin/delivery_person">All Delivery Person</Link>
+                            <Link className="dropdown-item" to="/admin/add_delivery_person">Add Delivery Person</Link>
+                        </NavDropdown>
                         
                     </Nav>
-                    <Form className="d-flex">
-                        <Form.Control
-                        type="search"
-                        placeholder="Search"
-                        className="me-2"
-                        aria-label="Search"
-                        />
-                        <Button variant="outline-success">Search</Button>
-                    </Form>
+                    
                     </Navbar.Collapse>
                 </Container>
 

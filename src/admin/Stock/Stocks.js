@@ -108,7 +108,9 @@ const Categories = () => {
                                 <Image 
                                     className='itemDetailsMainImg'
                                     style={{width: "250px", height: "250px"}}
-                                    src={require(`../../../src/images/product/${productDataImg}`)} 
+                                    //src={require(`../../../src/images/product/${productDataImg}`)} 
+                                    src={`${global.productImageUrl}${productDataImg}`}
+                                    alt='No Image'
                                 />
                             </div>
                         </div>
