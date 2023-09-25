@@ -7,6 +7,8 @@ import Loader from '../../components/Loader';
 import axios from "axios";
 import global from "../../components/global";
 
+import axiosInstance from '../../components/axiosInstance';
+
 import {
     useNavigate
   } from "react-router-dom";
@@ -59,13 +61,14 @@ const ActionCellRenderer = (props) => {
   const setPrimary = (id, product_id) =>{
     console.log(id, product_id);
     setIsLoading(true);
-    const headers = {
+    /*const headers = {
         'Content-Type': 'application/json'
-    }
+    }*/
     
-    axios.post(global["axios_url"]+'/setPrimaryImage', {id: id, product_id: product_id}, {
+    axiosInstance.post('/setPrimaryImage', {id: id, product_id: product_id})
+    /*axios.post(global["axios_url"]+'/setPrimaryImage', {id: id, product_id: product_id}, {
         headers: headers
-    })
+    })*/
     .then((response) => {
         console.log(response);
         alert("Set Primary image.");
@@ -84,6 +87,19 @@ const ActionCellRenderer = (props) => {
     window.open("../admin/stocks/"+cellValue, '_blank');
   }
 
+  const productDelete=()=>{
+    const shouldDelete = window.confirm('Are you sure you want to delete this?');
+    if (shouldDelete) {
+      axiosInstance.post('/deleteProduct', {id: cellValue})
+      .then((response) => {
+          navigate(0);
+          alert("Inactive");
+      }).catch((error) => {
+          console.log(error);
+      })
+    }
+  }
+
   return (
     <>
     <span>
@@ -91,6 +107,7 @@ const ActionCellRenderer = (props) => {
         <button className="btn btn-success" style={{padding: '2px 9px 2px 9px', margin: '5px', fontWeight: 'bold', fontSize: '12px'}} onClick={ActiveHandleClick}> Active/view </button>
         <button className="btn btn-danger" style={{padding: '2px 9px 2px 9px', fontWeight: 'bold', fontSize: '12px'}} onClick={showImages}>Set Primary Image </button>
         <button className={(props.data.stock > 0)?"btn btn-warning":"btn btn-success"} style={{padding: '2px 9px 2px 9px', fontWeight: 'bold', fontSize: '12px', marginLeft: "5px"}} onClick={productStock}>Stock </button>
+        <button className={(props.data.stock > 0)?"btn btn-warning":"btn btn-danger"} style={{padding: '2px 9px 2px 9px', fontWeight: 'bold', fontSize: '12px', marginLeft: "5px"}} onClick={productDelete}>Delete </button>
     </span>
 
     <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
@@ -105,7 +122,11 @@ const ActionCellRenderer = (props) => {
                       <div style={{float: 'left', paddingRight: '10px', height: '250px', position: 'relative'}} key={"imageDiv"+index}>
                           <div style={{border: obj.primary === 1?"3px #00cfff dashed":"3px #000 dashed"}}>
                           {obj.primary === 1 && <><label style={{fontWeight: 'bold', width: '100%', textAlign: 'center', background: '#00cfff', color: '#fff'}}>Primary Image</label> <br></br></>}
-                              <img src={require("../../images/product/"+obj.image_name)} alt="" style={{ width: '200px', height: '200px'}}></img>
+                              <img 
+                                //src={require("../../images/product/"+obj.image_name)} 
+                                src={`${global.productImageUrl}${obj.image_name}`}
+                                alt="No Image" 
+                                style={{ width: '200px', height: '200px'}}></img>
                               <br></br>
                               
                                 {

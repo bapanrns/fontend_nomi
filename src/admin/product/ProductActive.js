@@ -9,19 +9,10 @@ import {
     useNavigate
 } from "react-router-dom";
 import Loader from '../../components/Loader';
+import axiosInstance from '../../components/axiosInstance';
 
 const ProductAdd = () => {
-    const colorObj = [{"color": "Blue", "code": "#175195"},
-    {"color": "Yellows", "code": "#feee2f"},
-    {"color": "Black", "code": "#000"},
-    {"color": "Greys", "code": "#848484"},
-    {"color": "Browns", "code": "#744113"},
-    {"color": "Beige", "code": "#c5bf9c"},
-    {"color": "Reds", "code": "#be0000"},
-    {"color": "Pinks", "code": "#f7007c"},
-    {"color": "Oranges", "code": "#fba13e"},
-    {"color": "Green", "code": "#66bf19"}
-    ];
+    const colorObj = global['color'];
 
     const [isLoading, setIsLoading] = useState(false);
 
@@ -89,9 +80,10 @@ const ProductAdd = () => {
         }
         setIsLoading(true);
         let data = {};
-        await axios.post(global["axios_url"]+'/allBuyProduct', data, {
+        axiosInstance.post('/allBuyProduct', data)
+       /* await axios.post(global["axios_url"]+'/allBuyProduct', data, {
             headers: headers
-        })
+        })*/
         .then((response) => {
             if(response.data.length > 0){
                 setBillObj(response.data);
@@ -130,7 +122,8 @@ const ProductAdd = () => {
     }
     // Edit 
     const [productObj, setProductObj] = useState({
-        color: []
+        color: [],
+        occasion: []
     });
     const [hideQuantity, sethideQuantity] = useState({
         display: "none",
@@ -209,6 +202,7 @@ const ProductAdd = () => {
         product_febric_id: "",
         product_febric: "",
         color: [],
+        occasion: [],
         imageArray: [],
         images1: null,
         images2: null,
@@ -226,14 +220,15 @@ const ProductAdd = () => {
     const [imageArray, setImageArray] = useState();
     async function getProductById(id){
         setIsLoading(true);
-        const headers = {
+        /*const headers = {
             'Content-Type': 'application/json'
-        }
+        }*/
         
         let data = {id: id};
-        await axios.post(global["axios_url"]+'/ProductFindById', data, {
+        axiosInstance.post('/ProductFindById', data)
+        /*await axios.post(global["axios_url"]+'/ProductFindById', data, {
             headers: headers
-        })
+        })*/
         .then((response) => {
             // Show hide quantity
             hideShowQuantity(response.data.category_id);
@@ -276,12 +271,13 @@ const ProductAdd = () => {
         }
         setIsLoading(true);
         
-        const headers = {
+        /*const headers = {
             'Content-Type': 'application/json'
-        }
-        axios.post(global["axios_url"]+'/productAactiveInactive', {id: editData.id, active_status: active_status}, {
+        }*/
+        axiosInstance.post('/productAactiveInactive', {id: editData.id, active_status: active_status})
+        /*axios.post(global["axios_url"]+'/productAactiveInactive', {id: editData.id, active_status: active_status}, {
             headers: headers
-        })
+        })*/
         .then((response) => {
             alert(response.data);
             // console.log(JSON.parse(JSON.stringify(response)))
@@ -488,6 +484,20 @@ const ProductAdd = () => {
                                 value={editData['delivery_charges']}
                                 disabled = {true}
                             />
+                        </div>
+
+                        <div className="col-md-4"style={{float: 'left', paddingRight: '10px'}}>
+                            <label className="form-label" htmlFor="delivery_charges.ControlInput1">Delivery Charges: </label>
+                            <select
+                                className='form-select'
+                                id="bill_id_and_shop_id"
+                                name="bill_id_and_shop_id"
+                                value={editData.return_avaliable}
+                                disabled = {true}
+                                >
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
                         </div>
                     </div>
 
@@ -810,8 +820,9 @@ const ProductAdd = () => {
                                 disabled = {true}
                             >   
                                 <option value="">NULL</option>
-                                <option value="Hand wash">Hand wash</option>
-                                <option value="2023-05">2023-05</option>
+                                    {global["careInstruction"].map((option, key) => (
+                                        <option value={option.value} key={"care_"+key}>{option.label}</option>
+                                    ))}
                             </select>
                         </div>
 
@@ -886,6 +897,39 @@ const ProductAdd = () => {
                                 disabled = {true}
                             />
                         </div>
+                        <div className="col-md-4" style={{float: 'left', paddingRight: '10px'}}>
+                            <label className="form-label" htmlFor="youtube_link">Occasion:</label>
+                            
+                            <br></br>
+
+                            {
+                                global.occasion.length > 0  &&
+                                global.occasion.map((obj, index)=>{
+                                    return (
+                                        <div className='form-check' style={{background: obj.code, float: 'left', marginLeft: '5px', minWidth: '100px'}} key={index}>
+                                            <input 
+                                                className="form-check-input" 
+                                                type="checkbox" 
+                                                value={obj.value} 
+                                                id={"flexCheckDefaul"+index} 
+                                                style={{marginTop: '10px', marginLeft: '-15px'}} 
+                                                /*checked={checkedValues.includes(obj.color)}*/
+                                                checked={productObj['occasion'].includes(obj.value)}
+                                                disabled = {true}
+                                                />
+                                            <label 
+                                                className="form-check-label" 
+                                                htmlFor={"flexCheckDefaul"+index} 
+                                                style={{padding: '5px', cursor: 'pointer'}}
+                                                >
+                                                {obj.label}
+                                            </label>
+                                        </div>
+                                    );
+                                })
+
+                            }
+                        </div>
                     </div>
                     
                     <div style={{width: '100%', backgroundColor: "#00cfff", textAlign: "center", padding: '10px', clear: 'both', marginTop: '5px'}}>Product Color</div>
@@ -899,7 +943,7 @@ const ProductAdd = () => {
                                 colorObj.length > 0  &&
                                 colorObj.map((obj, index)=>{
                                     return (
-                                        <div className='form-check' style={{background: obj.code, float: 'left', marginLeft: '5px', width: '100px', color: '#fff'}} key={index}>
+                                        <div className='form-check' style={{background: obj.code, float: 'left', marginLeft: '5px', minWidth: '100px', color: obj.color}} key={index}>
                                             <input 
                                                 className="form-check-input" 
                                                 type="checkbox" 
@@ -907,7 +951,7 @@ const ProductAdd = () => {
                                                 id={"flexCheckDefaul"+index} 
                                                 style={{marginTop: '10px', marginLeft: '-15px'}} 
                                                 /*checked={checkedValues.includes(obj.color)}*/
-                                                checked={productObj['color'].includes(obj.color)}
+                                                checked={productObj['color'].includes(obj.label)}
                                                 disabled = {true}
                                                 />
                                             <label 
@@ -915,7 +959,7 @@ const ProductAdd = () => {
                                                 htmlFor={"flexCheckDefaul"+index} 
                                                 style={{padding: '5px', cursor: 'pointer'}}
                                                 >
-                                                {obj.color}
+                                                {obj.label}
                                             </label>
                                         </div>
                                     );
@@ -935,7 +979,12 @@ const ProductAdd = () => {
                                 return (
                                     <div style={{float: 'left', paddingRight: '10px', height: '250px', position: 'relative'}} key={"imageDiv"+index}>
                                         <div style={{border: "1px dashed"}}>
-                                            <img src={require("../../images/product/"+obj)} alt="" style={{ width: '200px', height: '200px'}}></img>
+                                            <img 
+                                                //src={require("../../images/product/"+obj)} 
+                                                src={`${global.productImageUrl}${obj}`}
+                                                alt="No Image" 
+                                                style={{ width: '200px', height: '200px'}}
+                                                ></img>
                                         </div>
                                     </div>
                                 );

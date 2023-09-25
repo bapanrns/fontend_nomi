@@ -6,6 +6,8 @@ import {
     useHistory
   } from "react-router-dom";
 
+import axiosInstance from '../../components/axiosInstance';
+
 
 
 const ActionCellRenderer = (props) => {
@@ -25,7 +27,7 @@ const ActionCellRenderer = (props) => {
   const DeleteHandleClick = (e) => {
     console.log("Delete", cellValue);
     e.preventDefault();
-    const headers = {
+    /*const headers = {
         'Content-Type': 'application/json'
     }
     axios.post('http://localhost:8081/api/deleteSubCategory', {id: cellValue}, {
@@ -39,6 +41,23 @@ const ActionCellRenderer = (props) => {
     .catch((error) => {
         console.log(error)
         alert(error);
+    })*/
+
+
+    /*const headers = {
+        'Content-Type': 'application/json'
+    }*/
+    
+    let data = {};
+    axiosInstance.post('/deleteSubCategory', {id: cellValue})
+    /*axios.post(global["axios_url"]+'/deleteSubCategory', {id: cellValue}, {
+        headers: headers
+    })*/
+    .then((response) => {
+        //console.log(response.data);
+        navigate(0);
+    }).catch((error) => {
+        console.log(error);
     })
   };
 

@@ -9,13 +9,13 @@ import '../../components/css/leftNavBars.css';
 
 const LeftNavBars = (props) => {
     const { itemType, subCatId } = props;
-    console.log("subCatId:", subCatId);
+    console.log("itemType:", itemType);
     useEffect(() => {
         getFabricDetails();
         getItemsList(itemType);
         ///console.log(localStorage);
         setSelectedItemsForType([...selectedItemsForType, subCatId.toString()]);
-    }, []);
+    }, [itemType]);
 
     /* ============================ Fabric Start ============================ */
     function getFabricDetails(){
@@ -109,23 +109,23 @@ const LeftNavBars = (props) => {
     };
     /* ================================= Price option end ======================== */
     
-    /* ================================= Occassion start ======================== */
-    const [occassionOption, setOccassionOption] = useState(global["occassion"]);
+    /* ================================= Occasion start ======================== */
+    const [occasionOption, setOccasionOption] = useState(global["occasion"]);
 
-    const [selectedItemsForOccassion, setSelectedItemsForOccassion] = useState([]);
+    const [selectedItemsForOccasion, setSelectedItemsForOccasion] = useState([]);
 
-    const handleCheckboxChangeForOccassion = (event) => {
+    const handleCheckboxChangeForOccasion = (event) => {
         const { value, checked } = event.target;
 
         // Update the selected items based on checkbox state
         if (checked) {
-            setSelectedItemsForOccassion([...selectedItemsForOccassion, value]);
+            setSelectedItemsForOccasion([...selectedItemsForOccasion, value]);
         } else {
-            setSelectedItemsForOccassion(selectedItemsForOccassion.filter((item) => item !== value));
+            setSelectedItemsForOccasion(selectedItemsForOccasion.filter((item) => item !== value));
         }
-        props.getFilterHash("occassion", checked, value);
+        props.getFilterHash("occasion", checked, value);
     };
-    /* ================================= Occassion option end ======================== */
+    /* ================================= Occasion option end ======================== */
     
     /* ================================= Care Instruction start ======================== */
     const [careInstructionOption, setCareInstructionOption] = useState(global["careInstruction"]);
@@ -265,17 +265,17 @@ const LeftNavBars = (props) => {
                     </Accordion.Body>
                 </Accordion.Item>
                 <Accordion.Item eventKey="3">
-                    <Accordion.Header>Occassion</Accordion.Header>
+                    <Accordion.Header>Occasion</Accordion.Header>
                     <Accordion.Body className='accordionBody'>
-                        {occassionOption.map((option, key) => (
+                        {occasionOption.map((option, key) => (
                             <Form.Check
-                                key={"occassion"+key}
+                                key={"occasion"+key}
                                 type="checkbox"
-                                id={`checkbox-occassion-${key}`}
+                                id={`checkbox-occasion-${key}`}
                                 label={option.label}
                                 value={option.value}
-                                checked={selectedItemsForOccassion.includes(option.value)}
-                                onChange={handleCheckboxChangeForOccassion}
+                                checked={selectedItemsForOccasion.includes(option.value)}
+                                onChange={handleCheckboxChangeForOccasion}
                             />
                         ))}
                     </Accordion.Body>

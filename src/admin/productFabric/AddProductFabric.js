@@ -4,6 +4,8 @@ import axios from "axios";
 import global from "../../components/global";
 import Loader from '../../components/Loader'
 
+import axiosInstance from '../../components/axiosInstance';
+
 import {
     useParams,
     useNavigate
@@ -78,12 +80,14 @@ const AddProductFabric = () => {
     const onSubmit = async (event) => {
         event.preventDefault();
         setIsLoading(true);
-        const headers = {
+        /*const headers = {
             'Content-Type': 'application/json'
-        }
-        axios.post(global["axios_url"]+'/productFabricAdd', subCategoryObj, {
+        }*/
+
+        axiosInstance.post('/productFabricAdd', subCategoryObj)
+        /*axios.post(global["axios_url"]+'/productFabricAdd', subCategoryObj, {
             headers: headers
-        })
+        })*/
         .then((response) => {
             alert(response.data);
             setIsLoading(false);

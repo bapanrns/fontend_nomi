@@ -92,7 +92,7 @@ const AddSubCategory = () => {
         id: 0,
         category_id: "",
         subCategory: "",
-        status: ""
+        status: 0
     });
     
     const navigate = useNavigate();

@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 import axios from "axios";
 
+import Loader from '../../components/Loader'
+import global from "../../components/global";
+import axiosInstance from '../../components/axiosInstance';
+// Notification
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import {
     useNavigate,
     useHistory
@@ -25,20 +32,21 @@ const ActionCellRenderer = (props) => {
   const DeleteHandleClick = (e) => {
     console.log("Delete", cellValue);
     e.preventDefault();
-    const headers = {
+
+   /* const headers = {
         'Content-Type': 'application/json'
-    }
-    axios.post('http://localhost:8081/api/deleteProductFabric', {id: cellValue}, {
+    }*/
+    
+    let data = {};
+    axiosInstance.post('/deleteProductFabric', {id: cellValue})
+    /*axios.post(global["axios_url"]+'/deleteProductFabric', {id: cellValue}, {
         headers: headers
-    })
+    })*/
     .then((response) => {
-        alert(response.data);
-        //navigate("../admin/sub_category/");
+        //console.log(response.data);
         navigate(0);
-    })
-    .catch((error) => {
-        console.log(error)
-        alert(error);
+    }).catch((error) => {
+        console.log(error);
     })
   };
 

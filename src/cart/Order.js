@@ -238,8 +238,10 @@ const MyOrder = (props) => {
                                     <div className='col-md-12'>
                                         <div className='OrderItemDiv' style={{position: "relative"}}>
                                             <Image
-                                            className='OrderImage'
-                                            src={require(`../images/product/${obj.image_name}`)} 
+                                                className='OrderImage'
+                                                //src={require(`../images/product/${obj.image_name}`)} 
+                                                src={`${global.productImageUrl}${obj.image_name}`}
+                                                alt='No Image Found'
                                             />
                                             <span className='nId'>N{obj.p_id}</span>
                                         </div>

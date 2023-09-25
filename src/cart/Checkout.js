@@ -35,9 +35,7 @@ const Checkout = (props) => {
         }
         let itemIds = localStorage.getItem('cart') || "[]"
         let data = {itemIds: itemIds};
-        axios.post(global["axios_url"]+'/getCartData', data, {
-            headers: headers
-        })
+        axiosInstance.post('/getCartData', data)
         .then((response) => {
             setCartData(response.data.itemListHash);
             setTotalPrice(response.data.total_price);
@@ -336,7 +334,9 @@ const Checkout = (props) => {
                                         <div style={{float: 'left', position: "relative"}}>
                                             <Image 
                                                 style={{width: '130px', height: '130px'}}
-                                                src={require(`../images/product/${cartData[product_id].image_name}`)} 
+                                                //src={require(`../images/product/${cartData[product_id].image_name}`)} 
+                                                src={`${global.productImageUrl}${cartData[product_id].image_name}`}
+                                                alt='No Image found'
                                             />
                                             <span className='nId'>N{product_id}</span>
                                         </div>
@@ -350,7 +350,7 @@ const Checkout = (props) => {
                                             { cartData[product_id].quantity > 0 &&
                                             
                                             <div>
-                                                <div className='productAddRemoveImg' onClick={() => productAddRemoveImgFn('remove', 'x')}>
+                                               {/* <div className='productAddRemoveImg' onClick={() => productAddRemoveImgFn('remove', 'x')}>
                                                     <Image 
                                                         src={`${process.env.PUBLIC_URL}/assets/images/negative.png`}
                                                         
@@ -363,7 +363,7 @@ const Checkout = (props) => {
                                                     <Image 
                                                         src={`${process.env.PUBLIC_URL}/assets/images/posative.png`}
                                                     />
-                                                </div>
+                                                </div>*/}
                                             </div>
                                             }
                                             <div style={{marginLeft: '160px', fontWeight: 'bold', color: 'red', cursor: 'pointer'}} onClick={() => removeItem(product_id, cartData[product_id].size)}>REMOVE</div>

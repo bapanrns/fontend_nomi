@@ -1,4 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
+import Loader from '../../components/Loader'
+import axiosInstance from '../../components/axiosInstance';
+import { ToastContainer, toast } from 'react-toastify';
 
 import {
     useNavigate
@@ -7,11 +10,11 @@ import {
 
 
 const ActionCellRenderer = (props) => {
-
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
-function productDetailsFn(pid){
-    navigate("../admin/shop_details_add/"+pid);
-}
+    function productDetailsFn(pid){
+        navigate("../admin/shop_details_add/"+pid);
+    }
 
 
     const cellValue = props.valueFormatted ? props.valueFormatted : props.value;
@@ -20,8 +23,29 @@ function productDetailsFn(pid){
         productDetailsFn(cellValue)
     };
     const DeleteHandleClick = (e) => {
-        console.log("Delete", cellValue);
-    };
+      const shouldDelete = window.confirm('Are you sure you want to delete this?');
+      if (shouldDelete) {
+        setIsLoading(true);
+        axiosInstance.post('/deleteShopeName', {id: cellValue})
+        .then((response) => {
+            setIsLoading(false);
+            if(response.data.success === true){
+              toast.success('Delete successfully.', {
+                position: toast.POSITION.TOP_CENTER,
+              });
+            }
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000);
+        })
+        .catch((error) => {
+          toast.success('Delete error.', {
+            position: toast.POSITION.TOP_CENTER,
+          });
+            console.log(error)
+        })
+      }
+    }
 
   return (
     <span>

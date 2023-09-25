@@ -118,14 +118,14 @@
     text-decoration: line-through;
     color: #a49393;
     font-weight: bold;
-    margin-right: 13px;
+    margin-right: 5px;
     font-size: 15px;
 }
 
 .productPrice .offerPrice{
     color: #00cfff;
     font-weight: bold;
-    margin-right: 13px;
+    margin-right: 5px;
     font-size: 15px;
 }
 
@@ -168,6 +168,39 @@
 .subHeaddingP{
     font-size: 15px;
 }
+
+.video-responsive {
+    overflow: hidden;
+    padding-bottom: 56.25%;
+    position: relative;
+    height: 0;
+}
+  
+.video-responsive iframe {
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+.similarTypeProductImgDiv .shareLink{
+    position: absolute;
+    top: 14px;
+    right: 17px;
+    cursor: pointer;
+}
+.ProDetailssharelink{
+    position: relative;
+}
+
+.ProDetailssharelink .shareLink{
+    position: absolute;
+    top: -6px;
+    right: 17px;
+    cursor: pointer;
+}
+
 @media (max-width: 768px) {
     .homePageitemListForMobile{
         display: block;

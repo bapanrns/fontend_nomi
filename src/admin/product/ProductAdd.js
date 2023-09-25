@@ -11,6 +11,8 @@ import {
 import Loader from '../../components/Loader';
 import Joi from 'joi';
 
+import axiosInstance from '../../components/axiosInstance';
+
 const ProductAdd = () => {
     const colorObj = global['color'];
 
@@ -81,12 +83,13 @@ const ProductAdd = () => {
                 //console.log(productObj);
                 setIsLoading(true);
                 
-                const headers = {
+               /* const headers = {
                     'Content-Type': 'application/json'
-                }
-                axios.post(global["axios_url"]+'/productAdd', productObj, {
+                }*/
+                axiosInstance.post('/productAdd', productObj)
+                /*axios.post(global["axios_url"]+'/productAdd', productObj, {
                     headers: headers
-                })
+                })*/
                 .then((response) => {
                     alert(response.data);
                     // console.log(JSON.parse(JSON.stringify(response)))
@@ -243,9 +246,10 @@ const ProductAdd = () => {
         }
         setIsLoading(true);
         let data = {};
-        await axios.post(global["axios_url"]+'/allBuyProduct', data, {
+        await axiosInstance.post('/allBuyProduct', data)
+        /*await axios.post(global["axios_url"]+'/allBuyProduct', data, {
             headers: headers
-        })
+        })*/
         .then((response) => {
             if(response.data.length > 0){
                 setBillObj(response.data);
@@ -288,11 +292,12 @@ const ProductAdd = () => {
         category_id: "",
         sub_category_id: "",
         product_name: "",
-        active_status: "",
+        active_status: 0,
         company_name: "",
         year_month: "",
         product_offer_percentage: "",
         delivery_charges: "",
+        return_avaliable: "",
         quantity: "",
         quantity_buy_price: "",
         quantity_selling_price: "",
@@ -317,6 +322,7 @@ const ProductAdd = () => {
         product_febric_id: "",
         product_febric: "",
         color: [],
+        occasion: [],
         images1: "",
         images2: "",
         images3: "",
@@ -382,7 +388,9 @@ const ProductAdd = () => {
 
     const hideShowQuantity = (category_id) => {
         console.log("category_id: ", category_id);
-        if(parseInt(category_id, 10) === 2){
+        // Kurti, Tops, Kurta Sets & Salwar Suits
+        if(global.kurtiCatIds.includes(parseInt(category_id, 10))){
+        //if(parseInt(category_id, 10) === 2){
             sethideQuantityType({
                 ...hideQuantityType,
                 display: "block"
@@ -404,7 +412,7 @@ const ProductAdd = () => {
     };
 
     const [checkedValues, setCheckedValues] = useState([]);
-
+    
     const handleCheckboxChange = (event) => {
         const { value, checked } = event.target;
         if (checked) {
@@ -415,6 +423,18 @@ const ProductAdd = () => {
             setCheckedValues(checkedValues.filter((item) => item !== value));
             //setProductObj({...productObj, ['color']: productObj['color'].filter((item) => item !== value)})
             setProductObj({...productObj, color: productObj['color'].filter((item) => item !== value)})
+        }
+    };
+
+    //const [checkedValuesOccasion, setCheckedValuesOccasion] = useState([]);
+    const handleCheckboxChangeOccasion = (event) => {
+        const { value, checked } = event.target;
+        if (checked) {
+            //setCheckedValuesOccasion([...checkedValuesOccasion, value]);
+            setProductObj({...productObj, occasion: [...productObj['occasion'], value]})
+        } else {
+            //setCheckedValuesOccasion(checkedValuesOccasion.filter((item) => item !== value));
+            setProductObj({...productObj, occasion: productObj['occasion'].filter((item) => item !== value)})
         }
     };
 
@@ -429,6 +449,7 @@ const ProductAdd = () => {
         year_month: "",
         product_offer_percentage: "",
         delivery_charges: "",
+        return_avaliable: "",
         quantity: "",
         quantity_buy_price: "",
         quantity_selling_price: "",
@@ -462,6 +483,7 @@ const ProductAdd = () => {
         product_febric_id: "",
         product_febric: "",
         color: [],
+        occasion: [],
         imageArray: [],
         images1: "",
         images2: "",
@@ -480,14 +502,15 @@ const ProductAdd = () => {
     const [imageArray, setImageArray] = useState();
     async function getProductById(id){
         setIsLoading(true);
-        const headers = {
+        /*const headers = {
             'Content-Type': 'application/json'
-        }
+        }*/
         
         let data = {id: id};
-        await axios.post(global["axios_url"]+'/ProductFindById', data, {
+        axiosInstance.post('/ProductFindById', data)
+        /*await axios.post(global["axios_url"]+'/ProductFindById', data, {
             headers: headers
-        })
+        })*/
         .then((response) => {
             //setProductObj({...productObj, ['color']: response.data.color.split(", ")});
             // Show hide quantity
@@ -525,14 +548,15 @@ const ProductAdd = () => {
         //console.log("deleteProductImage", id);
         if(window.confirm('Are you sure you want to delete?')){
             setIsLoading(true);
-            const headers = {
+           /* const headers = {
                 'Content-Type': 'application/json'
-            }
+            }*/
             
             let data = {image: image_name, image_id: image_id, product_id: product_id};
-            await axios.post(global["axios_url"]+'/deleteProductImage', data, {
+            axiosInstance.post('/deleteProductImage', data)
+            /*await axios.post(global["axios_url"]+'/deleteProductImage', data, {
                 headers: headers
-            })
+            })*/
             .then((response) => {
                 //console.log(response.data);
                 //setProductObj({...productObj, ['color']: response.data.color.split(", ")});
@@ -554,13 +578,14 @@ const ProductAdd = () => {
     const setPrimary = (id, product_id="")=>{
         if(product_id !==""){
             setIsLoading(true);
-            const headers = {
+           /* const headers = {
                 'Content-Type': 'application/json'
-            }
+            }*/
             
-            axios.post(global["axios_url"]+'/setPrimaryImage', {id: id, product_id: product_id}, {
+            axiosInstance.post('/setPrimaryImage', {id: id, product_id: product_id})
+            /*axios.post(global["axios_url"]+'/setPrimaryImage', {id: id, product_id: product_id}, {
                 headers: headers
-            })
+            })*/
             .then((response) => {
                 alert("Set Primary image. Please Refresh");
                 setIsLoading(false);
@@ -674,6 +699,20 @@ const ProductAdd = () => {
                                 onKeyPress={(e) => AcceptNumericValue(e)}
                                 onChange={handalChange}
                             />
+                        </div>
+
+                        <div className="col-md-4"style={{float: 'left', paddingRight: '10px'}}>
+                            <label className="form-label" htmlFor="delivery_charges.ControlInput1">Return Avaliable: </label>
+                            <select
+                                className='form-select'
+                                id="return_avaliable"
+                                name="return_avaliable"
+                                onChange={handalChange}
+                                value={editData.return_avaliable}
+                                >
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
                         </div>
                     </div>
 
@@ -1096,6 +1135,37 @@ const ProductAdd = () => {
                                 onChange={handalChange}
                             />
                         </div>
+                        <div className="col-md-4" style={{float: 'left', paddingRight: '10px'}}>
+                            <label className="form-label" htmlFor="occasion">Occasion:</label>
+                            <br />
+                            {
+                                
+                                global.occasion.length > 0  &&
+                                global.occasion.map((obj, index)=>{
+                                    return (
+                                        <div className='form-check' style={{background: obj.code, float: 'left', marginLeft: '5px', minWidth: '100px'}} key={index}>
+                                            <input 
+                                                className="form-check-input" 
+                                                type="checkbox" 
+                                                value={obj.value} 
+                                                id={"flexCheckDefaul"+index} 
+                                                style={{marginTop: '10px', marginLeft: '-15px'}} 
+                                                checked={productObj['occasion'].includes(obj.value)}
+                                                onChange={handleCheckboxChangeOccasion}
+                                                />
+                                            <label 
+                                                className="form-check-label" 
+                                                htmlFor={"flexCheckDefaul"+index} 
+                                                style={{padding: '5px', cursor: 'pointer'}}
+                                                >
+                                                {obj.label}
+                                            </label>
+                                        </div>
+                                    );
+                                })
+
+                            }
+                        </div>
                     </div>
                     
                     <div style={{width: '100%', backgroundColor: "#00cfff", textAlign: "center", padding: '10px', clear: 'both', marginTop: '5px'}}>Product Color</div>
@@ -1163,7 +1233,12 @@ const ProductAdd = () => {
                                                 >
 
                                             </img>
-                                            <img src={require("../../images/product/"+obj)} alt="" style={{ width: '200px', height: '200px'}}></img>
+                                            <img 
+                                               // src={require("../../images/product/"+obj)} 
+                                                src={`${global.productImageUrl}${obj}`}
+                                                alt="No Image" 
+                                                style={{ width: '200px', height: '200px'}}
+                                                ></img>
 
                                             {
                                                 editData["imageHash"][obj].primary === 0 &&

@@ -11,6 +11,7 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
 import ActionCellRenderer from './ShopActionCellRenderer';
 import global from "../../components/global";
 import Loader from '../../components/Loader'
+import axiosInstance from '../../components/axiosInstance';
 
 import axios from "axios";
 
@@ -39,14 +40,15 @@ const ShopDetails = () => {
     // {category_name: "", active_status: "", id: 1}
     function getShopData(){
         setIsLoading(true);
-        const headers = {
+        /*const headers = {
             'Content-Type': 'application/json'
-        }
+        }*/
         
         let data = {};
-        axios.post(global["axios_url"]+'/allShop', data, {
+        axiosInstance.post('/allShop', data)
+        /*axios.post(global["axios_url"]+'/allShop', data, {
             headers: headers
-        })
+        })*/
         .then((response) => {
             setRowData(response.data);
             setIsLoading(false);

@@ -10,6 +10,7 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
 import ActionCellRenderer from './BuyProductActionCellRenderer';
 import global from "../../components/global";
 import Loader from '../../components/Loader'
+import axiosInstance from '../../components/axiosInstance';
 
 
 import axios from "axios";
@@ -43,13 +44,13 @@ const ShopDetails = () => {
 
     function getShopData(){
         setIsLoading(true);
-        const headers = {
+        /*const headers = {
             'Content-Type': 'application/json'
-        }
-        
-        axios.post(global["axios_url"]+'/allBuyProduct', editData, {
+        }*/
+        axiosInstance.post('/allBuyProduct', editData)
+        /*axios.post(global["axios_url"]+'/allBuyProduct', editData, {
             headers: headers
-        })
+        })*/
         .then((response) => {
             setRowData(response.data);
             setIsLoading(false);
@@ -58,6 +59,10 @@ const ShopDetails = () => {
         .catch((error) => {
             console.log(error)
         })
+    }
+
+    function deleteG(){
+        alert();
     }
 
 
@@ -69,7 +74,8 @@ const ShopDetails = () => {
     function ImageRenderer(value){
         if(value.data.bill !==""){
             return (<img 
-                src={require("../../images/bill/"+value.data.bill)} 
+                //src={require("../../images/bill/"+value.data.bill)} 
+                src={`${global.billImageUrl}${value.data.bill}`}
                 alt="No bill to show" 
                 style={{ height: '90px', width: '100%', cursor: 'pointer' }} 
                 onClick={(e) => { 
@@ -113,14 +119,15 @@ const ShopDetails = () => {
 
     const getShopList = async () => {
         setIsLoading(true);
-        const headers = {
+        /*const headers = {
             'Content-Type': 'application/json'
-        }
+        }*/
         
         let data = {};
-        axios.post(global["axios_url"]+'/allShopList', data, {
+        axiosInstance.post('/allShopList', data)
+        /*axios.post(global["axios_url"]+'/allShopList', data, {
             headers: headers
-        })
+        })*/
         .then((response) => {
             setIsLoading(false);
             getShops(response.data)
@@ -198,7 +205,8 @@ const ShopDetails = () => {
                     {
                     imageLink &&
                     (<img 
-                        src={require("../../images/bill/"+imageLink)} 
+                        //src={require("../../images/bill/"+imageLink)} 
+                        src={`${global.billImageUrl}${imageLink}`}
                         alt="No bill to show" 
                         style={{ height: '100%', width: '100%' }} 
                     />)}

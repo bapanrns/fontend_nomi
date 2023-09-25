@@ -1,5 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Modal } from 'react-bootstrap';
 
 import { AgGridReact } from 'ag-grid-react';
 
@@ -14,6 +15,9 @@ import global from "../../components/global";
 
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+
+import axiosInstance from '../../components/axiosInstance';
+import { ToastContainer, toast } from 'react-toastify';
 
 const checkboxSelection = function (params) {
     // we put checkbox on the name if we are not doing grouping
@@ -60,14 +64,15 @@ const Products = () => {
     // {category_name: "", active_status: "", id: 1}
     function getProductData(){
         setIsLoading(true);
-        const headers = {
+        /*const headers = {
             'Content-Type': 'application/json'
-        }
+        }*/
         
         let data = searchObj;
-        axios.post(global["axios_url"]+'/AllProduct', data, {
+        axiosInstance.post('/AllProduct', data)
+       /* axios.post(global["axios_url"]+'/AllProduct', data, {
             headers: headers
-        })
+        })*/
         .then((response) => {
             setRowData(response.data)
             setIsLoading(false);
@@ -86,7 +91,33 @@ const Products = () => {
         setGridApi(params.api);
         getProductData();
     }, []);
+
+    const [showModal, setShowModal] = useState(false);
+    const [imageLink, setImageLink] = useState();
+
+    const handleShowModal = () => {
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+    };
     
+    function ImageRenderer(value){
+        if(value.data.product_img !==""){
+            return (<img 
+                //src={require("../../images/bill/"+value.data.bill)} 
+                src={`${global.productImageUrl}${value.data.product_img}`}
+                alt="No Image" 
+                style={{ height: '90px', width: '100%', cursor: 'pointer' }} 
+                onClick={(e) => { 
+                    setImageLink(value.data.product_img);
+                    handleShowModal(true);
+                }}
+            />);
+        }
+    }
+
     const [columnDefs] = useState([
         {
             field: 'id',
@@ -95,9 +126,10 @@ const Products = () => {
             headerCheckboxSelection: headerCheckboxSelection,
         },
         { field: 'id', headerName: "PID", width: 90 },
-        { field: 'category_id', headerName: "Category", width: 150 },
-        { field: 'sub_category_id', headerName: "Sub Category", width: 150 },
-        { field: 'group_id', headerName: "Group Id", width: 90 },
+        { field: 'product_img', headerName: "Img", width: 150, cellRendererFramework: ImageRenderer },
+        { field: 'category_id', headerName: "Category", width: 150, filter: 'agTextColumnFilter' },
+        { field: 'sub_category_desc', headerName: "Sub Category", width: 150, filter: 'agTextColumnFilter' },
+        { field: 'group_id', headerName: "Group Id", width: 90, editable: true, filter: 'agNumberColumnFilter' },
         { field: 'active_status', headerName: "Status", cellRenderer: StatusCellRenderer, width: 100 },
         { field: 'color', headerName: "Color", width: 150, cellRendererFramework: TooltipRenderer },
         { field: 'no_of_product', headerName: "Total Quantity", width: 125, cellRendererFramework: TooltipRenderer },
@@ -108,21 +140,22 @@ const Products = () => {
         { field: 'quantity_m', headerName: "M", width: 150, cellRendererFramework: TooltipRenderer },
         { field: 'quantity_xl', headerName: "XL", width: 150, cellRendererFramework: TooltipRenderer },
         { field: 'quantity_2xl', headerName: "2XL", width: 150, cellRendererFramework: TooltipRenderer },
-        { field: 'id', headerName: "Action", cellRenderer: ActionCellRenderer, width: 400 }
+        { field: 'id', headerName: "Action", cellRenderer: ActionCellRenderer, width: 450 }
     ])
 
-    function UpdateGroupIdHandleClick(){
+    function createGroupIdHandleClick(){
         if(selectedIds.length > 0){
             setIsLoading(true);
             console.log(selectedIds);
-            const headers = {
+            /*const headers = {
                 'Content-Type': 'application/json'
-            }
+            }*/
             
             let data = {product_id: selectedIds};
-            axios.post(global["axios_url"]+'/UpdateGroupID', data, {
+            axiosInstance.post('/createGroupID', data)
+            /*axios.post(global["axios_url"]+'/createGroupID', data, {
                 headers: headers
-            })
+            })*/
             .then((response) => {
                 getProductData();
                 alert(response.data);
@@ -203,6 +236,31 @@ const Products = () => {
         getProductData();
     }
 
+    const handleCellBlur = (event) => {
+        // Your logic to handle the blur event here
+        console.log('Cell blurred', event);
+        console.log('Cell blurred', event.newValue, event.oldValue, event.data.id);
+        if(event.newValue != event.oldValue){
+            setIsLoading(true);
+            axiosInstance.post('/UpdateGroupID', {product_id: event.data.id, group_id: event.newValue, sub_category_id: event.newValue.sub_category_id})
+            .then((response) => {
+                setIsLoading(false);
+                if(response.data.msgFlag === "success"){
+                    toast.success(response.data.message, {
+                        position: toast.POSITION.TOP_CENTER,
+                    });
+                }else{
+                    toast.warning(response.data.message, {
+                        position: toast.POSITION.TOP_CENTER,
+                    });
+                }
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+        }
+    };
+
     return (
         <div>
             {isLoading ? <Loader /> : ""}
@@ -265,7 +323,7 @@ const Products = () => {
                             <td><button className='btn btn-info' onClick={productSearch}>Search</button></td>
                             <td style={{width: "10px"}}></td>
                             <td>
-                                <button className="btn btn-primary" onClick={UpdateGroupIdHandleClick}> Update Group Id </button>
+                                <button className="btn btn-primary" onClick={createGroupIdHandleClick}> Create Group Id </button>
                             </td>
                         </tr>
                     </tbody>
@@ -278,6 +336,23 @@ const Products = () => {
                 
             
             </div>
+
+            <Modal show={showModal} onHide={handleCloseModal}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Product Image</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {
+                    imageLink &&
+                    (<img 
+                        //src={require("../../images/bill/"+imageLink)} 
+                        src={`${global.productImageUrl}${imageLink}`}
+                        alt="No bill to show" 
+                        style={{ height: '100%', width: '100%' }} 
+                    />)}
+                </Modal.Body>
+            </Modal>
+
             <div className="ag-theme-alpine" style={{height: 600}}>
                 <AgGridReact
                     rowData={rowData}
@@ -286,6 +361,7 @@ const Products = () => {
                     rowSelection={'multiple'}
                     onGridReady={onGridReady}
                     onSelectionChanged={onSelectionChanged}
+                    onCellValueChanged={handleCellBlur}
                     >
                         
                 </AgGridReact>

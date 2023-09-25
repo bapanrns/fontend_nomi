@@ -7,6 +7,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import Joi from 'joi';
 import Loader from '../../components/Loader';
 import global from "../../components/global";
+import axiosInstance from '../../components/axiosInstance';
 
 import {
     useParams,
@@ -60,9 +61,10 @@ const BuyDetailsAdd = () => {
         }
         
         let data = {id: shop_id};
-        await axios.post(global["axios_url"]+'/findBuyProductByPK', data, {
+        await axiosInstance.post('/findBuyProductByPK', data)
+        /*await axios.post(global["axios_url"]+'/findBuyProductByPK', data, {
             headers: headers
-        })
+        })*/
         .then((response) => {
             console.log(response.data);
             setEditData({...editData, 
@@ -102,14 +104,15 @@ const BuyDetailsAdd = () => {
 
     const getShopList = async () => {
         setIsLoading(true);
-        const headers = {
+        /*const headers = {
             'Content-Type': 'application/json'
-        }
+        }*/
         
         let data = {};
-        axios.post(global["axios_url"]+'/allShopList', data, {
+        axiosInstance.post('/allShopList', data)
+        /*axios.post(global["axios_url"]+'/allShopList', data, {
             headers: headers
-        })
+        })*/
         .then((response) => {
             setIsLoading(false);
             getShops(response.data)
@@ -137,9 +140,10 @@ const BuyDetailsAdd = () => {
                 'Content-Type': 'application/json'
             }
             
-            axios.post(global["axios_url"]+'/saveBuyProduct', editData, {
+            axiosInstance.post('/saveBuyProduct', editData)
+            /*axios.post(global["axios_url"]+'/saveBuyProduct', editData, {
                 headers: headers
-            })
+            })*/
             .then((response) => {
                 //console.log(response);
                 setIsLoading(false);
@@ -344,7 +348,12 @@ const BuyDetailsAdd = () => {
                         <div>
                             {originalBill && (
                                 <div style={{border: "1px dashed", float: 'right'}}>
-                                    <img src={require("../../images/bill/"+originalBill)} alt="" style={{ width: '200px', height: '200px'}}></img>
+                                    <img 
+                                        //src={require("../../images/bill/"+originalBill)} 
+                                        src={`${global.billImageUrl}${originalBill}`}
+                                        alt="No image found" 
+                                        style={{ width: '200px', height: '200px'}}
+                                    ></img>
                                 </div>
                             )}
                             {previewImage['bill'] && (

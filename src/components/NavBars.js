@@ -79,12 +79,19 @@ import '../components/css/profile.css';
     /** goToCheckout */
 
     const goToCheckout = () =>{
-        if ((JSON.parse(localStorage.getItem('cart')) || []).length > 0){
-            navigate("/checkout");
+        if(localStorage.getItem("login") === "true"){
+            if ((JSON.parse(localStorage.getItem('cart')) || []).length > 0){
+                navigate("/checkout");
+            }else{
+                toast.error('Cart is empty.', {
+                    position: toast.POSITION.TOP_CENTER,
+                });
+            }
         }else{
-            toast.error('Cart is empty.', {
+            toast.warn('Please log in to your account. After that, show your cart products.', {
                 position: toast.POSITION.TOP_CENTER,
             });
+            openLoginModal();
         }
     }
 
@@ -95,8 +102,14 @@ import '../components/css/profile.css';
         return (
             <Navbar bg="light" expand="lg" className='navbarBg'>
                 <Container fluid>
-                    <Navbar.Brand href="/">MoreBuy</Navbar.Brand>
-                    <Navbar.Toggle aria-controls="navbarScroll" />
+                    <Navbar.Brand href="/">BsKart</Navbar.Brand>
+                    <Navbar.Toggle className='NavBarManMenu' aria-controls="navbarScroll" >
+                        <img
+                            className='NavBarManMenuImg'
+                            src={require(`../images/user.png`)}
+                            alt='No Men'
+                            ></img>
+                    </Navbar.Toggle>
                     <Navbar.Collapse id="navbarScroll">
                     <Nav
                         className="me-auto my-2 my-lg-0"
@@ -166,7 +179,7 @@ import '../components/css/profile.css';
                 }
 
                 {
-                    newPassModal === true ? <NewPasswordModal modalHide={hideNewPasswordModal}/> : ""
+                    newPassModal === true ? <NewPasswordModal modalHide={hideNewPasswordModal} openLogin={()=>openLoginModal()} /> : ""
                 }
 
                 {

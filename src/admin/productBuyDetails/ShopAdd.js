@@ -5,6 +5,7 @@ import axios from "axios";
 import Joi from 'joi';
 import Loader from '../../components/Loader';
 import global from "../../components/global";
+import axiosInstance from '../../components/axiosInstance';
 
 import {
     useParams,
@@ -40,14 +41,15 @@ const BuyDetailsAdd = () => {
 
     const getShopById = async (shop_id) => {
         setIsLoading(true);
-        const headers = {
+        /*const headers = {
             'Content-Type': 'application/json'
-        }
+        }*/
         
         let data = {id: shop_id};
-        await axios.post(global["axios_url"]+'/findShop', data, {
+        await axiosInstance.post('/findShop', data)
+        /*await axios.post(global["axios_url"]+'/findShop', data, {
             headers: headers
-        })
+        })*/
         .then((response) => {
             setEditData(response.data);
             setFormData({
@@ -76,13 +78,14 @@ const BuyDetailsAdd = () => {
             console.log(validationResult.error);
             setErrors(validationErrors);
         } else {
-            const headers = {
+            /*const headers = {
                 'Content-Type': 'application/json'
-            }
+            }*/
             
-            axios.post(global["axios_url"]+'/shopAdd', editData, {
+            axiosInstance.post('/shopAdd', editData)
+           /* axios.post(global["axios_url"]+'/shopAdd', editData, {
                 headers: headers
-            })
+            })*/
             .then((response) => {
                 setIsLoading(false);
                 alert(response.data)
