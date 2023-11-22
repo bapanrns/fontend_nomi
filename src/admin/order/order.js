@@ -87,12 +87,16 @@ const Order = () => {
         },
         { field: 'product_image', headerName: "Image", width: 120, cellRendererFramework: ImageRenderer },
         { field: 'pId', headerName: "P ID.", width: 100 },
+        { field: 'delivery_address_id', headerName: "delivery_address_id", width: 50 },
         { field: 'orderId', headerName: "Order ID", width: 120 },
         { field: 'orderItemId', headerName: "Order Item Id", width: 120 },
+        { field: 'createdAt', headerName: "Created At", width: 120 },
         { field: 'quantity', headerName: "Quantity", width: 100 },
         { field: 'size', headerName: "Size", width: 80 },
         { field: 'delivery_pincode', headerName: "Delivery Pincode", width: 150 },
         { field: 'order_status', headerName: "Order Status", width: 150 },
+        { field: 'order_message', headerName: "Order Message", width: 150 },
+        { field: 'delivery_boy_id', headerName: "Delivery Boy", width: 220 },
         { field: 'price', headerName: "Total amount", width: 120 },
         { field: 'total_amount', headerName: "Total Amount", width: 150 },
         { field: 'orderId', headerName: "Action", cellRenderer: ActionCellRenderer, width: 450 }
@@ -126,6 +130,23 @@ const Order = () => {
 
     const findOrderDetails=()=>{
         getOrderData();
+    }
+
+    const getRowStyle=(params)=>{
+        let returnHash = { background: '#ffffff', color: '#000000' };;
+        if (params.data && params.data.order_status === 'Pending') {
+            returnHash = { background: '#cccccc', color: '#000000' };
+        }else if (params.data && params.data.order_status === 'Confirm') {
+            returnHash = { background: 'green', color: 'white' };
+        }else if (params.data && params.data.order_status === 'Complete') {
+            returnHash = { background: '#00cfff', color: 'white' };
+        }else if (params.data && params.data.order_status === 'Reject') {
+            returnHash = { background: '#000', color: 'white' };
+        }else if (params.data && params.data.order_status === 'Return Accept') {
+            returnHash = { background: 'orange', color: 'white' };
+        }
+        // Return null to apply the default row style.
+        return returnHash;
     }
 
     return (
@@ -189,6 +210,7 @@ const Order = () => {
                         pagination={true}
                         rowSelection={'multiple'}
                         onGridReady={onGridReady}
+                        getRowStyle={getRowStyle}
                         >
                             
                     </AgGridReact>

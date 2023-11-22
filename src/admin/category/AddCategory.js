@@ -36,7 +36,7 @@ const AddCategory = () => {
         }
         let data = {};
         data["id"] = id;
-        axios.post('http://localhost:8081/api/categoryFindId', data, {
+        axios.post('https://localhost:8081/api/categoryFindId', data, {
             headers: headers
         })
         .then((response) => {
