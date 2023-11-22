@@ -201,6 +201,21 @@
     cursor: pointer;
 }
 
+.modal-90w {
+    max-width: 90%;
+    width: 90%;
+    margin: auto;
+  }
+  
+  /* Optional: Center the modal vertically */
+  .modal-90w .modal-dialog {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /*min-height: 100vh;*/
+  }
+
 @media (max-width: 768px) {
     .homePageitemListForMobile{
         display: block;
@@ -216,6 +231,15 @@
     }
     .deliveryOptionDiv{
         width: 100%;
+    }
+
+    .axis-horizontal{
+        height: 300px;
+    }
+
+    .modal-90w {
+        max-width: 95%;
+        width: 95%;
     }
 }
 

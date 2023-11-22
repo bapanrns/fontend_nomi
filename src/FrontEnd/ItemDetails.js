@@ -18,7 +18,7 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import SubNavBars from '../components/SubNavBars';
 
 import YoutubeEmbed from "../components/YoutubeEmbed";
-import ShareLink from '../components/ShareLink';
+import ShareLink from '../components/ShareLink'; 
 
 import {
     useNavigate,
@@ -52,6 +52,7 @@ const ItemDetails = (e) => {
     const [sellPrice, setSellPrice] = useState(0);
     const [offerPrice, setOfferPrice] = useState(0);
     const [newPercentage, setNewPercentage] = useState(0);
+    const [itemWiseSize, setItemWiseSize] = useState([]);
     const getItemDetails = (id) => {
         setIsLoading(true);
         setItemSize("");
@@ -67,6 +68,11 @@ const ItemDetails = (e) => {
             //console.log(response.data[0]);
             setItemObj(response.data[0]);
             setIsLoading(false);
+            if([2, 6].includes(response.data[0]["category_id"])){
+                setItemWiseSize(["M", "L", "XL", "2XL"]);
+            }else{
+                setItemWiseSize(["32", "34", "36"]);
+            }
             // select size
             setItemSize(response.data[0]["quantity"][0]["size"]);
             setSellPrice(response.data[0]["quantity"][0]['sell_price']);
@@ -292,6 +298,7 @@ const ItemDetails = (e) => {
 
     const SubNavBarsUrlChange = (items="") =>{
         navigate("../items/"+items);
+        localStorage.removeItem('searchTermForType');
     }
 
     let windowHeight = window.innerHeight - 200;
@@ -323,7 +330,7 @@ const ItemDetails = (e) => {
                                 
                             </Row>
                             <Row>
-                            <Col md={12} className='homePageitemListForMobile' style={{height: windowHeight}}>
+                            <Col md={12} className='homePageitemListForMobile'>
                                     <ImageCarousel
                                         showThumbs={false}
                                         showStatus={false}
@@ -353,10 +360,12 @@ const ItemDetails = (e) => {
                                             </div>
                                         ))}
                                     </ImageCarousel>
+                                    
                                 </Col>
                                 {
                                     itemsObj["youtube_link"] !=="" &&
-                                    <div style={{marginTop: "5px", marginBottom: "5px"}}>
+                                    <div style={{marginTop: "30px", marginBottom: "5px"}}>
+                                        <p> Video </p>
                                         <YoutubeEmbed embedId={itemsObj["youtube_link"]} />
                                     </div>
                                 }
@@ -364,7 +373,7 @@ const ItemDetails = (e) => {
                         </Col>
                         <Col md={5}>
                             <div>
-                                <p className='headdingP ProDetailssharelink'>{itemsObj.product_name}  <ShareLink title={itemsObj.product_name} text={itemsObj.company_name} url={`http://www.bskart.com/product-details/${itemsObj.item_id}`}></ShareLink></p>
+                                <p className='headdingP ProDetailssharelink'>{itemsObj.product_name}  <ShareLink title={itemsObj.product_name} text={itemsObj.company_name} url={`https://www.bskart.com/product-details/${itemsObj.item_id}`}></ShareLink></p>
                                 <p className='subHeaddingP'>{itemsObj.company_name}</p>
                             </div>
                             <div style={{marginTop: "25px", marginBottom: "25px"}}>
@@ -462,14 +471,14 @@ const ItemDetails = (e) => {
                                 </div>
                             </div>
                             {/* Add category id which is needed size */}
-                            {([2].includes(itemsObj.category_id)) ?(
+                            {([2, 6, 8].includes(itemsObj.category_id)) ?(
                             <>
                                 <div style={{ marginBottom: "5px"}}>
                                     <p className={'headdingP '+selectSize}>Select Size</p>
                                 </div>
                                 <div style={{width: "auto", display: "flex", marginBottom: "5px"}}>
                                     {
-                                        ["M", "L", "XL", "2XL"].map(( size, index ) => (
+                                        itemWiseSize.map(( size, index ) => (
                                     
                                     <div className={(itemSize.toString() === size.toString())?"form-check check-size active-size":"form-check check-size"} key={"check-size-key-"+index}>
                                         <label className={itemsObj.productSize.includes(size.toString())?"form-check-label check-size-label":"form-check-label check-size-label check-size-label-desiabled"} htmlFor={size.toString()}>
@@ -515,12 +524,50 @@ const ItemDetails = (e) => {
 
                             <div style={{clear: "both"}}>
                                 <h5>Product Details</h5>
-                                <div style={{marginBottom: '6'}}><b>Occasion: </b> {itemsObj.occasion}</div>
-                                <div style={{marginBottom: '6'}}><b>Length: </b> {itemsObj.saree_length} meters</div>
-                                <div style={{marginBottom: '6'}}><b>Width: </b> 47 inches</div>
-                                <div style={{marginBottom: '6'}}><b>Blouse Piece: </b> {itemsObj.blouse}</div>
-                                <div style={{marginBottom: '6'}}><b>Wash care: </b> {itemsObj.fabric_care}</div>
-                                <div style={{marginBottom: '6'}}><b>Fabric: </b> {itemsObj.product_febric}</div>
+                                {/* ------------------ For Saree -------------------------------- */}
+                                {
+                                    (global.sareeCatIds.includes(itemsObj.category_id)) &&
+                                    <>
+                                    <div style={{marginBottom: '6'}}><b>Occasion: </b> {itemsObj.occasion}</div>
+                                    <div style={{marginBottom: '6'}}><b>Length: </b> {itemsObj.saree_length} meters</div>
+                                    <div style={{marginBottom: '6'}}><b>Width: </b> 47 inches</div>
+                                    <div style={{marginBottom: '6'}}><b>Blouse Piece: </b> {itemsObj.blouse}</div>
+                                    <div style={{marginBottom: '6'}}><b>Wash care: </b> {itemsObj.fabric_care}</div>
+                                    <div style={{marginBottom: '6'}}><b>Fabric: </b> {itemsObj.product_febric}</div>
+                                    </>
+                                }
+                                {/* ------------------ For Kurti -------------------------------- */}
+                                {
+                                    (global.kurtiCatIds.includes(itemsObj.category_id)) &&
+                                    <>
+                                    <div style={{marginBottom: '6'}}><b>Occasion: </b> {itemsObj.occasion}</div>
+                                    <div style={{marginBottom: '6'}}><b>Wash care: </b> {itemsObj.fabric_care}</div>
+                                    <div style={{marginBottom: '6'}}><b>Fabric: </b> {itemsObj.product_febric}</div>
+                                    <div style={{marginBottom: '6'}}><b>Type: </b> {itemsObj.type}</div>
+                                    </>
+                                }
+                                
+                                {/* ------------------ For Kurti -------------------------------- */}
+                                {
+                                    (global.jewelleryCatIds.includes(itemsObj.category_id)) &&
+                                    <>
+                                        <div style={{marginBottom: '6'}}><b>Occasion: </b> {itemsObj.occasion}</div>
+                                        <div style={{marginBottom: '6'}}><b>Material: </b> {itemsObj.material}</div>
+                                        <div style={{marginBottom: '6'}}><b>Stone Type: </b> {itemsObj.stone_type}</div>
+                                        <div style={{marginBottom: '6'}}><b>Type: </b> {itemsObj.type}</div>
+                                    </>
+                                }
+
+                                {/* ------------------ For Blouse -------------------------------- */}
+                                {
+                                    (global.blouseCatIds.includes(itemsObj.category_id)) &&
+                                    <>
+                                        <div style={{marginBottom: '6'}}><b>Occasion: </b> {itemsObj.occasion}</div>
+                                        <div style={{marginBottom: '6'}}><b>Wash care: </b> {itemsObj.fabric_care}</div>
+                                        <div style={{marginBottom: '6'}}><b>Fabric: </b> {itemsObj.product_febric}</div>
+                                        <div style={{marginBottom: '6'}}><b>Type: </b> {itemsObj.type}</div>
+                                    </>
+                                }
                             </div>
                             
                         </Col>
@@ -590,7 +637,7 @@ const ItemDetails = (e) => {
                                                     }}
                                                 />
                                                 <span className='nId'>N{obj.item_id}</span>
-                                                <ShareLink title={obj.product_name} text={obj.company_name} url={`http://www.bskart.com/product-details/${obj.item_id}`}></ShareLink>
+                                                <ShareLink title={obj.product_name} text={obj.company_name} url={`https://www.bskart.com/product-details/${obj.item_id}`}></ShareLink>
                                             </div>
                                             <div id={index} className='productPrice'>
                                                 <span className='actualPrice'>₹{obj.offerPrice}</span>
@@ -604,7 +651,7 @@ const ItemDetails = (e) => {
                     </div>
                 </Container>
 
-                <Modal show={showModal} onHide={handleCloseModal}>
+                <Modal show={showModal} onHide={handleCloseModal} dialogClassName="modal-90w">
                     <Modal.Header closeButton>
                         <Modal.Title>Product Image</Modal.Title>
                     </Modal.Header>

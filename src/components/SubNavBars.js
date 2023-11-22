@@ -208,7 +208,7 @@ const SubNavBars = (props) => {
                         >
                         <span className="nav-link">Kurti</span>
                     </li>
-                    
+                    {/*
                     <li className="nav-item menuLink"
                         onClick={(e) => { 
                             props.SubNavBarsUrlChange("gown")
@@ -221,7 +221,7 @@ const SubNavBars = (props) => {
                         }}
                         >
                         <span className="nav-link" >Palazzos</span>
-                    </li>
+                    </li>*/}
                     <li className="nav-item menuLink"
                         onClick={(e) => { 
                             props.SubNavBarsUrlChange("kurta sets & Salwar suits")
@@ -235,6 +235,13 @@ const SubNavBars = (props) => {
                         }}
                     >
                         <span className="nav-link" >Jewellery</span>
+                    </li>
+                    <li className="nav-item menuLink"
+                        onClick={(e) => { 
+                            props.SubNavBarsUrlChange("blouse")
+                        }}
+                        >
+                        <span className="nav-link" >Blouse</span>
                     </li>
                 </ul>
             </div>
@@ -266,7 +273,7 @@ const SubNavBars = (props) => {
                             >
                             Kurti
                         </div>
-                        
+                        {/*
                         <div className="d-inline-block px-3 MoSubCat"
                             onClick={(e) => { 
                                 props.SubNavBarsUrlChange("gown")
@@ -279,7 +286,7 @@ const SubNavBars = (props) => {
                             }}
                             >
                             Palazzos
-                        </div>
+                        </div>*/}
                         <div className="d-inline-block px-3 MoSubCat"
                             onClick={(e) => { 
                                 props.SubNavBarsUrlChange("kurta sets & Salwar suits")
@@ -293,6 +300,13 @@ const SubNavBars = (props) => {
                             }}
                         >
                             Jewellery
+                        </div>
+                        <div className="d-inline-block px-3 MoSubCat"
+                            onClick={(e) => { 
+                                props.SubNavBarsUrlChange("blouse")
+                            }}
+                        >
+                            Blouse
                         </div>
                         {/* Add more items as needed */}
                     </div>

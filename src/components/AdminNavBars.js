@@ -67,7 +67,7 @@ import '../components/css/profile.css';
     }
 
         return (
-            <Navbar bg="light" expand="lg" className='navbarBg'>
+            <Navbar bg="light" expand="lg" className='navbarBg Badmin'>
                 <Container fluid>
                     <Navbar.Brand href="/">BsKart</Navbar.Brand>
                     <Navbar.Toggle aria-controls="navbarScroll" />
@@ -133,6 +133,14 @@ import '../components/css/profile.css';
                             <Link className="dropdown-item" to="/admin/add_delivery_person">Add Delivery Person</Link>
                         </NavDropdown>
                         
+
+                        <NavDropdown title="Buy Now" id="basic-nav-dropdown">
+                            <Link className="dropdown-item" to="/admin/product_buy">Buy Now</Link>
+                        </NavDropdown>
+
+                        <NavDropdown title="User List" id="basic-nav-dropdown">
+                            <Link className="dropdown-item" to="/admin/user_list">User List</Link>
+                        </NavDropdown>
                     </Nav>
                     
                     </Navbar.Collapse>

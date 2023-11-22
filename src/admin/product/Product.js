@@ -127,6 +127,7 @@ const Products = () => {
         },
         { field: 'id', headerName: "PID", width: 90 },
         { field: 'product_img', headerName: "Img", width: 150, cellRendererFramework: ImageRenderer },
+        { field: 'youtube_link', headerName: "Video", width: 150},
         { field: 'category_id', headerName: "Category", width: 150, filter: 'agTextColumnFilter' },
         { field: 'sub_category_desc', headerName: "Sub Category", width: 150, filter: 'agTextColumnFilter' },
         { field: 'group_id', headerName: "Group Id", width: 90, editable: true, filter: 'agNumberColumnFilter' },
@@ -242,7 +243,7 @@ const Products = () => {
         console.log('Cell blurred', event.newValue, event.oldValue, event.data.id);
         if(event.newValue != event.oldValue){
             setIsLoading(true);
-            axiosInstance.post('/UpdateGroupID', {product_id: event.data.id, group_id: event.newValue, sub_category_id: event.newValue.sub_category_id})
+            axiosInstance.post('/UpdateGroupID', {product_id: event.data.id, group_id: event.newValue, sub_category_id: event.data.sub_category_id})
             .then((response) => {
                 setIsLoading(false);
                 if(response.data.msgFlag === "success"){

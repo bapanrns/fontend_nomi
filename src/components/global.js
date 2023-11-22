@@ -22,7 +22,12 @@ const colorObj = [
 	{"label": "Deep Ocean Blue", "code": "#107889", "color": "#FFFFFF"},
     {"label": "Cerulean Blue", "code": "#0286c9", "color": "#FFFFFF"},
     {"label": "Royal Blue", "code": "#0649b0", "color": "#FFFFFF"},
-    {"label": "Moon Glow", "code": "#FCFEDA", "color": "#000000"}
+    {"label": "Moon Glow", "code": "#FCFEDA", "color": "#000000"},
+    {"label": "Salmon", "code": "#f0728c", "color": "#FFFFFF"},
+    {"label": "Parrot Green", "code": "#beea4f", "color": "#FFFFFF"},
+    {"label": "Rifle Green", "code": "#40584b", "color": "#FFFFFF"},
+    {"label": "Magenta", "code": "#c11771", "color": "#FFFFFF"},
+    {"label": "Light Teal", "code": "#a0f9fc", "color": "#000000"}
     ];
 
 const priceOptionForWomen = [
@@ -61,17 +66,22 @@ reasonsForCancellation["7"]="Purchased product from somewhere else"
 const globalVariable = {
     "admin_product_image_url": "/images/product/",
     "product_bill": "",
-    //"axios_url": "http://localhost:8081/api",
-	"axios_url": "http://backendnode.nomimart.in:80/api",
+    "axios_url": "http://localhost:8081/api",
+	//"axios_url": "https://backendnode.nomimart.in:443/api",
     "color": colorObj,
     "priceOptionForWomen": priceOptionForWomen,
     "occasion": occasion,
     "careInstruction": careInstruction,
     "reasonsForCancellation": reasonsForCancellation,
     //"productImageUrl": "images/product/"
-    "productImageUrl": "http://bskart.com/images/product/",
-    "categoriesImageUrl": "http://bskart.com/images/categories/",
-    "billImageUrl": "http://bskart.com/images/bill/",
-    "kurtiCatIds": [2, 6] 
+    "productImageUrl": "https://bskart.com/images/product/",
+    "categoriesImageUrl": "https://bskart.com/images/categories/",
+    "billImageUrl": "https://bskart.com/images/bill/",
+    "kurtiCatIds": [2, 6],
+    "sareeCatIds": [1],
+    "jewelleryCatIds": [3],
+    "blouseCatIds": [8, 10],
+    "Saree": " / ( শাড়ি )",
+    "Kurti": " / ( কুর্তি )"
 };
 export default globalVariable;

@@ -58,6 +58,12 @@ const Home = () => {
         subCatId = localStorage.getItem('searchTermForType');
     }
 
+    let globalSearch = "";
+
+    if (localStorage.hasOwnProperty('globalSearch')) {
+        globalSearch = localStorage.getItem('globalSearch');
+    }
+
     const [filterHash, setfilterHash] = useState({
         fabric: [],
         color: [],
@@ -66,7 +72,8 @@ const Home = () => {
         careInstruction: [],
         type: [subCatId],
         discount: [],
-        serchFor: useParams()['id']
+        serchFor: useParams()['id'],
+        globalSearch: globalSearch
     });
 
     /** Collect filter hash from leftNavBar js */
@@ -101,6 +108,7 @@ const Home = () => {
             //console.log(response.data);
             setItemsListArray(response.data);
             setIsLoading(false);
+            localStorage.removeItem('globalSearch');
         })
         .catch((error) => {
             console.log(error);
@@ -111,10 +119,11 @@ const Home = () => {
     useEffect(() => {
         leftPanelOpenShowFnOnload();
     }, []); 
-    
+    let urlType = useParams()['id'];
     useEffect(() => {
+        console.log("================", urlType);
         getItemsDetails();
-    }, [filterHash]);
+    }, [filterHash, urlType]);
 
     const [leftPanelOpenShow, setLeftPanelOpenShow] = useState(true);
     const [leftPanelOpenShowTest, setLeftPanelOpenShowText] = useState("Hide Filter");
@@ -138,7 +147,6 @@ const Home = () => {
     }
 
     const parameter = useParams();
-
         return (
             <div>
                 {isLoading ? <Loader /> : ""}
@@ -161,8 +169,9 @@ const Home = () => {
                             
                         </Col>
                         <Col xs={12} md={10}>
-                            <Row>
-                                {itemsListArray.map((object, key) => (
+                            <Row style={{minHeight: "350px"}}>
+                                {itemsListArray.length > 0 ?
+                                itemsListArray.map((object, key) => (
                                     <Col className='itemsClMd3' md={3} key={"list"+key}>
                                         <div className='sareeList'>
                                             <div className='product productShare'>
@@ -174,7 +183,7 @@ const Home = () => {
                                                         productDetailsFn(object.items_id)
                                                     }}
                                                 />
-                                                <ShareLink title={object.product_name} text={object.company_name} url={`http://www.bskart.com/product-details/${object.item_id}`}></ShareLink>
+                                                <ShareLink title={object.product_name} text={object.company_name} url={`https://www.bskart.com/product-details/${object.items_id}`}></ShareLink>
                                             </div>
                                             <div className='productDesc' title={object.product_name}>{object.product_name} </div>
                                             <div className='productDesc' title={object.company_name}>{object.company_name} </div>  
@@ -185,7 +194,9 @@ const Home = () => {
                                             </div>       
                                         </div>
                                     </Col>
-                                ))}
+                                ))
+                                :"No Record Found"
+                            }
                             </Row>
                         </Col>
                     </Row>

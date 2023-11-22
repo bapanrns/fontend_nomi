@@ -125,36 +125,101 @@ const ProductAdd = () => {
         color: [],
         occasion: []
     });
-    const [hideQuantity, sethideQuantity] = useState({
+    const [hideSareeQuantity, sethideQuantity] = useState({
         display: "none",
         float: 'left', 
         paddingRight: '10px'
     });
-    const [hideQuantityType, sethideQuantityType] = useState({
+    const [hideKurtiQuantity, sethideQuantityType] = useState({
+        display: "none",
+        float: 'left', 
+        paddingRight: '10px'
+    });
+    //hideBlouse
+    const [hideBlouse, setHideBlouse] = useState({
+        display: "none",
+        float: 'left', 
+        paddingRight: '10px'
+    });
+
+    const [hideJewellery, setHideJewellery] = useState({
         display: "none",
         float: 'left', 
         paddingRight: '10px'
     });
 
     const hideShowQuantity = (category_id) => {
-        console.log("category_id: ", category_id);
-        if(parseInt(category_id, 10) === 2){
+        if(global.kurtiCatIds.includes(parseInt(category_id, 10))){
+        //if(parseInt(category_id, 10) === 2){
             sethideQuantityType({
-                ...hideQuantityType,
+                ...hideKurtiQuantity,
                 display: "block"
             });
             sethideQuantity({
-                ...hideQuantity,
+                ...hideSareeQuantity,
                 display: "none"
+            });
+            setHideBlouse({
+                ...hideBlouse,
+                display: "none"
+            });
+            setHideJewellery({
+                ...hideJewellery,
+                display: "none"
+            });
+        //}else if(global.blouseCatIds.includes(parseInt(category_id, 10))){
+        }else if(global.blouseCatIds.includes(parseInt(category_id, 10))){
+            //hideBlouse
+            setHideBlouse({
+                ...hideBlouse,
+                display: "block"
+            });
+            sethideQuantityType({
+                ...hideKurtiQuantity,
+                display: "none"
+            });
+            sethideQuantity({
+                ...hideSareeQuantity,
+                display: "none"
+            });
+            setHideJewellery({
+                ...hideJewellery,
+                display: "none"
+            });
+        }else if(global.jewelleryCatIds.includes(parseInt(category_id, 10))){
+            //hideBlouse
+            setHideBlouse({
+                ...hideBlouse,
+                display: "none"
+            });
+            sethideQuantityType({
+                ...hideKurtiQuantity,
+                display: "none"
+            });
+            sethideQuantity({
+                ...hideSareeQuantity,
+                display: "block"
+            });
+            setHideJewellery({
+                ...hideJewellery,
+                display: "block"
             });
         }else{
             sethideQuantityType({
-                ...hideQuantityType,
+                ...hideKurtiQuantity,
                 display: "none"
             });
             sethideQuantity({
-                ...hideQuantity,
+                ...hideSareeQuantity,
                 display: "block"
+            });
+            setHideBlouse({
+                ...hideBlouse,
+                display: "none"
+            });
+            setHideJewellery({
+                ...hideJewellery,
+                display: "none"
             });
         }
     };
@@ -215,7 +280,9 @@ const ProductAdd = () => {
         weight:"",
         youtube_link: "",
         fabric_care: "",
-        bill_id_and_shop_id: ""
+        bill_id_and_shop_id: "",
+        material: "",
+        stone_type: ""
     }); 
     const [imageArray, setImageArray] = useState();
     async function getProductById(id){
@@ -487,7 +554,7 @@ const ProductAdd = () => {
                         </div>
 
                         <div className="col-md-4"style={{float: 'left', paddingRight: '10px'}}>
-                            <label className="form-label" htmlFor="delivery_charges.ControlInput1">Delivery Charges: </label>
+                            <label className="form-label" htmlFor="delivery_charges.ControlInput1">Return: </label>
                             <select
                                 className='form-select'
                                 id="bill_id_and_shop_id"
@@ -505,7 +572,7 @@ const ProductAdd = () => {
 
                     <div className='col-md-12' style={{padding: "5px", display: 'inline-block'}}>
                         {quantityValidation.quantity && <span className="error">Error in Quantity</span>}
-                        <div className="col-md-4" style={hideQuantity}>
+                        <div className="col-md-4" style={hideSareeQuantity}>
                             <label className="form-label" htmlFor="quantity.ControlInput1">Quantity: </label>
                             <input 
                                 type="text" 
@@ -516,7 +583,7 @@ const ProductAdd = () => {
                                 disabled = {true}
                             />
                         </div>
-                        <div className="col-md-4" style={hideQuantity}>
+                        <div className="col-md-4" style={hideSareeQuantity}>
                             <label className="form-label" htmlFor="quantity_buy_price.ControlInput1">Quantity Buy Price: </label>
                             <input 
                                 type="text" 
@@ -528,7 +595,7 @@ const ProductAdd = () => {
                             />
                         </div>
                         
-                        <div className="col-md-4"style={hideQuantity}>
+                        <div className="col-md-4"style={hideSareeQuantity}>
                             <label className="form-label" htmlFor="quantity_selling_price.ControlInput1">Quantity Sell Price: </label>
                             <input 
                                 type="text" 
@@ -540,7 +607,7 @@ const ProductAdd = () => {
                             />
                         </div>
                         
-                        <div className="col-md-4" style={hideQuantityType}>
+                        <div className="col-md-4" style={hideKurtiQuantity}>
                             {quantityValidation.quantityXs && <span className="error">Error in Quantity</span>}
                             <label className="form-label" htmlFor="quantityXs.ControlInput1">Quantity: <b>XS</b> 75 cm = 28 Inches </label>
                             <input 
@@ -553,7 +620,7 @@ const ProductAdd = () => {
                             />
                         </div>
 
-                        <div className="col-md-4" style={hideQuantityType}>
+                        <div className="col-md-4" style={hideKurtiQuantity}>
                             <label className="form-label" htmlFor="quantityXs_buy_price.ControlInput1">Quantity <b>XS</b> Buy Price: </label>
                             <input 
                                 type="text" 
@@ -565,7 +632,7 @@ const ProductAdd = () => {
                             />
                         </div>
                         
-                        <div className="col-md-4"style={hideQuantityType}>
+                        <div className="col-md-4"style={hideKurtiQuantity}>
                             <label className="form-label" htmlFor="quantityXs_selling_price.ControlInput1">Quantity <b>XS</b> Sell Price: </label>
                             <input 
                                 type="text" 
@@ -577,7 +644,7 @@ const ProductAdd = () => {
                             />
                         </div>
                         
-                        <div className="col-md-4" style={hideQuantityType}>
+                        <div className="col-md-4" style={hideKurtiQuantity}>
                             {quantityValidation.quantityS && <span className="error">Error in Quantity <b>S</b></span>}
                             <label className="form-label" htmlFor="quantityS.ControlInput1">Quantity: <b>S</b> 80 cm = 30 Inches</label>
                             <input 
@@ -590,7 +657,7 @@ const ProductAdd = () => {
                             />
                         </div>
 
-                        <div className="col-md-4" style={hideQuantityType}>
+                        <div className="col-md-4" style={hideKurtiQuantity}>
                             <label className="form-label" htmlFor="quantityS_buy_price.ControlInput1">Quantity <b>S</b> Buy Price: </label>
                             <input 
                                 type="text" 
@@ -602,7 +669,7 @@ const ProductAdd = () => {
                             />
                         </div>
                         
-                        <div className="col-md-4"style={hideQuantityType}>
+                        <div className="col-md-4"style={hideKurtiQuantity}>
                             <label className="form-label" htmlFor="quantityS_selling_price.ControlInput1">Quantity <b>S</b> Sell Price: </label>
                             <input 
                                 type="text" 
@@ -614,7 +681,7 @@ const ProductAdd = () => {
                             />
                         </div>
                         
-                        <div className="col-md-4" style={hideQuantityType}>
+                        <div className="col-md-4" style={hideKurtiQuantity}>
                             {quantityValidation.quantityL && <span className="error">Error in Quantity <b>L</b></span>}
                             <label className="form-label" htmlFor="quantityL.ControlInput1">Quantity: <b>L</b> 90 cm = 3 Inches</label>
                             <input 
@@ -627,7 +694,7 @@ const ProductAdd = () => {
                             />
                         </div>
 
-                        <div className="col-md-4" style={hideQuantityType}>
+                        <div className="col-md-4" style={hideKurtiQuantity}>
                             <label className="form-label" htmlFor="quantityL_buy_price.ControlInput1">Quantity <b>L</b> Buy Price: </label>
                             <input 
                                 type="text" 
@@ -639,7 +706,7 @@ const ProductAdd = () => {
                             />
                         </div>
                         
-                        <div className="col-md-4"style={hideQuantityType}>
+                        <div className="col-md-4"style={hideKurtiQuantity}>
                             <label className="form-label" htmlFor="quantityL_selling_price.ControlInput1">Quantity <b>L</b> Sell Price: </label>
                             <input 
                                 type="text" 
@@ -651,7 +718,7 @@ const ProductAdd = () => {
                             />
                         </div>
                         
-                        <div className="col-md-4" style={hideQuantityType}>
+                        <div className="col-md-4" style={hideKurtiQuantity}>
                             {quantityValidation.quantityM && <span className="error">Error in Quantity <b>M</b></span>}
                             <label className="form-label" htmlFor="quantityM.ControlInput1">Quantity: <b>M</b> 85 cm = 32 Inches</label>
                             <input 
@@ -664,7 +731,7 @@ const ProductAdd = () => {
                             />
                         </div>
 
-                        <div className="col-md-4" style={hideQuantityType}>
+                        <div className="col-md-4" style={hideKurtiQuantity}>
                             <label className="form-label" htmlFor="quantityM_buy_price.ControlInput1">Quantity <b>M</b> Buy Price: </label>
                             <input 
                                 type="text" 
@@ -676,7 +743,7 @@ const ProductAdd = () => {
                             />
                         </div>
                         
-                        <div className="col-md-4"style={hideQuantityType}>
+                        <div className="col-md-4"style={hideKurtiQuantity}>
                             <label className="form-label" htmlFor="quantityM_selling_price.ControlInput1">Quantity <b>M</b> Sell Price: </label>
                             <input 
                                 type="text" 
@@ -688,7 +755,7 @@ const ProductAdd = () => {
                             />
                         </div>
                         
-                        <div className="col-md-4" style={hideQuantityType}>
+                        <div className="col-md-4" style={hideKurtiQuantity}>
                             {quantityValidation.quantityXl && <span className="error">Error in Quantity <b>XL</b></span>}
                             <label className="form-label" htmlFor="quantityXl.ControlInput1">Quantity: <b>XL</b> 95 cm = 36 Inches</label>
                             <input 
@@ -700,7 +767,7 @@ const ProductAdd = () => {
                                 disabled = {true}
                             />
                         </div>
-                        <div className="col-md-4" style={hideQuantityType}>
+                        <div className="col-md-4" style={hideKurtiQuantity}>
                             <label className="form-label" htmlFor="quantityXl_buy_price.ControlInput1">Quantity <b>XL</b> Buy Price: </label>
                             <input 
                                 type="text" 
@@ -712,7 +779,7 @@ const ProductAdd = () => {
                             />
                         </div>
                         
-                        <div className="col-md-4"style={hideQuantityType}>
+                        <div className="col-md-4"style={hideKurtiQuantity}>
                             <label className="form-label" htmlFor="quantityXl_selling_price.ControlInput1">Quantity <b>XL</b> Sell Price: </label>
                             <input 
                                 type="text" 
@@ -724,7 +791,7 @@ const ProductAdd = () => {
                             />
                         </div>
                         
-                        <div className="col-md-4" style={hideQuantityType}>
+                        <div className="col-md-4" style={hideKurtiQuantity}>
                             {quantityValidation.quantity2Xl && <span className="error">Error in Quantity <b>2XL</b></span>}
                             <label className="form-label" htmlFor="quantity2Xl.ControlInput1">Quantity: <b>2XL</b> 100 cm = 38 Inches</label>
                             <input 
@@ -737,7 +804,7 @@ const ProductAdd = () => {
                             />
                         </div>
 
-                        <div className="col-md-4" style={hideQuantityType}>
+                        <div className="col-md-4" style={hideKurtiQuantity}>
                             <label className="form-label" htmlFor="quantity2Xl_buy_price.ControlInput1">Quantity <b>2XL</b> Buy Price: </label>
                             <input 
                                 type="text" 
@@ -749,7 +816,7 @@ const ProductAdd = () => {
                             />
                         </div>
                         
-                        <div className="col-md-4" style={hideQuantityType}>
+                        <div className="col-md-4" style={hideKurtiQuantity}>
                             <label className="form-label" htmlFor="quantity2Xl_selling_price.ControlInput1">Quantity <b>2XL</b> Sell Price: </label>
                             <input 
                                 type="text" 
@@ -760,7 +827,120 @@ const ProductAdd = () => {
                                 disabled = {true}
                             />
                         </div>
+
+
+                        {/** Blouse */}
+
+                        <div className="col-md-4" style={hideBlouse}>
+                            <label className="form-label" htmlFor="quantity32.ControlInput1">Quantity: <b>32</b></label>
+                            <input 
+                                type="text" 
+                                name='quantity32'
+                                id="quantity32.ControlInput1" 
+                                className="form-control"
+                                value={editData['quantity32']}
+                                disabled = {true}
+                            />
+                        </div>
+                        <div className="col-md-4" style={hideBlouse}>
+                            <label className="form-label" htmlFor="quantity32_buy_price.ControlInput1">Quantity <b>32</b> Buy Price: </label>
+                            <input 
+                                type="text" 
+                                name='quantity32_buy_price'
+                                id="quantity32_buy_price.ControlInput1" 
+                                className="form-control"
+                                value={editData['quantity32_buy_price']}
+                                disabled = {true}
+                            />
+                        </div>
+                        
+                        <div className="col-md-4" style={hideBlouse}>
+                            <label className="form-label" htmlFor="quantity32_selling_price.ControlInput1">Quantity <b>32</b> Sell Price: </label>
+                            <input 
+                                type="text" 
+                                name='quantity32_selling_price'
+                                id="quantity32_selling_price.ControlInput1" 
+                                className="form-control"
+                                value={editData['quantity32_selling_price']}
+                                disabled = {true}
+                            />
+                        </div>
+
+                        <div className="col-md-4" style={hideBlouse}>
+                            <label className="form-label" htmlFor="quantity34.ControlInput1">Quantity: <b>34</b></label>
+                            <input 
+                                type="text" 
+                                name='quantity34'
+                                id="quantity34.ControlInput1" 
+                                className="form-control"
+                                value={editData['quantity34']}
+                                disabled = {true}
+                            />
+                        </div>
+
+                        <div className="col-md-4" style={hideBlouse}>
+                            <label className="form-label" htmlFor="quantity34_buy_price.ControlInput1">Quantity <b>34</b> Buy Price: </label>
+                            <input 
+                                type="text" 
+                                name='quantity34_buy_price'
+                                id="quantity34_buy_price.ControlInput1" 
+                                className="form-control"
+                                value={editData['quantity34_buy_price']}
+                                disabled = {true}
+                            />
+                        </div>
+                        
+                        <div className="col-md-4" style={hideBlouse}>
+                            <label className="form-label" htmlFor="quantity34_selling_price.ControlInput1">Quantity <b>34</b> Sell Price: </label>
+                            <input 
+                                type="text" 
+                                name='quantity34_selling_price'
+                                id="quantity34_selling_price.ControlInput1" 
+                                className="form-control"
+                                value={editData['quantity34_selling_price']}
+                                disabled = {true}
+                            />
+                        </div>
+
+                        <div className="col-md-4" style={hideBlouse}>
+                            <label className="form-label" htmlFor="quantity36.ControlInput1">Quantity: <b>36</b></label>
+                            <input 
+                                type="text" 
+                                name='quantity36'
+                                id="quantity36.ControlInput1" 
+                                className="form-control"
+                                value={editData['quantity36']}
+                                disabled = {true}
+                            />
+                        </div>
+
+                        <div className="col-md-4" style={hideBlouse}>
+                            <label className="form-label" htmlFor="quantity36_buy_price.ControlInput1">Quantity <b>36</b> Buy Price: </label>
+                            <input 
+                                type="text" 
+                                name='quantity36_buy_price'
+                                id="quantity36_buy_price.ControlInput1" 
+                                className="form-control"
+                                value={editData['quantity36_buy_price']}
+                                disabled = {true}
+                            />
+                        </div>
+                        
+                        <div className="col-md-4" style={hideBlouse}>
+                            <label className="form-label" htmlFor="quantity36_selling_price.ControlInput1">Quantity <b>36</b> Sell Price: </label>
+                            <input 
+                                type="text" 
+                                name='quantity36_selling_price'
+                                id="quantity36_selling_price.ControlInput1" 
+                                className="form-control"
+                                value={editData['quantity36_selling_price']}
+                                disabled = {true}
+                            />
+                        </div>
                     </div>
+
+                    
+                   
 
                     <div style={{width: '100%', backgroundColor: "#00cfff", textAlign: "center", padding: '10px', clear: 'both', marginTop: '5px'}}>Product Information</div>
 
@@ -840,7 +1020,7 @@ const ProductAdd = () => {
                                 <option value="2023-05">2023-05</option>
                             </select>
                         </div>
-                        <div className="col-md-4" style={hideQuantity}>
+                        <div className="col-md-4" style={hideSareeQuantity}>
                             <label className="form-label" htmlFor="saree_length">Saree Length:</label>
                             <input 
                                 type="text" 
@@ -851,7 +1031,7 @@ const ProductAdd = () => {
                                 disabled = {true}
                             />
                         </div>
-                        <div className="col-md-4" style={hideQuantity}>
+                        <div className="col-md-4" style={hideSareeQuantity}>
                             <label className="form-label" htmlFor="blouse.ControlInput1">Blouse Piece:</label>
                             <select
                                 className='form-select'
@@ -864,7 +1044,7 @@ const ProductAdd = () => {
                                 <option value="Yes">Yes</option>
                             </select>
                         </div>
-                        <div className="col-md-4" style={hideQuantity}>
+                        <div className="col-md-4" style={hideSareeQuantity}>
                             <label className="form-label" htmlFor="blouse_length">Blouse Length:</label>
                             <input 
                                 type="text" 
@@ -929,6 +1109,34 @@ const ProductAdd = () => {
                                 })
 
                             }
+                        </div>
+
+                        <div className="col-md-4" style={hideJewellery}>
+                            <label className="form-label" htmlFor="material.ControlInput1">Material:</label>
+                            <select
+                                className='form-select'
+                                id="material"
+                                name="material"
+                                value={editData.material}
+                            >   
+                                <option value="">NULL</option>
+                                <option value="2023-04">2023-04</option>
+                                <option value="2023-05">2023-05</option>
+                            </select>
+                        </div>
+
+                        <div className="col-md-4" style={hideJewellery}>
+                            <label className="form-label" htmlFor="stone_type.ControlInput1">Stone Type:</label>
+                            <select
+                                className='form-select'
+                                id="stone_type"
+                                name="stone_type"
+                                value={editData.stone_type}
+                            >   
+                                <option value="">NULL</option>
+                                <option value="2023-04">2023-04</option>
+                                <option value="2023-05">2023-05</option>
+                            </select>
                         </div>
                     </div>
                     

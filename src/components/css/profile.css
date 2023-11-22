@@ -66,8 +66,8 @@
 .itemCount{
     color: #fff;
     position: absolute;
-    top: -9px;
-    right: 0px;
+    top: 0px;
+    right: 5px;
     background: red;
     border-radius: 50%;
     text-align: center;
@@ -90,17 +90,66 @@
 .NavBarManMenuImg{
     width: 20px;
 }
+.navbar-toggler:focus{
+    box-shadow: none;
+}
+
+.onlyMobile{
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .OnlyDesktop{
+        display: none;
+    }
+    .onlyMobile{
+        display: block;
+    }
+
+    #navbarScroll{
+        margin-bottom: 15px;
+    }
+
+    #navbarScroll{
+        position: absolute;
+        background: #cccccc;
+        z-index: 9;
+        right: 0px;
+        padding: 7px;
+        border-radius: 5px;
+        top: 0px;
+    }
+    .NBapan #navbarScroll{
+        top: 72px;
+    }
+    .Badmin #navbarScroll{
+        top: 55px;
+    }
+
+    .onlyMobile .nav-link{
+        font-size: 15px;
+    }
+
+}
+.anyQuery{
+    font-size: 12px;
+    font-weight: bold;
+    color: yellow !important;
+}
 
 @media screen and (min-device-width: 481px) and (max-device-width: 768px) { 
     .HomeContainer .row .col-md-2{
         width: 33%;
         padding: 0px;
     } 
+    
 }
+
 
 @media only screen and (max-device-width: 480px) {
     .HomeContainer .row .col-md-2{
         width: 50%;
         padding: 0px;
     } 
+    
 }

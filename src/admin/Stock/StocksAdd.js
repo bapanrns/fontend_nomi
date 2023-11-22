@@ -20,13 +20,20 @@ const StockAdd = () => {
         getProductDetails(id);
     }, []);
 
-    const [hideQuantity, sethideQuantity] = useState({
+    const [hideSareeQuantity, sethideSareeQuantity] = useState({
         display: "none",
         float: 'left', 
         paddingRight: '10px'
     });
 
-    const [hideQuantityType, sethideQuantityType] = useState({
+    const [hideKurtiQuantity, sethideKurtiQuantityType] = useState({
+        display: "none",
+        float: 'left', 
+        paddingRight: '10px'
+    });
+
+    //hideBlouse
+    const [hideBlouse, setHideBlouse] = useState({
         display: "none",
         float: 'left', 
         paddingRight: '10px'
@@ -53,25 +60,58 @@ const StockAdd = () => {
             setIsLoading(false);
             setProductDataImg(response.data.imageArray[0]);
             setProductData(response.data);
-            if(response.data.category_id === 2){
-                sethideQuantityType({
-                    ...hideQuantityType,
+            if(global.kurtiCatIds.includes(parseInt(response.data.category_id, 10))){
+            //if(response.data.category_id === 2){
+                sethideKurtiQuantityType({
+                    ...hideKurtiQuantity,
                     ["display"]: "block",
                 });
 
-                sethideQuantity({
-                    ...hideQuantity,
+                sethideSareeQuantity({
+                    ...hideSareeQuantity,
                     ["display"]: "none",
                 });
-            }else{
-                sethideQuantity({
-                    ...hideQuantity,
+                setHideBlouse({
+                    ...hideBlouse,
+                    display: "none"
+                });
+            }else if(global.sareeCatIds.includes(parseInt(response.data.category_id, 10))){
+                sethideSareeQuantity({
+                    ...hideSareeQuantity,
                     ["display"]: "block",
                 });
 
-                sethideQuantityType({
-                    ...hideQuantityType,
+                sethideKurtiQuantityType({
+                    ...hideKurtiQuantity,
                     ["display"]: "none",
+                });
+                setHideBlouse({
+                    ...hideBlouse,
+                    display: "none"
+                });
+            }else if(global.jewelleryCatIds.includes(parseInt(response.data.category_id, 10))){
+                sethideSareeQuantity({
+                    ...hideSareeQuantity,
+                    ["display"]: "block",
+                });
+
+                sethideKurtiQuantityType({
+                    ...hideKurtiQuantity,
+                    ["display"]: "none",
+                });
+                setHideBlouse({
+                    ...hideBlouse,
+                    display: "none"
+                });
+            }else if(global.blouseCatIds.includes(parseInt(response.data.category_id, 10))){
+                setHideBlouse({
+                    ...hideBlouse,
+                    display: "block"
+                });
+
+                sethideKurtiQuantityType({
+                    ...hideKurtiQuantity,
+                    display: "none"
                 });
             }
         })
@@ -100,7 +140,16 @@ const StockAdd = () => {
         quantityXl_selling_price: "",
         quantity2Xl: "",
         quantity2Xl_buy_price: "",
-        quantity2Xl_selling_price: ""
+        quantity2Xl_selling_price: "",
+        quantity32: "",
+        quantity32_buy_price: "",
+        quantity32_selling_price: "",
+        quantity34: "",
+        quantity34_buy_price: "",
+        quantity34_selling_price: "",
+        quantity36: "",
+        quantity36_buy_price: "",
+        quantity36_selling_price: ""
     });
 
 
@@ -154,65 +203,66 @@ const StockAdd = () => {
     const quantityValid = () => {
         let returnFlag = true;
         let returnFlagValue = false;
-        if(saveData.bill_id_and_shop_id === 0){
+        console.log(saveData);
+        if(saveData.bill_id_and_shop_id === ""){
             returnFlag = false;
-        }else if(saveData.quantity > 0 || saveData.quantity_buy_price > 0 || saveData.quantity_selling_price > 0){
-            if(saveData.quantity > 0 && saveData.quantity_buy_price > 0 && saveData.quantity_selling_price > 0){
-                if(saveData.quantity_buy_price > saveData.quantity_selling_price){
+        }else if(parseInt(saveData.quantity, 10) > 0 || parseInt(saveData.quantity_buy_price, 10) > 0 || parseInt(saveData.quantity_selling_price, 10) > 0){
+            if(parseInt(saveData.quantity, 10) > 0 && parseInt(saveData.quantity_buy_price, 10) > 0 && parseInt(saveData.quantity_selling_price, 10) > 0){
+                if(parseInt(saveData.quantity_buy_price, 10) > parseInt(saveData.quantity_selling_price, 10)){
                     returnFlag = false;
                 }
                 returnFlagValue = true;
             }else{
                 returnFlag = false;
             }
-        }else if(saveData.quantityXs > 0 || saveData.quantityXs_buy_price > 0 || saveData.quantityXs_selling_price > 0){
-            if(saveData.quantityXs > 0 && saveData.quantityXs_buy_price > 0 && saveData.quantityXs_selling_price > 0){
-                if(saveData.quantityXs_buy_price > saveData.quantityXs_selling_price){
+        }else if(parseInt(saveData.quantityXs, 10) > 0 || parseInt(saveData.quantityXs_buy_price, 10) > 0 || parseInt(saveData.quantityXs_selling_price, 10) > 0){
+            if(parseInt(saveData.quantityXs, 10) > 0 && parseInt(saveData.quantityXs_buy_price, 10) > 0 && parseInt(saveData.quantityXs_selling_price, 10) > 0){
+                if(parseInt(saveData.quantityXs_buy_price, 10) > parseInt(saveData.quantityXs_selling_price, 10)){
                     returnFlag = false;
                 }
                 returnFlagValue = true;
             }else{
                 returnFlag = false;
             }
-        }else if(saveData.quantityS > 0 || saveData.quantityS_buy_price > 0 || saveData.quantityS_selling_price > 0){
-            if(saveData.quantityS > 0 && saveData.quantityS_buy_price > 0 && saveData.quantityS_selling_price > 0){
-                if(saveData.quantityS_buy_price > saveData.quantityS_selling_price){
+        }else if(parseInt(saveData.quantityS, 10) > 0 || parseInt(saveData.quantityS_buy_price, 10) > 0 || parseInt(saveData.quantityS_selling_price, 10) > 0){
+            if(parseInt(saveData.quantityS, 10) > 0 && parseInt(saveData.quantityS_buy_price, 10) > 0 && parseInt(saveData.quantityS_selling_price, 10) > 0){
+                if(parseInt(saveData.quantityS_buy_price, 10) > parseInt(saveData.quantityS_selling_price, 10)){
                     returnFlag = false;
                 }
                 returnFlagValue = true;
             }else{
                 returnFlag = false;
             }
-        }else if(saveData.quantityL > 0 || saveData.quantityL_buy_price > 0 || saveData.quantityL_selling_price > 0){
-            if(saveData.quantityL > 0 && saveData.quantityL_buy_price > 0 && saveData.quantityL_selling_price > 0){
-                if(saveData.quantityL_buy_price > saveData.quantityL_selling_price){
+        }else if(parseInt(saveData.quantityL, 10) > 0 || parseInt(saveData.quantityL_buy_price, 10) > 0 || parseInt(saveData.quantityL_selling_price, 10) > 0){
+            if(parseInt(saveData.quantityL, 10) > 0 && parseInt(saveData.quantityL_buy_price, 10) > 0 && parseInt(saveData.quantityL_selling_price, 10) > 0){
+                if(parseInt(saveData.quantityL_buy_price, 10) > parseInt(saveData.quantityL_selling_price, 10)){
                     returnFlag = false;
                 }
                 returnFlagValue = true;
             }else{
                 returnFlag = false;
             }
-        }else if(saveData.quantityM > 0 || saveData.quantityM_buy_price > 0 || saveData.quantityM_selling_price > 0){
-            if(saveData.quantityM > 0 && saveData.quantityM_buy_price > 0 && saveData.quantityM_selling_price > 0){
-                if(saveData.quantityM_buy_price > saveData.quantityM_selling_price){
+        }else if(parseInt(saveData.quantityM, 10) > 0 || parseInt(saveData.quantityM_buy_price, 10) > 0 || parseInt(saveData.quantityM_selling_price, 10) > 0){
+            if(parseInt(saveData.quantityM, 10) > 0 && parseInt(saveData.quantityM_buy_price, 10) > 0 && parseInt(saveData.quantityM_selling_price, 10) > 0){
+                if(parseInt(saveData.quantityM_buy_price, 10) > parseInt(saveData.quantityM_selling_price, 10)){
                     returnFlag = false;
                 }
                 returnFlagValue = true;
             }else{
                 returnFlag = false;
             }
-        }else if(saveData.quantityXl > 0 || saveData.quantityXl_buy_price > 0 || saveData.quantityXl_selling_price > 0){
-            if(saveData.quantityXl > 0 && saveData.quantityXl_buy_price > 0 && saveData.quantityXl_selling_price > 0){
-                if(saveData.quantityXl_buy_price > saveData.quantityXl_selling_price){
+        }else if(parseInt(saveData.quantityXl, 10) > 0 || parseInt(saveData.quantityXl_buy_price, 10) > 0 || parseInt(saveData.quantityXl_selling_price, 10) > 0){
+            if(parseInt(saveData.quantityXl, 10) > 0 && parseInt(saveData.quantityXl_buy_price, 10) > 0 && parseInt(saveData.quantityXl_selling_price, 10) > 0){
+                if(parseInt(saveData.quantityXl_buy_price, 10) > parseInt(saveData.quantityXl_selling_price, 10)){
                     returnFlag = false;
                 }
                 returnFlagValue = true;
             }else{
                 returnFlag = false;
             }
-        }else if(saveData.quantity2Xl > 0 || saveData.quantity2Xl_buy_price > 0 || saveData.quantity2Xl_selling_price > 0){
-            if(saveData.quantity2Xl > 0 && saveData.quantity2Xl_buy_price > 0 && saveData.quantity2Xl_selling_price > 0){
-                if(saveData.quantity2Xl_buy_price > saveData.quantity2Xl_selling_price){
+        }else if(parseInt(saveData.quantity2Xl, 10) > 0 || parseInt(saveData.quantity2Xl_buy_price, 10) > 0 || parseInt(saveData.quantity2Xl_selling_price, 10) > 0){
+            if(parseInt(saveData.quantity2Xl, 10) > 0 && parseInt(saveData.quantity2Xl_buy_price, 10) > 0 && parseInt(saveData.quantity2Xl_selling_price,10) > 0){
+                if(parseInt(saveData.quantity2Xl_buy_price, 10) > parseInt(saveData.quantity2Xl_selling_price, 10)){
                     returnFlag = false;
                 }
                 returnFlagValue = true;
@@ -297,6 +347,25 @@ const StockAdd = () => {
                                         <td>{productData.quantity2Xl_buy_price}</td>
                                         <td>{productData.quantity2Xl_selling_price}</td>
                                     </tr>
+                                    <tr>
+                                        <td>32</td>
+                                        <td>{productData.quantity32}</td>
+                                        <td>{productData.quantity32_buy_price}</td>
+                                        <td>{productData.quantity32_selling_price}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>34</td>
+                                        <td>{productData.quantity34}</td>
+                                        <td>{productData.quantity34_buy_price}</td>
+                                        <td>{productData.quantity34_selling_price}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>36</td>
+                                        <td>{productData.quantity36}</td>
+                                        <td>{productData.quantity36_buy_price}</td>
+                                        <td>{productData.quantity36_selling_price}</td>
+                                    </tr>
+
                                 </tbody>
                             </table>
                     </div>
@@ -321,7 +390,7 @@ const StockAdd = () => {
                 
             </div>
             <div style={{clear: "both"}}></div>
-            <div className="col-md-4" style={hideQuantity}>
+            <div className="col-md-4" style={hideSareeQuantity}>
                 <label className="form-label" htmlFor="quantity.ControlInput1">Quantity:</label>
                 <input 
                     type="text" 
@@ -332,7 +401,7 @@ const StockAdd = () => {
                     onChange={handalChange}
                 />
             </div>
-            <div className="col-md-4" style={hideQuantity}>
+            <div className="col-md-4" style={hideSareeQuantity}>
                 <label className="form-label" htmlFor="quantity_buy_price.ControlInput1">Quantity Buy Price: </label>
                 <input 
                     type="text" 
@@ -344,7 +413,7 @@ const StockAdd = () => {
                 />
             </div>
             
-            <div className="col-md-4"style={hideQuantity}>
+            <div className="col-md-4"style={hideSareeQuantity}>
                 <label className="form-label" htmlFor="quantity_selling_price.ControlInput1">Quantity Sell Price: </label>
                 <input 
                     type="text" 
@@ -356,7 +425,7 @@ const StockAdd = () => {
                 />
             </div>
             
-            <div className="col-md-4" style={hideQuantityType}>
+            <div className="col-md-4" style={hideKurtiQuantity}>
                 <label className="form-label" htmlFor="quantityXs.ControlInput1">Quantity: <b>XS</b> 75 cm = 28 Inches </label>
                 <input 
                     type="text" 
@@ -368,7 +437,7 @@ const StockAdd = () => {
                 />
             </div>
 
-            <div className="col-md-4" style={hideQuantityType}>
+            <div className="col-md-4" style={hideKurtiQuantity}>
                 <label className="form-label" htmlFor="quantityXs_buy_price.ControlInput1">Quantity <b>XS</b> Buy Price: </label>
                 <input 
                     type="text" 
@@ -380,7 +449,7 @@ const StockAdd = () => {
                 />
             </div>
             
-            <div className="col-md-4"style={hideQuantityType}>
+            <div className="col-md-4"style={hideKurtiQuantity}>
                 <label className="form-label" htmlFor="quantityXs_selling_price.ControlInput1">Quantity <b>XS</b> Sell Price: </label>
                 <input 
                     type="text" 
@@ -392,7 +461,7 @@ const StockAdd = () => {
                 />
             </div>
             
-            <div className="col-md-4" style={hideQuantityType}>
+            <div className="col-md-4" style={hideKurtiQuantity}>
                 <label className="form-label" htmlFor="quantityS.ControlInput1">Quantity: <b>S</b> 80 cm = 30 Inches</label>
                 <input 
                     type="text" 
@@ -404,7 +473,7 @@ const StockAdd = () => {
                 />
             </div>
 
-            <div className="col-md-4" style={hideQuantityType}>
+            <div className="col-md-4" style={hideKurtiQuantity}>
                 <label className="form-label" htmlFor="quantityS_buy_price.ControlInput1">Quantity <b>S</b> Buy Price: </label>
                 <input 
                     type="text" 
@@ -416,7 +485,7 @@ const StockAdd = () => {
                 />
             </div>
             
-            <div className="col-md-4"style={hideQuantityType}>
+            <div className="col-md-4"style={hideKurtiQuantity}>
                 <label className="form-label" htmlFor="quantityS_selling_price.ControlInput1">Quantity <b>S</b> Sell Price: </label>
                 <input 
                     type="text" 
@@ -428,7 +497,7 @@ const StockAdd = () => {
                 />
             </div>
             
-            <div className="col-md-4" style={hideQuantityType}>
+            <div className="col-md-4" style={hideKurtiQuantity}>
                 <label className="form-label" htmlFor="quantityL.ControlInput1">Quantity: <b>L</b> 90 cm = 3 Inches</label>
                 <input 
                     type="text" 
@@ -440,7 +509,7 @@ const StockAdd = () => {
                 />
             </div>
 
-            <div className="col-md-4" style={hideQuantityType}>
+            <div className="col-md-4" style={hideKurtiQuantity}>
                 <label className="form-label" htmlFor="quantityL_buy_price.ControlInput1">Quantity <b>L</b> Buy Price: </label>
                 <input 
                     type="text" 
@@ -452,7 +521,7 @@ const StockAdd = () => {
                 />
             </div>
             
-            <div className="col-md-4"style={hideQuantityType}>
+            <div className="col-md-4"style={hideKurtiQuantity}>
                 <label className="form-label" htmlFor="quantityL_selling_price.ControlInput1">Quantity <b>L</b> Sell Price: </label>
                 <input 
                     type="text" 
@@ -464,7 +533,7 @@ const StockAdd = () => {
                 />
             </div>
             
-            <div className="col-md-4" style={hideQuantityType}>
+            <div className="col-md-4" style={hideKurtiQuantity}>
                 <label className="form-label" htmlFor="quantityM.ControlInput1">Quantity: <b>M</b> 85 cm = 32 Inches</label>
                 <input 
                     type="text" 
@@ -476,7 +545,7 @@ const StockAdd = () => {
                 />
             </div>
 
-            <div className="col-md-4" style={hideQuantityType}>
+            <div className="col-md-4" style={hideKurtiQuantity}>
                 <label className="form-label" htmlFor="quantityM_buy_price.ControlInput1">Quantity <b>M</b> Buy Price: </label>
                 <input 
                     type="text" 
@@ -488,7 +557,7 @@ const StockAdd = () => {
                 />
             </div>
             
-            <div className="col-md-4"style={hideQuantityType}>
+            <div className="col-md-4"style={hideKurtiQuantity}>
                 <label className="form-label" htmlFor="quantityM_selling_price.ControlInput1">Quantity <b>M</b> Sell Price: </label>
                 <input 
                     type="text" 
@@ -500,7 +569,7 @@ const StockAdd = () => {
                 />
             </div>
             
-            <div className="col-md-4" style={hideQuantityType}>
+            <div className="col-md-4" style={hideKurtiQuantity}>
                 <label className="form-label" htmlFor="quantityXl.ControlInput1">Quantity: <b>XL</b> 95 cm = 36 Inches</label>
                 <input 
                     type="text" 
@@ -511,7 +580,7 @@ const StockAdd = () => {
                     onChange={handalChange}
                 />
             </div>
-            <div className="col-md-4" style={hideQuantityType}>
+            <div className="col-md-4" style={hideKurtiQuantity}>
                 <label className="form-label" htmlFor="quantityXl_buy_price.ControlInput1">Quantity <b>XL</b> Buy Price: </label>
                 <input 
                     type="text" 
@@ -523,7 +592,7 @@ const StockAdd = () => {
                 />
             </div>
             
-            <div className="col-md-4"style={hideQuantityType}>
+            <div className="col-md-4"style={hideKurtiQuantity}>
                 <label className="form-label" htmlFor="quantityXl_selling_price.ControlInput1">Quantity <b>XL</b> Sell Price: </label>
                 <input 
                     type="text" 
@@ -535,7 +604,7 @@ const StockAdd = () => {
                 />
             </div>
             
-            <div className="col-md-4" style={hideQuantityType}>
+            <div className="col-md-4" style={hideKurtiQuantity}>
                 <label className="form-label" htmlFor="quantity2Xl.ControlInput1">Quantity: <b>2XL</b> 100 cm = 38 Inches</label>
                 <input 
                     type="text" 
@@ -547,7 +616,7 @@ const StockAdd = () => {
                 />
             </div>
 
-            <div className="col-md-4" style={hideQuantityType}>
+            <div className="col-md-4" style={hideKurtiQuantity}>
                 <label className="form-label" htmlFor="quantity2Xl_buy_price.ControlInput1">Quantity <b>2XL</b> Buy Price: </label>
                 <input 
                     type="text" 
@@ -559,7 +628,7 @@ const StockAdd = () => {
                 />
             </div>
             
-            <div className="col-md-4" style={hideQuantityType}>
+            <div className="col-md-4" style={hideKurtiQuantity}>
                 <label className="form-label" htmlFor="quantity2Xl_selling_price.ControlInput1">Quantity <b>2XL</b> Sell Price: </label>
                 <input 
                     type="text" 
@@ -570,6 +639,119 @@ const StockAdd = () => {
                     onChange={handalChange}
                 />
             </div>
+
+
+
+            {/** Blouse */}
+
+            <div className="col-md-4" style={hideBlouse}>
+                <label className="form-label" htmlFor="quantity32.ControlInput1">Quantity: <b>32</b></label>
+                <input 
+                    type="text" 
+                    name='quantity32'
+                    id="quantity32.ControlInput1" 
+                    className="form-control"
+                    onKeyPress={(e) => AcceptNumericValue(e)}
+                    onChange={handalChange}
+                />
+            </div>
+            <div className="col-md-4" style={hideBlouse}>
+                <label className="form-label" htmlFor="quantity32_buy_price.ControlInput1">Quantity <b>32</b> Buy Price: </label>
+                <input 
+                    type="text" 
+                    name='quantity32_buy_price'
+                    id="quantity32_buy_price.ControlInput1" 
+                    className="form-control"
+                    onKeyPress={(e) => AcceptNumericValue(e)}
+                    onChange={handalChange}
+                />
+            </div>
+            
+            <div className="col-md-4" style={hideBlouse}>
+                <label className="form-label" htmlFor="quantity32_selling_price.ControlInput1">Quantity <b>32</b> Sell Price: </label>
+                <input 
+                    type="text" 
+                    name='quantity32_selling_price'
+                    id="quantity32_selling_price.ControlInput1" 
+                    className="form-control"
+                    onKeyPress={(e) => AcceptNumericValue(e)}
+                    onChange={handalChange}
+                />
+            </div>
+
+            <div className="col-md-4" style={hideBlouse}>
+                <label className="form-label" htmlFor="quantity34.ControlInput1">Quantity: <b>34</b></label>
+                <input 
+                    type="text" 
+                    name='quantity34'
+                    id="quantity34.ControlInput1" 
+                    className="form-control"
+                    onKeyPress={(e) => AcceptNumericValue(e)}
+                    onChange={handalChange}
+                />
+            </div>
+
+            <div className="col-md-4" style={hideBlouse}>
+                <label className="form-label" htmlFor="quantity34_buy_price.ControlInput1">Quantity <b>34</b> Buy Price: </label>
+                <input 
+                    type="text" 
+                    name='quantity34_buy_price'
+                    id="quantity34_buy_price.ControlInput1" 
+                    className="form-control"
+                    onKeyPress={(e) => AcceptNumericValue(e)}
+                    onChange={handalChange}
+                />
+            </div>
+            
+            <div className="col-md-4" style={hideBlouse}>
+                <label className="form-label" htmlFor="quantity34_selling_price.ControlInput1">Quantity <b>34</b> Sell Price: </label>
+                <input 
+                    type="text" 
+                    name='quantity34_selling_price'
+                    id="quantity34_selling_price.ControlInput1" 
+                    className="form-control"
+                    onKeyPress={(e) => AcceptNumericValue(e)}
+                    onChange={handalChange}
+                />
+            </div>
+
+            <div className="col-md-4" style={hideBlouse}>
+                <label className="form-label" htmlFor="quantity36.ControlInput1">Quantity: <b>36</b></label>
+                <input 
+                    type="text" 
+                    name='quantity36'
+                    id="quantity36.ControlInput1" 
+                    className="form-control"
+                    onKeyPress={(e) => AcceptNumericValue(e)}
+                    onChange={handalChange}
+                />
+            </div>
+
+            <div className="col-md-4" style={hideBlouse}>
+                <label className="form-label" htmlFor="quantity36_buy_price.ControlInput1">Quantity <b>36</b> Buy Price: </label>
+                <input 
+                    type="text" 
+                    name='quantity36_buy_price'
+                    id="quantity36_buy_price.ControlInput1" 
+                    className="form-control"
+                    onKeyPress={(e) => AcceptNumericValue(e)}
+                    onChange={handalChange}
+                />
+            </div>
+            
+            <div className="col-md-4" style={hideBlouse}>
+                <label className="form-label" htmlFor="quantity36_selling_price.ControlInput1">Quantity <b>36</b> Sell Price: </label>
+                <input 
+                    type="text" 
+                    name='quantity36_selling_price'
+                    id="quantity36_selling_price.ControlInput1" 
+                    className="form-control"
+                    onKeyPress={(e) => AcceptNumericValue(e)}
+                    onChange={handalChange}
+                />
+            </div>
+
+
 
             <div className="col-md-12" style={{textAlign: "center"}}>
                 <button className='btn btn-success' style={{marginTop: "10px"}} onClick={saveStock}>Save Stock</button>

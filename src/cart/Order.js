@@ -43,12 +43,12 @@ const MyOrder = (props) => {
         })
     }
 
-    const cancelOrder =(order_item_id, order_id)=>{
+    const cancelOrder =(order_item_id, order_id, p_id)=>{
         const confirmed = window.confirm('Are you sure you want to cancel this item?');
         if (confirmed) {
             console.log('Item deleted');
             setIsLoading(true);
-            let data = {order_item_id: order_item_id, order_id};
+            let data = {order_item_id: order_item_id, order_id: order_id, pid: p_id};
             axiosInstance.post('/cancelOrderItem', data)
             .then((response) => {
                 setIsLoading(false);
@@ -229,7 +229,7 @@ const MyOrder = (props) => {
         />
             <Container className='HomeContainer'>
                 <Row>
-                {Object.keys(orderDetails).length > 0 && 
+                {Object.keys(orderDetails).length > 0 ?
                 Object.keys(orderDetails).map((product_id, key) => (
                     <Col md={12} className={"OrderWise OrderWise"+(key%2===0?"1":"2")}>
                         <div className='col-md-8 orderItemListDiv'>
@@ -259,7 +259,7 @@ const MyOrder = (props) => {
                                                     editDeliveryAddress(obj.delivery_address_id);
                                                 }}><span className='editDelivary'>Edit Delivary Address</span></div>
                                             <div className='editDelivaryDiv' onClick={(e) => { 
-                                                    cancelOrder(obj.order_item_id, obj.order_id);
+                                                    cancelOrder(obj.order_item_id, obj.order_id, obj.p_id);
                                                 }}><span className='cancelDelivary'>Cancel Order</span></div>
                                         </>
                                         }
@@ -305,7 +305,8 @@ const MyOrder = (props) => {
                             </div>
                         </div>
                     </Col>
-                ))}
+                )):"No Record Found"
+            }
                 </Row>
 
                 <Row>

@@ -19,7 +19,8 @@ const ActionCellRenderer = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   function productDetailsFn(pid){
-    navigate("../admin/product-add/"+pid);
+    //navigate("../admin/product-add/"+pid);
+    window.open("../admin/product-add/"+pid, '_blank');
   }
 
   const cellValue = props.valueFormatted ? props.valueFormatted : props.value;
@@ -52,7 +53,8 @@ const ActionCellRenderer = (props) => {
   };
 
   const ActiveHandleClick = (e) => {
-    navigate("../admin/product_active/"+cellValue);
+    //navigate("../admin/product_active/"+cellValue);
+    window.open("../admin/product_active/"+cellValue, '_blank');
   }
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -84,7 +86,7 @@ const ActionCellRenderer = (props) => {
 
   const productStock=()=>{
    // navigate("../admin/stocks_add/"+cellValue);
-    window.open("../admin/stocks/"+cellValue, '_blank');
+    window.open("../stocks/"+cellValue, '_blank');
   }
 
   const productDelete=()=>{

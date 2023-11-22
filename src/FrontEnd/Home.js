@@ -117,7 +117,7 @@ const Home = ({data2}) => {
                                         />
                                     }
                                 </div>
-                                <div className='categoriesDesc' title='Satrani Art Silk Saree with Blouse Piece' style={{height: '30px'}}>All {object.category_name} </div>                             
+                                <div className='categoriesDesc' title='Satrani Art Silk Saree with Blouse Piece' style={{height: '30px'}}>All {object.category_name} {global[object.category_name]}</div>                             
                             </div>
                         </Col>
                     ))}
@@ -147,7 +147,15 @@ const Home = ({data2}) => {
                                                         }}
                                                     />
                                                     <span className='nId'>N{obj.item_id}</span>
-                                                    <ShareLink title={obj.product_name} text={obj.company_name} url={`http://www.bskart.com/product-details/${obj.item_id}`}></ShareLink>
+                                                    <span 
+                                                        className='aroColorAche' 
+                                                        onClick={(e) => { 
+                                                            productDetailsFn(obj.category_name);
+                                                            localStorage.setItem("searchTermForType", obj.sub_category_id);
+                                                        }}>
+                                                        {obj.more_color>0?"আরো কালার আছে":""}
+                                                    </span>
+                                                    <ShareLink title={obj.product_name} text={obj.company_name} url={`https://www.bskart.com/product-details/${obj.item_id}`}></ShareLink>
                                                 </div>
                                                 <div>{obj.sub_category_name}</div>
                                                 <div id={index} className='productPrice'>
@@ -164,7 +172,7 @@ const Home = ({data2}) => {
                                     </div>
                                 </Col>
                                 <React.StrictMode>
-                                    <div className="scroll-container">
+                                    <div className="scroll-container scroll-containerHome">
                                      {xxx[mainObj].map((obj, index) => (
                                             <div key={"Jewellery-scroll-container-"+index} className='HomeShareLink'>
                                                 <Image
@@ -177,7 +185,15 @@ const Home = ({data2}) => {
                                                         localStorage.setItem("searchTermForType", obj.sub_category_id);
                                                     }}
                                                 />
-                                                <ShareLink title={obj.product_name} text={obj.company_name} url={`http://www.bskart.com/product-details/${obj.item_id}`}></ShareLink>
+                                                <span className='nId'>N{obj.item_id}</span>
+                                                <span className='aroColorAche' 
+                                                    onClick={(e) => { 
+                                                        productDetailsFn(obj.category_name);
+                                                        localStorage.setItem("searchTermForType", obj.sub_category_id);
+                                                    }}>
+                                                    {obj.more_color>0?"আরো কালার আছে":""}
+                                                </span>
+                                                <ShareLink title={obj.product_name} text={obj.company_name} url={`https://www.bskart.com/product-details/${obj.item_id}`}></ShareLink>
                                                 <div>{obj.sub_category_name}</div>
                                                 <div id={index} className='productPrice'>
                                                     <span className='offerPrice'>₹{obj.price}</span>

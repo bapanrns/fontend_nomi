@@ -99,10 +99,25 @@ import '../components/css/profile.css';
         navigate("/my-order");
     }
 
+    const [serchString, setSerchString] = useState("");
+    const globalSearch=()=>{
+        if(serchString.trim() !==""){
+            localStorage.removeItem('searchTermForType');
+            localStorage.setItem("globalSearch", serchString);
+            navigate(`/items/${serchString.trim()}`);
+        }
+    }
+
         return (
-            <Navbar bg="light" expand="lg" className='navbarBg'>
+            <>
+            <Navbar bg="light" expand="lg" className='navbarBg NBapan OnlyDesktop'>
                 <Container fluid>
                     <Navbar.Brand href="/">BsKart</Navbar.Brand>
+                    <Navbar.Brand className='anyQuery'><Image 
+                            className='cartIcon'
+                            style={{width: "20px"}}
+                            src={require(`../images/whatsapp.png`)} 
+                        /> Any Query: 7679215404</Navbar.Brand>
                     <Navbar.Toggle className='NavBarManMenu' aria-controls="navbarScroll" >
                         <img
                             className='NavBarManMenuImg'
@@ -120,20 +135,17 @@ import '../components/css/profile.css';
                         {localStorage.getItem('login') === "true" ? (
                             <>
                                 <NavDropdown title="User Name" id="navbarScrollingDropdown">
-                                    <NavDropdown.Item href="#action3">My Profile</NavDropdown.Item>
-                                    <NavDropdown.Divider />
                                     <NavDropdown.Item href="my-order" onClick={myOrder}>
                                         Orders
-                                    </NavDropdown.Item>
-                                    <NavDropdown.Divider />
-                                    <NavDropdown.Item href="#action5">
-                                        <i class="bi bi-bag-heart-fill"></i> Wishlist
                                     </NavDropdown.Item>
                                     <NavDropdown.Divider />
                                     <NavDropdown.Item href="#" onClick={loginOut}>
                                         <i class="bi bi-bag-heart-fill"></i> Logout
                                     </NavDropdown.Item>
                                 </NavDropdown>
+
+                                <Nav.Link href="#" onClick={myOrder}>Orders</Nav.Link>
+                                <Nav.Link href="#" onClick={loginOut}>Logout</Nav.Link>
                             </>
                         ) : (
                            <> <Nav.Link href="#" onClick={openLoginModal}>Login</Nav.Link><Nav.Link href="#" onClick={signUpModalOpen}>Sign Up</Nav.Link></>
@@ -146,8 +158,11 @@ import '../components/css/profile.css';
                         placeholder="Search"
                         className="me-2"
                         aria-label="Search"
+                        onChange={(e) => { 
+                            setSerchString(e.target.value)
+                        }}
                         />
-                        <Button variant="outline-success">Search</Button>
+                        <Button variant="outline-success" onClick={globalSearch}>Search</Button>
                     </Form>
                     </Navbar.Collapse>
                     <div 
@@ -165,7 +180,77 @@ import '../components/css/profile.css';
                         />
                     </div>
                 </Container>
-
+            </Navbar>
+            {/** For Mobile */}
+            <Navbar bg="light" expand="lg" className='navbarBg NBapan onlyMobile'>
+                <Navbar.Brand className='anyQuery'><Image 
+                            className='cartIcon'
+                            style={{width: "20px"}}
+                            src={require(`../images/whatsapp.png`)} 
+                        /> Any Query: 7679215404</Navbar.Brand>
+                <Container fluid>
+                    <Navbar.Brand href="/">BsKart</Navbar.Brand>
+                    
+                    <Navbar.Brand 
+                        className='cartIconDiv'
+                        onClick={() => { 
+                            goToCheckout();
+                        }}
+                        >
+                        { cartValue > 0 && (
+                        <div className='itemCount'>{cartValue}</div>
+                        )}
+                        <Image 
+                            className='cartIcon'
+                            src={require(`../images/cart.png`)} 
+                        />
+                    </Navbar.Brand>
+                    <Navbar.Toggle className='NavBarManMenu' aria-controls="navbarScroll" >
+                        {
+                            (localStorage.getItem('login') !== "true") ?
+                            <span style={{fontSize: "12px", fontWeight: "bold", paddingRight: "5px"}}>Login / Sign Up</span>
+                            : <img
+                                className='NavBarManMenuImg'
+                                src={require(`../images/user.png`)}
+                                alt='No Men'
+                                ></img>
+                        }
+                        
+                    
+                        <Navbar.Collapse id="navbarScroll">
+                            <Nav
+                                className="me-auto my-2 my-lg-0"
+                                style={{ maxHeight: '150px' }}
+                                navbarScroll
+                            >
+                                
+                                {localStorage.getItem('login') === "true" ? (
+                                    <>
+                                        <Nav.Link href="#" onClick={myOrder}>Orders</Nav.Link>
+                                        <Nav.Link href="#" onClick={loginOut}>Logout</Nav.Link>
+                                    </>
+                                ) : (
+                                <> <Nav.Link href="#" onClick={openLoginModal}>Login</Nav.Link><Nav.Link href="#" onClick={signUpModalOpen}>Sign Up</Nav.Link></>
+                                )}
+                                
+                            </Nav>
+                            <Form className="d-flex">
+                                <Form.Control
+                                type="search"
+                                placeholder="Search"
+                                className="me-2"
+                                aria-label="Search"
+                                onChange={(e) => { 
+                                    setSerchString(e.target.value)
+                                }}
+                                />
+                                <Button variant="outline-success" onClick={globalSearch}>Search</Button>
+                            </Form>
+                        </Navbar.Collapse>
+                    </Navbar.Toggle>
+                    
+                </Container>
+            </Navbar>
 
                 
                 {
@@ -186,9 +271,9 @@ import '../components/css/profile.css';
                     signUpModal === true ? <SignUp modalHide={()=>setSignUpModal(false)} /> : ""
                 }
 
+                </>
 
-
-                </Navbar>
+                
         )
     
 }

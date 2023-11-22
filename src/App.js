@@ -17,6 +17,8 @@ import Checkout from './cart/Checkout';
 import Product from './admin/product/Product';
 import ProductAdd from './admin/product/ProductAdd';
 import ProductActive from './admin/product/ProductActive';
+import AdminBuy from "./admin/product/AdminBuy";
+
 import StocksAdd from './admin/Stock/StocksAdd';
 import Stocks from './admin/Stock/Stocks';
 
@@ -41,6 +43,8 @@ import AddDeliveryBoy from "./admin/deliveryBoy/AddDeliveryBoy";
 
 import Order from "./admin/order/order";
 
+import UserList from "./admin/user/UserList";
+
 
 // Notification
 import { ToastContainer, toast } from 'react-toastify';
@@ -48,6 +52,12 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useState } from 'react';
 
 import axiosInstance from './components/axiosInstance';
+
+import Footer from './components/Footer';
+
+import ReactGA from 'react-ga';
+
+ReactGA.initialize('UA-288720205-1');
 
 
 let userRole = 'user';
@@ -223,6 +233,18 @@ function App() {
             element={
               isAuthorized('Admin') ? (
                 <ProductActive />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            }
+          />
+          
+
+          <Route
+            path="admin/product_buy"
+            element={
+              isAuthorized('Admin') ? (
+                <AdminBuy />
               ) : (
                 <Navigate to="/" replace />
               )
@@ -420,8 +442,17 @@ function App() {
                 <Navigate to="/" replace />
               )
             }
+          />
 
-            
+          <Route
+            path="admin/user_list"
+            element={
+              isAuthorized('Admin') ? (
+                <UserList />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            }
           />
 
           <Route
@@ -450,6 +481,7 @@ function App() {
         </Routes>
       </BrowserRouter>
       <ToastContainer />
+      <Footer />
     </>
   );
 }

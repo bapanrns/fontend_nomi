@@ -17,6 +17,7 @@
     "react-datepicker": "^4.14.1",
     "react-dom": "^18.2.0",
     "react-form-input-validation": "^2.1.0",
+    "react-ga": "^3.3.1",
     "react-horizontal-scrolling-menu": "^4.0.1",
     "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^6.10.0",

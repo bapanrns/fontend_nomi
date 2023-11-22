@@ -11,7 +11,7 @@ export default function WebShareGfg(props) {
 					url: props.url,
 					title: props.title,
 				}}
-				onClick={() => console.log("shared successfully!")}
+				onClick={() => console.log(props)}
 			>
             <Image 
                 className='shareIcon'
