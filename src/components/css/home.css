@@ -11,6 +11,8 @@
     height: 350px;
     width: 100%;
     cursor: pointer;
+    padding: 2px;
+    border-radius: 10px;
 }
 
 .categoriesImgDiv{
@@ -179,7 +181,10 @@
     cursor: pointer;
 }
 
-
+.addProductDiv{
+    float: left;
+    padding-right: 10px;
+}
 
 @media (max-width: 768px) {
     .categoriesImgDiv {

@@ -61,7 +61,139 @@ reasonsForCancellation["3"]="Incorrect product size/color/type ordered"
 reasonsForCancellation["4"]="Product not required anymore"
 reasonsForCancellation["5"]="Product price has mistake"
 reasonsForCancellation["6"]="Ordered by mistake"
-reasonsForCancellation["7"]="Purchased product from somewhere else"
+reasonsForCancellation["7"]="Purchased product from somewhere else";
+
+
+const kurtiHash = [
+    {
+        quantityHeader: "Quantity XS 75 cm = 28 Inches",
+        quantityName: "quantityXs",
+        quantityBuyPriceHeader: "Quantity XS Buy Price",
+        quantityBuyPriceName: "quantityXs_buy_price",
+        
+        quantityMrpPriceHeader: "Quantity XS MRP Price",
+        quantityMrpPriceName: "quantityXs_mrp_price",
+        
+        quantitySellPriceHeader: "Quantity XS Sell Price",
+        quantitySellPriceName: "quantityXs_selling_price",
+    },{
+        quantityHeader: "Quantity S 80 cm = 30 Inches",
+        quantityName: "quantityS",
+        quantityBuyPriceHeader: "Quantity S Buy Price",
+        quantityBuyPriceName: "quantityS_buy_price",
+        
+        quantityMrpPriceHeader: "Quantity S MRP Price",
+        quantityMrpPriceName: "quantityS_mrp_price",
+        
+        quantitySellPriceHeader: "Quantity S Sell Price",
+        quantitySellPriceName: "quantityS_selling_price",
+    },{
+        quantityHeader: "Quantity L 90 cm = 3 Inches",
+        quantityName: "quantityL",
+        quantityBuyPriceHeader: "Quantity L Buy Price",
+        quantityBuyPriceName: "quantityL_buy_price",
+        
+        quantityMrpPriceHeader: "Quantity L MRP Price",
+        quantityMrpPriceName: "quantityL_mrp_price",
+        
+        quantitySellPriceHeader: "Quantity L Sell Price",
+        quantitySellPriceName: "quantityL_selling_price",
+    },{
+        quantityHeader: "Quantity M 85 cm = 32 Inches",
+        quantityName: "quantityM",
+        quantityBuyPriceHeader: "Quantity M Buy Price",
+        quantityBuyPriceName: "quantityM_buy_price",
+        
+        quantityMrpPriceHeader: "Quantity M MRP Price",
+        quantityMrpPriceName: "quantityM_mrp_price",
+        
+        quantitySellPriceHeader: "Quantity M Sell Price",
+        quantitySellPriceName: "quantityM_selling_price",
+    },{
+        quantityHeader: "Quantity XL 95 cm = 36 Inches",
+        quantityName: "quantityXl",
+        quantityBuyPriceHeader: "Quantity XL Buy Price",
+        quantityBuyPriceName: "quantityXl_buy_price",
+        
+        quantityMrpPriceHeader: "Quantity XL MRP Price",
+        quantityMrpPriceName: "quantityXl_mrp_price",
+        
+        quantitySellPriceHeader: "Quantity XL Sell Price",
+        quantitySellPriceName: "quantityXl_selling_price",
+    },{
+        quantityHeader: "Quantity 2XL 100 cm = 38 Inches",
+        quantityName: "quantity2Xl",
+        quantityBuyPriceHeader: "Quantity 2XL Buy Price",
+        quantityBuyPriceName: "quantity2Xl_buy_price",
+        
+        quantityMrpPriceHeader: "Quantity 2XL MRP Price",
+        quantityMrpPriceName: "quantity2Xl_mrp_price",
+        
+        quantitySellPriceHeader: "Quantity 2XL Sell Price",
+        quantitySellPriceName: "quantity2Xl_selling_price"
+    }
+];
+
+const sareeHash = [{
+    quantityHeader: "Quantity",
+    quantityName: "quantity",
+    quantityBuyPriceHeader: "Quantity Buy Price",
+    quantityBuyPriceName: "quantity_buy_price",
+    
+    quantityMrpPriceHeader: "Quantity MRP Price",
+    quantityMrpPriceName: "quantity_mrp_price",
+    
+    quantitySellPriceHeader: "Quantity Sell Price",
+    quantitySellPriceName: "quantity_selling_price"
+}];
+
+const blouseHash = [{
+    quantityHeader: "Quantity 32",
+    quantityName: "quantity32",
+    quantityBuyPriceHeader: "Quantity 32 Buy Price",
+    quantityBuyPriceName: "quantity32_buy_price",
+
+    quantityMrpPriceHeader: "Quantity MRP Price",
+    quantityMrpPriceName: "quantity32_mrp_price",
+
+    quantitySellPriceHeader: "Quantity 32 Sell Price",
+    quantitySellPriceName: "quantity32_selling_price"
+},{
+	quantityHeader: "Quantity 34",
+	quantityName: "quantity34",
+	quantityBuyPriceHeader: "Quantity 34 Buy Price",
+	quantityBuyPriceName: "quantity34_buy_price",
+	
+	quantityMrpPriceHeader: "Quantity 34 MRP Price",
+	quantityMrpPriceName: "quantity34_mrp_price",
+	
+	quantitySellPriceHeader: "Quantity 34 Sell Price",
+	quantitySellPriceName: "quantity34_selling_price"
+},{
+	quantityHeader: "Quantity 36",
+	quantityName: "quantity36",
+	quantityBuyPriceHeader: "Quantity 36 Buy Price",
+	quantityBuyPriceName: "quantity36_buy_price",
+	
+	quantityMrpPriceHeader: "Quantity 36 MRP Price",
+	quantityMrpPriceName: "quantity36_mrp_price",
+	
+	quantitySellPriceHeader: "Quantity 36 Sell Price",
+	quantitySellPriceName: "quantity36_selling_price"
+}]
+
+// 1 = Saree, 2 = Kurti, 3 = Jewellery, 4 = Gown, 5 = Leggings, 6 = Kurta Sets & Salwar Suits, 7 = Ceramic Flower Pot, 8 = Blouse, 10 = Jockey Inner Wear
+const productQuentityHash = {
+    "1": sareeHash,
+    "2": kurtiHash,
+    "3": sareeHash,
+    "4": kurtiHash,
+    "5": blouseHash,
+    "6": kurtiHash,
+    "7": sareeHash,
+    "8": blouseHash,
+    "10": blouseHash
+}
 
 const globalVariable = {
     "admin_product_image_url": "/images/product/",
@@ -81,7 +213,9 @@ const globalVariable = {
     "sareeCatIds": [1],
     "jewelleryCatIds": [3],
     "blouseCatIds": [8, 10],
+    "tree": [7],
     "Saree": " / ( শাড়ি )",
-    "Kurti": " / ( কুর্তি )"
+    "Kurti": " / ( কুর্তি )",
+    "productQuentityHash": productQuentityHash
 };
 export default globalVariable;

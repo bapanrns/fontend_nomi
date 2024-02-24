@@ -224,6 +224,12 @@ const ProductAdd = () => {
         }
     };
 
+    const [productQuentityHash, setProductQuentityHash] = useState([]);
+    const setQuantityHtml =(category_id)=>{
+        console.log(global["productQuentityHash"][category_id]);
+        setProductQuentityHash(global["productQuentityHash"][category_id])
+    }
+
     const [editData, setEditData] = useState({
         id: "",
         category_id: "",
@@ -299,6 +305,7 @@ const ProductAdd = () => {
         .then((response) => {
             // Show hide quantity
             hideShowQuantity(response.data.category_id);
+            setQuantityHtml(response.data.category_id);
             // Load category select option
             getSubCategory(response.data.category_id);
             // Set Edit record
@@ -572,6 +579,64 @@ const ProductAdd = () => {
 
                     <div className='col-md-12' style={{padding: "5px", display: 'inline-block'}}>
                         {quantityValidation.quantity && <span className="error">Error in Quantity</span>}
+
+
+                        {
+                        productQuentityHash.map((objHtml, index)=>{
+                            return(<>
+                                {/* Quantity */}
+                                <div className="col-md-3" style={{float: "left", paddingRight: "10px"}}>
+                                    <label className="form-label" htmlFor={objHtml.quantityName+"ControlInput1"}>{objHtml.quantityHeader}:</label>
+                                    <input 
+                                        type="text" 
+                                        name={objHtml.quantityName}
+                                        id={objHtml.quantityName+"ControlInput1"}
+                                        className="form-control"
+                                        value={editData[objHtml.quantityName]}
+                                        disabled = {true}
+                                    />
+                                </div>
+                                {/* Quantity Buy Price */}
+                                <div className="col-md-3" style={{float: "left", paddingRight: "10px"}}>
+                                    <label className="form-label" htmlFor={objHtml.quantityBuyPriceName+"ControlInput1"}>{objHtml.quantityBuyPriceHeader}: </label>
+                                    <input 
+                                        type="text" 
+                                        name={objHtml.quantityBuyPriceName}
+                                        id={objHtml.quantityBuyPriceName+"ControlInput1"}
+                                        className="form-control"
+                                        value={editData[objHtml.quantityBuyPriceName]}
+                                        disabled = {true}
+                                    />
+                                </div>
+                                {/* Quantity MRP Price */}
+                                <div className="col-md-3" style={{float: "left", paddingRight: "10px"}}>
+                                    <label className="form-label" htmlFor="quantity_mrp_price.ControlInput1">{objHtml.quantityMrpPriceHeader}: </label>
+                                    <input 
+                                        type="text" 
+                                        name='quantity_mrp_price'
+                                        id="quantity_mrp_price.ControlInput1" 
+                                        className="form-control"
+                                        value={editData['quantity_mrp_price']}
+                                        disabled = {true}
+                                    />
+                                </div>
+                                {/* Quantity Sell Price */}
+                                <div className="col-md-3" style={{float: "left", paddingRight: "10px"}}>
+                                    <label className="form-label" htmlFor={objHtml.quantityName+"ControlInput1"}>{objHtml.quantitySellPriceHeader}: </label>
+                                    <input 
+                                        type="text" 
+                                        name={objHtml.quantitySellPriceName}
+                                        id={objHtml.quantitySellPriceName+"ControlInput1"} 
+                                        className="form-control"
+                                        value={editData[objHtml.quantitySellPriceName]}
+                                        disabled = {true}
+                                    />
+                                </div>
+                            </>);
+                        })
+                        }
+{/*
+
                         <div className="col-md-4" style={hideSareeQuantity}>
                             <label className="form-label" htmlFor="quantity.ControlInput1">Quantity: </label>
                             <input 
@@ -827,10 +892,10 @@ const ProductAdd = () => {
                                 disabled = {true}
                             />
                         </div>
-
+*/}
 
                         {/** Blouse */}
-
+{/*
                         <div className="col-md-4" style={hideBlouse}>
                             <label className="form-label" htmlFor="quantity32.ControlInput1">Quantity: <b>32</b></label>
                             <input 
@@ -937,6 +1002,7 @@ const ProductAdd = () => {
                                 disabled = {true}
                             />
                         </div>
+                        */}
                     </div>
 
                     

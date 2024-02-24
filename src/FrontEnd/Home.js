@@ -198,7 +198,7 @@ const Home = ({data2}) => {
                                                 <div id={index} className='productPrice'>
                                                     <span className='offerPrice'>₹{obj.price}</span>
                                                     <span className='actualPrice'>₹{obj.offerPrice}</span>
-                                                    <span className='offerPercentage'>20% OFF</span>
+                                                    <span className='offerPercentage'>{obj.product_offer_percentage}% OFF</span>
                                                 </div>
                                             </div>
                                         ))}

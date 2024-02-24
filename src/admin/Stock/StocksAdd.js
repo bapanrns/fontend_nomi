@@ -39,6 +39,12 @@ const StockAdd = () => {
         paddingRight: '10px'
     });
 
+    const [productQuentityHash, setProductQuentityHash] = useState([]);
+    const setQuantityHtml =(category_id)=>{
+        console.log(global["productQuentityHash"][category_id]);
+        setProductQuentityHash(global["productQuentityHash"][category_id])
+    }
+
     // getBillDetails
     const [billObj, setBillObj] = useState([]);
     async function getBillDetails(){
@@ -60,6 +66,7 @@ const StockAdd = () => {
             setIsLoading(false);
             setProductDataImg(response.data.imageArray[0]);
             setProductData(response.data);
+            setQuantityHtml(response.data.category_id);
             if(global.kurtiCatIds.includes(parseInt(response.data.category_id, 10))){
             //if(response.data.category_id === 2){
                 sethideKurtiQuantityType({
@@ -390,6 +397,64 @@ const StockAdd = () => {
                 
             </div>
             <div style={{clear: "both"}}></div>
+
+            {
+            productQuentityHash.map((objHtml, index)=>{
+                return(<>
+                    {/* Quantity */}
+                    <div className="col-md-3" style={{float: "left", paddingRight: "10px"}}>
+                        <label className="form-label" htmlFor={objHtml.quantityName+"ControlInput1"}>{objHtml.quantityHeader}:</label>
+                        <input 
+                            type="text" 
+                            name={objHtml.quantityName}
+                            id={objHtml.quantityName+"ControlInput1"}
+                            className="form-control"
+                            onKeyPress={(e) => AcceptNumericValue(e)}
+                            onChange={handalChange}
+                        />
+                    </div>
+                    {/* Quantity Buy Price */}
+                    <div className="col-md-3" style={{float: "left", paddingRight: "10px"}}>
+                        <label className="form-label" htmlFor={objHtml.quantityBuyPriceName+"ControlInput1"}>{objHtml.quantityBuyPriceHeader}: </label>
+                        <input 
+                            type="text" 
+                            name={objHtml.quantityBuyPriceName}
+                            id={objHtml.quantityBuyPriceName+"ControlInput1"}
+                            className="form-control"
+                            onKeyPress={(e) => AcceptNumericValue(e)}
+                            onChange={handalChange}
+                        />
+                    </div>
+                    {/* Quantity MRP Price */}
+                    <div className="col-md-3" style={{float: "left", paddingRight: "10px"}}>
+                        <label className="form-label" htmlFor="quantity_mrp_price.ControlInput1">{objHtml.quantityMrpPriceHeader}: </label>
+                        <input 
+                            type="text" 
+                            name='quantity_mrp_price'
+                            id="quantity_mrp_price.ControlInput1" 
+                            className="form-control"
+                            onKeyPress={(e) => AcceptNumericValue(e)}
+                            onChange={handalChange}
+                        />
+                    </div>
+                    {/* Quantity Sell Price */}
+                    <div className="col-md-3" style={{float: "left", paddingRight: "10px"}}>
+                        <label className="form-label" htmlFor={objHtml.quantityName+"ControlInput1"}>{objHtml.quantitySellPriceHeader}: </label>
+                        <input 
+                            type="text" 
+                            name={objHtml.quantitySellPriceName}
+                            id={objHtml.quantitySellPriceName+"ControlInput1"} 
+                            className="form-control"
+                            onKeyPress={(e) => AcceptNumericValue(e)}
+                            onChange={handalChange}
+                        />
+                    </div>
+                </>);
+            })
+            }
+
+{/*
+
             <div className="col-md-4" style={hideSareeQuantity}>
                 <label className="form-label" htmlFor="quantity.ControlInput1">Quantity:</label>
                 <input 
@@ -407,6 +472,17 @@ const StockAdd = () => {
                     type="text" 
                     name='quantity_buy_price'
                     id="quantity_buy_price.ControlInput1" 
+                    className="form-control"
+                    onKeyPress={(e) => AcceptNumericValue(e)}
+                    onChange={handalChange}
+                />
+            </div>
+            <div className="col-md-4" style={hideSareeQuantity}>
+                <label className="form-label" htmlFor="quantity_buy_price.ControlInput1">Quantity MRP Price: </label>
+                <input 
+                    type="text" 
+                    name='quantity_mrp_price'
+                    id="quantity_mrp_price.ControlInput1" 
                     className="form-control"
                     onKeyPress={(e) => AcceptNumericValue(e)}
                     onChange={handalChange}
@@ -640,10 +716,10 @@ const StockAdd = () => {
                 />
             </div>
 
-
+*/}
 
             {/** Blouse */}
-
+{/*
             <div className="col-md-4" style={hideBlouse}>
                 <label className="form-label" htmlFor="quantity32.ControlInput1">Quantity: <b>32</b></label>
                 <input 
@@ -750,7 +826,7 @@ const StockAdd = () => {
                     onChange={handalChange}
                 />
             </div>
-
+*/}
 
 
             <div className="col-md-12" style={{textAlign: "center"}}>

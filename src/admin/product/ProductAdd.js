@@ -26,6 +26,16 @@ const ProductAdd = () => {
         images5: null 
     });
 
+    const [showHideProductFabric, setShowHideProductFabric] = useState(false);
+    const [showHideFabricCare, setShowHideFabricCare] = useState(false);
+    const [showHideSareeLength, setShowHideSareeLength] = useState(false);
+    const [showHideBlousePiece, setShowHideBlousePiece] = useState(false);
+    const [showHideBlouseLength, setShowHideBlouseLength] = useState(false);
+    const [showHideOccasion, setShowHideOccasion] = useState(false);
+
+    const [showHideMaterial, setShowHideMaterial] = useState(false);
+    const [showHideStoneType, setShowHideStoneType] = useState(false);
+
     const navigate = useNavigate();
     
     const handelFile = (e) =>{
@@ -51,8 +61,8 @@ const ProductAdd = () => {
         bill_id_and_shop_id: '',
         product_name: '',
         company_name: '',
-        product_febric: '',
-        year_month: ''
+        //product_febric: '',
+        //year_month: ''
     });
 
     const schema = Joi.object({
@@ -61,8 +71,8 @@ const ProductAdd = () => {
         bill_id_and_shop_id: Joi.string().required(),
         product_name: Joi.string().required(),
         company_name: Joi.string().required(),
-        product_febric: Joi.string().required(),
-        year_month: Joi.string().required()
+        //product_febric: Joi.string().required(),
+        //year_month: Joi.string().required()
     });
    
     const saveProduct = async (event) => {
@@ -242,15 +252,9 @@ const ProductAdd = () => {
     // getBillDetails
     const [billObj, setBillObj] = useState([]);
     async function getBillDetails(){
-        const headers = {
-            'Content-Type': 'application/json'
-        }
         setIsLoading(true);
         let data = {};
         await axiosInstance.post('/allBuyProduct', data)
-        /*await axios.post(global["axios_url"]+'/allBuyProduct', data, {
-            headers: headers
-        })*/
         .then((response) => {
             if(response.data.length > 0){
                 setBillObj(response.data);
@@ -362,30 +366,7 @@ const ProductAdd = () => {
         material: "",
         stone_type: ""
     });
-    const [hideSareeQuantity, sethideQuantity] = useState({
-        display: "none",
-        float: 'left', 
-        paddingRight: '10px'
-    });
-    const [hideKurtiQuantity, sethideQuantityType] = useState({
-        display: "none",
-        float: 'left', 
-        paddingRight: '10px'
-    });
-    // 
-    const [hideJewellery, setHideJewellery] = useState({
-        display: "none",
-        float: 'left', 
-        paddingRight: '10px'
-    });
-
-    //hideBlouse
-    const [hideBlouse, setHideBlouse] = useState({
-        display: "none",
-        float: 'left', 
-        paddingRight: '10px'
-    });
-
+    
     const handalChange = (e) =>{
         if(e.target.name === "product_febric"){
             //console.log(e.target.value.split("@"));
@@ -405,6 +386,7 @@ const ProductAdd = () => {
         if (e.target.name === "category_id"){
             hideShowQuantity(e.target.value);
             getSubCategory(e.target.value);
+            setQuantityHtml(e.target.value)
         }
 
         // For validation
@@ -421,75 +403,62 @@ const ProductAdd = () => {
         // Kurti, Tops, Kurta Sets & Salwar Suits
         if(global.kurtiCatIds.includes(parseInt(category_id, 10))){
             // For Kurti
-            sethideQuantityType({
-                ...hideKurtiQuantity,
-                display: "block"
-            });
-            sethideQuantity({
-                ...hideSareeQuantity,
-                display: "none"
-            });
-            setHideJewellery({
-                ...hideJewellery,
-                display: "none"
-            });
-
-            setHideBlouse({
-                ...hideBlouse,
-                display: "none"
-            });
+            
+            setShowHideProductFabric(true);
+            setShowHideFabricCare(true);
+            setShowHideSareeLength(false);
+            setShowHideBlousePiece(false);
+            setShowHideBlouseLength(false);
+            setShowHideOccasion(true);
+            setShowHideMaterial(false);
+            setShowHideStoneType(false);
         }else if(global.sareeCatIds.includes(parseInt(category_id, 10))){
             // For Saree 
-            sethideQuantityType({
-                ...hideKurtiQuantity,
-                display: "none"
-            });
-            sethideQuantity({
-                ...hideSareeQuantity,
-                display: "block"
-            });
-            setHideJewellery({
-                ...hideJewellery,
-                display: "none"
-            });
-            setHideBlouse({
-                ...hideBlouse,
-                display: "none"
-            });
+            
+            setShowHideProductFabric(true);
+            setShowHideFabricCare(true);
+            setShowHideSareeLength(true);
+            setShowHideBlousePiece(true);
+            setShowHideBlouseLength(true);
+            setShowHideOccasion(true);
+            setShowHideMaterial(false);
+            setShowHideStoneType(false);
         }else if(global.jewelleryCatIds.includes(parseInt(category_id, 10))){
             //setHideJewellery
-            sethideQuantity({
-                ...hideSareeQuantity,
-                display: "block"
-            });
-            setHideJewellery({
-                ...hideJewellery,
-                display: "block"
-            });
-            sethideQuantityType({
-                ...hideKurtiQuantity,
-                display: "none"
-            });
-            setHideBlouse({
-                ...hideBlouse,
-                display: "none"
-            });
+            setShowHideProductFabric(false);
+            setShowHideFabricCare(false);
+            setShowHideSareeLength(false);
+            setShowHideBlousePiece(false);
+            setShowHideBlouseLength(false);
+            setShowHideOccasion(true);
+            setShowHideMaterial(true);
+            setShowHideStoneType(true);
         }else if(global.blouseCatIds.includes(parseInt(category_id, 10))){
             //hideBlouse
-            setHideBlouse({
-                ...hideBlouse,
-                display: "block"
-            });
-            setHideJewellery({
-                ...hideJewellery,
-                display: "none"
-            });
-            sethideQuantityType({
-                ...hideKurtiQuantity,
-                display: "none"
-            });
+            setShowHideProductFabric(true);
+            setShowHideFabricCare(true);
+            setShowHideSareeLength(false);
+            setShowHideBlousePiece(false);
+            setShowHideBlouseLength(false);
+            setShowHideOccasion(true);
+            setShowHideMaterial(false);
+            setShowHideStoneType(false);
+        }else if(global.tree.includes(parseInt(category_id, 10))){
+            setShowHideProductFabric(false);
+            setShowHideFabricCare(false);
+            setShowHideSareeLength(false);
+            setShowHideBlousePiece(false);
+            setShowHideBlouseLength(false);
+            setShowHideOccasion(false);
+            setShowHideMaterial(false);
+            setShowHideStoneType(false);
         }
     };
+    const [productQuentityHash, setProductQuentityHash] = useState([]);
+    const setQuantityHtml =(category_id)=>{
+        console.log(global["productQuentityHash"][category_id]);
+        setProductQuentityHash(global["productQuentityHash"][category_id])
+    }
 
     const [checkedValues, setCheckedValues] = useState([]);
     
@@ -615,6 +584,10 @@ const ProductAdd = () => {
             headers: headers
         })*/
         .then((response) => {
+            // Create HTML
+            console.log(response.data.category_id);
+            setQuantityHtml(response.data.category_id);
+
             //setProductObj({...productObj, ['color']: response.data.color.split(", ")});
             // Show hide quantity
             hideShowQuantity(response.data.category_id);
@@ -822,425 +795,69 @@ const ProductAdd = () => {
                     <div style={{width: '100%', backgroundColor: "#00cfff", textAlign: "center", padding: '10px'}}>Product Price Information</div>
 
                     <div className='col-md-12' style={{padding: "5px", display: 'inline-block'}}>
-                        <div className="col-md-4" style={hideSareeQuantity}>
-                            <label className="form-label" htmlFor="quantity.ControlInput1">Quantity:</label>
-                            <input 
-                                type="text" 
-                                name='quantity'
-                                id="quantity.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantity']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
-                        <div className="col-md-4" style={hideSareeQuantity}>
-                            <label className="form-label" htmlFor="quantity_buy_price.ControlInput1">Quantity Buy Price: </label>
-                            <input 
-                                type="text" 
-                                name='quantity_buy_price'
-                                id="quantity_buy_price.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantity_buy_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
+                        {
+                        productQuentityHash.map((objHtml, index)=>{
+                            return(<>
+                                {/* Quantity */}
+                                <div className="col-md-3" style={{float: "left", paddingRight: "10px"}}>
+                                    <label className="form-label" htmlFor={objHtml.quantityName+"ControlInput1"}>{objHtml.quantityHeader}:</label>
+                                    <input 
+                                        type="text" 
+                                        name={objHtml.quantityName}
+                                        id={objHtml.quantityName+"ControlInput1"}
+                                        className="form-control"
+                                        value={editData[objHtml.quantityName]}
+                                        onKeyPress={(e) => AcceptNumericValue(e)}
+                                        onChange={handalChange}
+                                        disabled = {id !== undefined?true:false}
+                                    />
+                                </div>
+                                {/* Quantity Buy Price */}
+                                <div className="col-md-3" style={{float: "left", paddingRight: "10px"}}>
+                                    <label className="form-label" htmlFor={objHtml.quantityBuyPriceName+"ControlInput1"}>{objHtml.quantityBuyPriceHeader}: </label>
+                                    <input 
+                                        type="text" 
+                                        name={objHtml.quantityBuyPriceName}
+                                        id={objHtml.quantityBuyPriceName+"ControlInput1"}
+                                        className="form-control"
+                                        value={editData[objHtml.quantityBuyPriceName]}
+                                        onKeyPress={(e) => AcceptNumericValue(e)}
+                                        onChange={handalChange}
+                                        disabled = {id !== undefined?true:false}
+                                    />
+                                </div>
+                                {/* Quantity MRP Price */}
+                                <div className="col-md-3" style={{float: "left", paddingRight: "10px"}}>
+                                    <label className="form-label" htmlFor="quantity_mrp_price.ControlInput1">{objHtml.quantityMrpPriceHeader}: </label>
+                                    <input 
+                                        type="text" 
+                                        name='quantity_mrp_price'
+                                        id="quantity_mrp_price.ControlInput1" 
+                                        className="form-control"
+                                        value={editData['quantity_mrp_price']}
+                                        onKeyPress={(e) => AcceptNumericValue(e)}
+                                        onChange={handalChange}
+                                        disabled = {id !== undefined?true:false}
+                                    />
+                                </div>
+                                {/* Quantity Sell Price */}
+                                <div className="col-md-3" style={{float: "left", paddingRight: "10px"}}>
+                                    <label className="form-label" htmlFor={objHtml.quantityName+"ControlInput1"}>{objHtml.quantitySellPriceHeader}: </label>
+                                    <input 
+                                        type="text" 
+                                        name={objHtml.quantitySellPriceName}
+                                        id={objHtml.quantitySellPriceName+"ControlInput1"} 
+                                        className="form-control"
+                                        value={editData[objHtml.quantitySellPriceName]}
+                                        onKeyPress={(e) => AcceptNumericValue(e)}
+                                        onChange={handalChange}
+                                        disabled = {id !== undefined?true:false}
+                                    />
+                                </div>
+                            </>);
+                        })
+                        }
                         
-                        <div className="col-md-4"style={hideSareeQuantity}>
-                            <label className="form-label" htmlFor="quantity_selling_price.ControlInput1">Quantity Sell Price: </label>
-                            <input 
-                                type="text" 
-                                name='quantity_selling_price'
-                                id="quantity_selling_price.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantity_selling_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
-                        
-                        <div className="col-md-4" style={hideKurtiQuantity}>
-                            <label className="form-label" htmlFor="quantityXs.ControlInput1">Quantity: <b>XS</b> 75 cm = 28 Inches </label>
-                            <input 
-                                type="text" 
-                                name='quantityXs'
-                                id="quantityXs.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantityXs']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
-
-                        <div className="col-md-4" style={hideKurtiQuantity}>
-                            <label className="form-label" htmlFor="quantityXs_buy_price.ControlInput1">Quantity <b>XS</b> Buy Price: </label>
-                            <input 
-                                type="text" 
-                                name='quantityXs_buy_price'
-                                id="quantityXs_buy_price.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantityXs_buy_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
-                        
-                        <div className="col-md-4"style={hideKurtiQuantity}>
-                            <label className="form-label" htmlFor="quantityXs_selling_price.ControlInput1">Quantity <b>XS</b> Sell Price: </label>
-                            <input 
-                                type="text" 
-                                name='quantityXs_selling_price'
-                                id="quantityXs_selling_price.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantityXs_selling_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
-                        
-                        <div className="col-md-4" style={hideKurtiQuantity}>
-                            <label className="form-label" htmlFor="quantityS.ControlInput1">Quantity: <b>S</b> 80 cm = 30 Inches</label>
-                            <input 
-                                type="text" 
-                                name='quantityS'
-                                id="quantityS.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantityS']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
-
-                        <div className="col-md-4" style={hideKurtiQuantity}>
-                            <label className="form-label" htmlFor="quantityS_buy_price.ControlInput1">Quantity <b>S</b> Buy Price: </label>
-                            <input 
-                                type="text" 
-                                name='quantityS_buy_price'
-                                id="quantityS_buy_price.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantityS_buy_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
-                        
-                        <div className="col-md-4"style={hideKurtiQuantity}>
-                            <label className="form-label" htmlFor="quantityS_selling_price.ControlInput1">Quantity <b>S</b> Sell Price: </label>
-                            <input 
-                                type="text" 
-                                name='quantityS_selling_price'
-                                id="quantityS_selling_price.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantityS_selling_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
-                        
-                        <div className="col-md-4" style={hideKurtiQuantity}>
-                            <label className="form-label" htmlFor="quantityL.ControlInput1">Quantity: <b>L</b> 90 cm = 3 Inches</label>
-                            <input 
-                                type="text" 
-                                name='quantityL'
-                                id="quantityL.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantityL']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
-
-                        <div className="col-md-4" style={hideKurtiQuantity}>
-                            <label className="form-label" htmlFor="quantityL_buy_price.ControlInput1">Quantity <b>L</b> Buy Price: </label>
-                            <input 
-                                type="text" 
-                                name='quantityL_buy_price'
-                                id="quantityL_buy_price.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantityL_buy_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
-                        
-                        <div className="col-md-4"style={hideKurtiQuantity}>
-                            <label className="form-label" htmlFor="quantityL_selling_price.ControlInput1">Quantity <b>L</b> Sell Price: </label>
-                            <input 
-                                type="text" 
-                                name='quantityL_selling_price'
-                                id="quantityL_selling_price.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantityL_selling_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
-                        
-                        <div className="col-md-4" style={hideKurtiQuantity}>
-                            <label className="form-label" htmlFor="quantityM.ControlInput1">Quantity: <b>M</b> 85 cm = 32 Inches</label>
-                            <input 
-                                type="text" 
-                                name='quantityM'
-                                id="quantityM.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantityM']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
-
-                        <div className="col-md-4" style={hideKurtiQuantity}>
-                            <label className="form-label" htmlFor="quantityM_buy_price.ControlInput1">Quantity <b>M</b> Buy Price: </label>
-                            <input 
-                                type="text" 
-                                name='quantityM_buy_price'
-                                id="quantityM_buy_price.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantityM_buy_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
-                        
-                        <div className="col-md-4"style={hideKurtiQuantity}>
-                            <label className="form-label" htmlFor="quantityM_selling_price.ControlInput1">Quantity <b>M</b> Sell Price: </label>
-                            <input 
-                                type="text" 
-                                name='quantityM_selling_price'
-                                id="quantityM_selling_price.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantityM_selling_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
-                        
-                        <div className="col-md-4" style={hideKurtiQuantity}>
-                            <label className="form-label" htmlFor="quantityXl.ControlInput1">Quantity: <b>XL</b> 95 cm = 36 Inches</label>
-                            <input 
-                                type="text" 
-                                name='quantityXl'
-                                id="quantityXl.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantityXl']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
-                        <div className="col-md-4" style={hideKurtiQuantity}>
-                            <label className="form-label" htmlFor="quantityXl_buy_price.ControlInput1">Quantity <b>XL</b> Buy Price: </label>
-                            <input 
-                                type="text" 
-                                name='quantityXl_buy_price'
-                                id="quantityXl_buy_price.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantityXl_buy_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
-                        
-                        <div className="col-md-4"style={hideKurtiQuantity}>
-                            <label className="form-label" htmlFor="quantityXl_selling_price.ControlInput1">Quantity <b>XL</b> Sell Price: </label>
-                            <input 
-                                type="text" 
-                                name='quantityXl_selling_price'
-                                id="quantityXl_selling_price.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantityXl_selling_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
-                        
-                        <div className="col-md-4" style={hideKurtiQuantity}>
-                            <label className="form-label" htmlFor="quantity2Xl.ControlInput1">Quantity: <b>2XL</b> 100 cm = 38 Inches</label>
-                            <input 
-                                type="text" 
-                                name='quantity2Xl'
-                                id="quantity2Xl.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantity2Xl']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
-
-                        <div className="col-md-4" style={hideKurtiQuantity}>
-                            <label className="form-label" htmlFor="quantity2Xl_buy_price.ControlInput1">Quantity <b>2XL</b> Buy Price: </label>
-                            <input 
-                                type="text" 
-                                name='quantity2Xl_buy_price'
-                                id="quantity2Xl_buy_price.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantity2Xl_buy_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
-                        
-                        <div className="col-md-4" style={hideKurtiQuantity}>
-                            <label className="form-label" htmlFor="quantity2Xl_selling_price.ControlInput1">Quantity <b>2XL</b> Sell Price: </label>
-                            <input 
-                                type="text" 
-                                name='quantity2Xl_selling_price'
-                                id="quantity2Xl_selling_price.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantity2Xl_selling_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
-
-
-                        {/** Blouse */}
-
-                        <div className="col-md-4" style={hideBlouse}>
-                            <label className="form-label" htmlFor="quantity32.ControlInput1">Quantity: <b>32</b></label>
-                            <input 
-                                type="text" 
-                                name='quantity32'
-                                id="quantity32.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantity32']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
-                        <div className="col-md-4" style={hideBlouse}>
-                            <label className="form-label" htmlFor="quantity32_buy_price.ControlInput1">Quantity <b>32</b> Buy Price: </label>
-                            <input 
-                                type="text" 
-                                name='quantity32_buy_price'
-                                id="quantity32_buy_price.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantity32_buy_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
-                        
-                        <div className="col-md-4" style={hideBlouse}>
-                            <label className="form-label" htmlFor="quantity32_selling_price.ControlInput1">Quantity <b>32</b> Sell Price: </label>
-                            <input 
-                                type="text" 
-                                name='quantity32_selling_price'
-                                id="quantity32_selling_price.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantity32_selling_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
-
-                        <div className="col-md-4" style={hideBlouse}>
-                            <label className="form-label" htmlFor="quantity34.ControlInput1">Quantity: <b>34</b></label>
-                            <input 
-                                type="text" 
-                                name='quantity34'
-                                id="quantity34.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantity34']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
-
-                        <div className="col-md-4" style={hideBlouse}>
-                            <label className="form-label" htmlFor="quantity34_buy_price.ControlInput1">Quantity <b>34</b> Buy Price: </label>
-                            <input 
-                                type="text" 
-                                name='quantity34_buy_price'
-                                id="quantity34_buy_price.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantity34_buy_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
-                        
-                        <div className="col-md-4" style={hideBlouse}>
-                            <label className="form-label" htmlFor="quantity34_selling_price.ControlInput1">Quantity <b>34</b> Sell Price: </label>
-                            <input 
-                                type="text" 
-                                name='quantity34_selling_price'
-                                id="quantity34_selling_price.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantity34_selling_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
-
-                        <div className="col-md-4" style={hideBlouse}>
-                            <label className="form-label" htmlFor="quantity36.ControlInput1">Quantity: <b>36</b></label>
-                            <input 
-                                type="text" 
-                                name='quantity36'
-                                id="quantity36.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantity36']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
-
-                        <div className="col-md-4" style={hideBlouse}>
-                            <label className="form-label" htmlFor="quantity36_buy_price.ControlInput1">Quantity <b>36</b> Buy Price: </label>
-                            <input 
-                                type="text" 
-                                name='quantity36_buy_price'
-                                id="quantity36_buy_price.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantity36_buy_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
-                        
-                        <div className="col-md-4" style={hideBlouse}>
-                            <label className="form-label" htmlFor="quantity36_selling_price.ControlInput1">Quantity <b>36</b> Sell Price: </label>
-                            <input 
-                                type="text" 
-                                name='quantity36_selling_price'
-                                id="quantity36_selling_price.ControlInput1" 
-                                className="form-control"
-                                value={editData['quantity36_selling_price']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                                disabled = {id !== undefined?true:false}
-                            />
-                        </div>
                     </div>
 
                     <div style={{width: '100%', backgroundColor: "#00cfff", textAlign: "center", padding: '10px', clear: 'both', marginTop: '5px'}}>Product Information</div>
@@ -1273,30 +890,36 @@ const ProductAdd = () => {
                             {errors.company_name && <span className="error">This is a required field.</span>}
                         </div>
                         
-                        <div className="col-md-4" style={{float: 'left', paddingRight: '10px'}}>
-                            <label className="form-label" htmlFor="product_febric.ControlInput1">Product Fabric: <span className='requiredfield'> *</span></label>
-                            <select
-                                className='form-select'
-                                id="product_febric"
-                                name="product_febric"
-                                onChange={handalChange}
-                                value={editData['product_febric_id']+"@"+editData['product_febric']}
-                                >
-                                <option value="">Select Product Fabric</option> 
-                                {
-                                    productFebricObj.length > 0  &&
-                                    productFebricObj.map((data, index)=>{
-                                        return (<option key={index} value={data.id+"@"+data.product_fabric_name} >{data.product_fabric_name}</option>);
-                                    })
 
-                                }
-                            </select>
-                            {errors.product_febric && <span className="error">This is a required field.</span>}
-                        </div>
 
-                        <div className="col-md-4" style={{float: 'left', paddingRight: '10px'}}>
-                            <label className="form-label" htmlFor="fabric_care.ControlInput1">Fabric Care: </label>
-                           
+                        {/* For saree */}
+                        {
+                        showHideProductFabric &&
+                            <div className="col-md-4 addProductDiv">
+                                <label className="form-label" htmlFor="product_febric.ControlInput1">Product Fabric: <span className='requiredfield'> *</span></label>
+                                <select
+                                    className='form-select'
+                                    id="product_febric"
+                                    name="product_febric"
+                                    onChange={handalChange}
+                                    value={editData['product_febric_id']+"@"+editData['product_febric']}
+                                    >
+                                    <option value="">Select Product Fabric</option> 
+                                    {
+                                        productFebricObj.length > 0  &&
+                                        productFebricObj.map((data, index)=>{
+                                            return (<option key={index} value={data.id+"@"+data.product_fabric_name} >{data.product_fabric_name}</option>);
+                                        })
+
+                                    }
+                                </select>
+                                {errors.product_febric && <span className="error">This is a required field.</span>}
+                            </div>
+                        }
+                        {
+                        showHideFabricCare &&
+                            <div className="col-md-4 addProductDiv">
+                                <label className="form-label" htmlFor="fabric_care.ControlInput1">Fabric Care: </label>
                                 <select
                                     className='form-select'
                                     id="fabric_care"
@@ -1309,10 +932,129 @@ const ProductAdd = () => {
                                         <option value={option.value} key={"care_"+key}>{option.label}</option>
                                     ))}
                                 </select>
-                           
-                        </div>
+                            </div>
+                        }
+                        {
+                        showHideSareeLength &&
+                            <div className="col-md-4 addProductDiv">
+                                <label className="form-label" htmlFor="saree_length">Saree Length:</label>
+                                <input 
+                                    type="text" 
+                                    name='saree_length'
+                                    id="saree_length" 
+                                    className="form-control"
+                                    value={editData['saree_length']}
+                                    onKeyPress={(e) => AcceptNumericValue(e)}
+                                    onChange={handalChange}
+                                />
+                            </div>
+                        }
+                        {
+                        showHideBlousePiece &&
+                            <div className="col-md-4 addProductDiv">
+                                <label className="form-label" htmlFor="blouse.ControlInput1">Blouse Piece:</label>
+                                <select
+                                    className='form-select'
+                                    id="blouse"
+                                    name="blouse"
+                                    onChange={handalChange}
+                                    value={editData.blouse}
+                                >   
+                                    <option value="No">No</option>
+                                    <option value="Yes">Yes</option>
+                                </select>
+                            </div>
+                        }
+                        {
+                        showHideBlouseLength &&
+                            <div className="col-md-4 addProductDiv">
+                                <label className="form-label" htmlFor="blouse_length">Blouse Length:</label>
+                                <input 
+                                    type="text" 
+                                    name='blouse_length'
+                                    id="blouse_length" 
+                                    className="form-control"
+                                    value={editData['blouse_length']}
+                                    onKeyPress={(e) => AcceptNumericValue(e)}
+                                    onChange={handalChange}
+                                />
+                            </div>
+                        }
+                        {
+                        showHideOccasion &&
+                            <div className="col-md-8 addProductDiv">
+                                <label className="form-label" htmlFor="occasion">Occasion:</label>
+                                <br />
+                                {
+                                    
+                                    global.occasion.length > 0  &&
+                                    global.occasion.map((obj, index)=>{
+                                        return (
+                                            <div className='form-check' style={{background: obj.code, float: 'left', marginLeft: '5px', minWidth: '100px'}} key={index}>
+                                                <input 
+                                                    className="form-check-input" 
+                                                    type="checkbox" 
+                                                    value={obj.value} 
+                                                    id={"flexCheckDefaul"+index} 
+                                                    style={{marginTop: '10px', marginLeft: '-15px'}} 
+                                                    checked={productObj['occasion'].includes(obj.value)}
+                                                    onChange={handleCheckboxChangeOccasion}
+                                                    />
+                                                <label 
+                                                    className="form-check-label" 
+                                                    htmlFor={"flexCheckDefaul"+index} 
+                                                    style={{padding: '5px', cursor: 'pointer'}}
+                                                    >
+                                                    {obj.label}
+                                                </label>
+                                            </div>
+                                        );
+                                    })
 
-                        <div className="col-md-4" style={{float: 'left', paddingRight: '10px'}}>
+                                }
+                                <br /><br />
+                            </div>
+                        }
+                        {
+                        showHideMaterial &&
+                            <div className="col-md-4 addProductDiv">
+                                <label className="form-label" htmlFor="material.ControlInput1">Material:</label>
+                                <select
+                                    className='form-select'
+                                    id="material"
+                                    name="material"
+                                    onChange={handalChange}
+                                    value={editData.material}
+                                >   
+                                    <option value="">NULL</option>
+                                    <option value="Brass & Copper">Brass & Copper</option>
+                                    <option value="Alloy">Alloy</option>
+                                    <option value="Brass">Brass</option>
+                                    <option value="Vitreous enamel">Vitreous enamel</option>
+                                    <option value="Pearl">Pearl</option>
+                                </select>
+                            </div>
+                        }
+                        {
+                        showHideStoneType &&
+                            <div className="col-md-4 addProductDiv">
+                                <label className="form-label" htmlFor="stone_type.ControlInput1">Stone Type:</label>
+                                <select
+                                    className='form-select'
+                                    id="stone_type"
+                                    name="stone_type"
+                                    onChange={handalChange}
+                                    value={editData.stone_type}
+                                >   
+                                    <option value="">NULL</option>
+                                    <option value="Artificial stone and beads">Artificial stone and beads</option>
+                                    <option value="Crystals">Crystals</option>
+                                    <option value="Artificial Stones">Artificial Stones</option>
+                                </select>
+                            </div>
+                        }
+                        
+                        <div className="col-md-4 addProductDiv">
                             <label className="form-label" htmlFor="year_month.ControlInput1">Year Month: <span className='requiredfield'> *</span></label>
                             <select
                                 className='form-select'
@@ -1326,44 +1068,8 @@ const ProductAdd = () => {
                                 <option value="2023-05">2023-05</option>
                             </select>
                         </div>
-                        <div className="col-md-4" style={hideSareeQuantity}>
-                            <label className="form-label" htmlFor="saree_length">Saree Length:</label>
-                            <input 
-                                type="text" 
-                                name='saree_length'
-                                id="saree_length" 
-                                className="form-control"
-                                value={editData['saree_length']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                            />
-                        </div>
-                        <div className="col-md-4" style={hideSareeQuantity}>
-                            <label className="form-label" htmlFor="blouse.ControlInput1">Blouse Piece:</label>
-                            <select
-                                className='form-select'
-                                id="blouse"
-                                name="blouse"
-                                onChange={handalChange}
-                                value={editData.blouse}
-                            >   
-                                <option value="No">No</option>
-                                <option value="Yes">Yes</option>
-                            </select>
-                        </div>
-                        <div className="col-md-4" style={hideSareeQuantity}>
-                            <label className="form-label" htmlFor="blouse_length">Blouse Length:</label>
-                            <input 
-                                type="text" 
-                                name='blouse_length'
-                                id="blouse_length" 
-                                className="form-control"
-                                value={editData['blouse_length']}
-                                onKeyPress={(e) => AcceptNumericValue(e)}
-                                onChange={handalChange}
-                            />
-                        </div>
-                        <div className="col-md-4" style={{float: 'left', paddingRight: '10px'}}>
+                        
+                        <div className="col-md-4 addProductDiv">
                             <label className="form-label" htmlFor="weight">Weight:</label>
                             <input 
                                 type="text" 
@@ -1375,7 +1081,7 @@ const ProductAdd = () => {
                                 onChange={handalChange}
                             />
                         </div>
-                        <div className="col-md-4" style={{float: 'left', paddingRight: '10px'}}>
+                        <div className="col-md-4 addProductDiv">
                             <label className="form-label" htmlFor="youtube_link">Youtube Link:</label>
                             <input 
                                 type="text" 
@@ -1386,71 +1092,6 @@ const ProductAdd = () => {
                                 onKeyPress={(e) => AcceptNumericValue(e)}
                                 onChange={handalChange}
                             />
-                        </div>
-                        <div className="col-md-4" style={{float: 'left', paddingRight: '10px'}}>
-                            <label className="form-label" htmlFor="occasion">Occasion:</label>
-                            <br />
-                            {
-                                
-                                global.occasion.length > 0  &&
-                                global.occasion.map((obj, index)=>{
-                                    return (
-                                        <div className='form-check' style={{background: obj.code, float: 'left', marginLeft: '5px', minWidth: '100px'}} key={index}>
-                                            <input 
-                                                className="form-check-input" 
-                                                type="checkbox" 
-                                                value={obj.value} 
-                                                id={"flexCheckDefaul"+index} 
-                                                style={{marginTop: '10px', marginLeft: '-15px'}} 
-                                                checked={productObj['occasion'].includes(obj.value)}
-                                                onChange={handleCheckboxChangeOccasion}
-                                                />
-                                            <label 
-                                                className="form-check-label" 
-                                                htmlFor={"flexCheckDefaul"+index} 
-                                                style={{padding: '5px', cursor: 'pointer'}}
-                                                >
-                                                {obj.label}
-                                            </label>
-                                        </div>
-                                    );
-                                })
-
-                            }
-                        </div>
-
-                        <div className="col-md-4" style={hideJewellery}>
-                            <label className="form-label" htmlFor="material.ControlInput1">Material:</label>
-                            <select
-                                className='form-select'
-                                id="material"
-                                name="material"
-                                onChange={handalChange}
-                                value={editData.material}
-                            >   
-                                <option value="">NULL</option>
-                                <option value="Brass & Copper">Brass & Copper</option>
-                                <option value="Alloy">Alloy</option>
-                                <option value="Brass">Brass</option>
-                                <option value="Vitreous enamel">Vitreous enamel</option>
-                                <option value="Pearl">Pearl</option>
-                            </select>
-                        </div>
-
-                        <div className="col-md-4" style={hideJewellery}>
-                            <label className="form-label" htmlFor="stone_type.ControlInput1">Stone Type:</label>
-                            <select
-                                className='form-select'
-                                id="stone_type"
-                                name="stone_type"
-                                onChange={handalChange}
-                                value={editData.stone_type}
-                            >   
-                                <option value="">NULL</option>
-                                <option value="Artificial stone and beads">Artificial stone and beads</option>
-                                <option value="Crystals">Crystals</option>
-                                <option value="Artificial Stones">Artificial Stones</option>
-                            </select>
                         </div>
                     </div>
                     
@@ -1522,7 +1163,7 @@ const ProductAdd = () => {
                                             <img 
                                                // src={require("../../images/product/"+obj)} 
                                                 src={`${global.productImageUrl}${obj}`}
-                                                alt="No Image" 
+                                                alt="No" 
                                                 style={{ width: '200px', height: '200px'}}
                                                 ></img>
 
