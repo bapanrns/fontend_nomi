@@ -1,25 +1,25 @@
-import React, { useCallback, useState } from 'react'
-import {Container, Row, Col, Image, Carousel } from 'react-bootstrap';
+import React, { useState } from 'react'
+//import {Container, Row, Col, Image, Carousel } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { createRoot } from 'react-dom/client';
-import { AgGridReact } from 'ag-grid-react';
+//import { createRoot } from 'react-dom/client';
+//import { AgGridReact } from 'ag-grid-react';
 
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 
-import global from "../../components/global";
+//import global from "../../components/global";
 import Loader from '../../components/Loader'
 // Notification
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 
 import axiosInstance from '../../components/axiosInstance';
-
+/*
 import {
     useNavigate,
     useParams
-  } from "react-router-dom";
+  } from "react-router-dom";*/
 
 const Categories = () => {
     const [isLoading, setIsLoading] = useState(false);

@@ -1,8 +1,8 @@
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
 
-import { Button, Modal } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Loader from '../../components/Loader';
+//import Loader from '../../components/Loader';
 
 import axios from "axios";
 import global from "../../components/global";
@@ -58,7 +58,7 @@ const ActionCellRenderer = (props) => {
   }
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  //const handleShow = () => setShow(true);
 
   const setPrimary = (id, product_id) =>{
     console.log(id, product_id);
@@ -127,7 +127,7 @@ const ActionCellRenderer = (props) => {
                               <img 
                                 //src={require("../../images/product/"+obj.image_name)} 
                                 src={`${global.productImageUrl}${obj.image_name}`}
-                                alt="No Image" 
+                                alt="No" 
                                 style={{ width: '200px', height: '200px'}}></img>
                               <br></br>
                               
