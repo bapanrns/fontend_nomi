@@ -5,7 +5,7 @@ import Loader from '../components/Loader'
 import global from "../components/global";
 import axios from "axios";
 // Notification
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import axiosInstance from '../components/axiosInstance';

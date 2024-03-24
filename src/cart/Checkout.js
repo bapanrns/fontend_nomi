@@ -2,11 +2,9 @@ import React, {  useEffect, useState } from 'react'
 import { Container, Row, Col, Accordion, Form, Image } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../components/css/checkout.css';
-import Select from 'react-select';
-import axios from "axios";
 import global from "../components/global";
 // Notification
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import Joi from 'joi';
 
 import {
@@ -30,9 +28,7 @@ const Checkout = (props) => {
     
     const getCartData=()=>{
         setIsLoading(true);
-        const headers = {
-            'Content-Type': 'application/json'
-        }
+        
         let itemIds = localStorage.getItem('cart') || "[]"
         let data = {itemIds: itemIds};
         axiosInstance.post('/getCartData', data)
@@ -55,7 +51,7 @@ const Checkout = (props) => {
     }
     const [itemCount, setItemCount] = useState({"x": 1, "y": 1, "z": 1});
 
-    function productAddRemoveImgFn(action, id){
+    /*function productAddRemoveImgFn(action, id){
         if(action === "add"){
             setItemCount(prevState => ({
                 ...prevState,
@@ -72,7 +68,7 @@ const Checkout = (props) => {
             }
         }
         console.log(itemCount);
-    }
+    }*/
 
     const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({

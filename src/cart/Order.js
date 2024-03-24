@@ -1,17 +1,11 @@
 import React, {  useEffect, useState } from 'react'
-import { Container, Row, Col, Accordion, Form, Image } from 'react-bootstrap';
+import { Container, Row, Col, Image } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../components/css/checkout.css';
-import Select from 'react-select';
-import axios from "axios";
 import global from "../components/global";
 // Notification
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import Joi from 'joi';
-
-import {
-    useNavigate
-  } from "react-router-dom";
 
 import axiosInstance from '../components/axiosInstance';
 

@@ -5,7 +5,7 @@ import global from "../../components/global";
 import Loader from '../../components/Loader'
 import axiosInstance from '../../components/axiosInstance';
 
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 import {
     useParams,

@@ -1,12 +1,12 @@
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
 
 import {
     useNavigate
   } from "react-router-dom";
 
 import axiosInstance from '../../components/axiosInstance';
-import { ToastContainer, toast } from 'react-toastify';
-import Loader from '../../components/Loader'
+import { toast } from 'react-toastify';
+//import Loader from '../../components/Loader'
 
 
 

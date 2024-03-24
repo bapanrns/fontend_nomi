@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
-import axios from "axios";
+import React from 'react';
+//import axios from "axios";
 
 import {
-    useNavigate,
-    useHistory
+    useNavigate
   } from "react-router-dom";
 
 import axiosInstance from '../../components/axiosInstance';
@@ -48,7 +47,7 @@ const ActionCellRenderer = (props) => {
         'Content-Type': 'application/json'
     }*/
     
-    let data = {};
+    //let data = {};
     axiosInstance.post('/deleteSubCategory', {id: cellValue})
     /*axios.post(global["axios_url"]+'/deleteSubCategory', {id: cellValue}, {
         headers: headers

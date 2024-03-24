@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import axios from "axios";
+//import axios from "axios";
 
 import Joi from 'joi';
 import Loader from '../../components/Loader';
-import global from "../../components/global";
+//import global from "../../components/global";
 import axiosInstance from '../../components/axiosInstance';
 
 import {

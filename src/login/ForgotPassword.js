@@ -3,11 +3,9 @@ import ReactFormInputValidation from "react-form-input-validation";
 
 import '../components/css/profile.css';
 
-import Loader from '../components/Loader'
-import global from "../components/global";
 import axiosInstance from '../components/axiosInstance';
 // Notification
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export class ForgotPassword extends Component {

@@ -1,10 +1,10 @@
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import global from "../components/global";
 // Notification
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import Joi from 'joi';
 
 import axiosInstance from '../components/axiosInstance';

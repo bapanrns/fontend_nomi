@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import axios from "axios";
+import React from 'react';
+//import axios from "axios";
 
-import Loader from '../../components/Loader'
-import global from "../../components/global";
+//import Loader from '../../components/Loader'
+//import global from "../../components/global";
 import axiosInstance from '../../components/axiosInstance';
 // Notification
-import { ToastContainer, toast } from 'react-toastify';
+//import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import {
@@ -37,7 +37,7 @@ const ActionCellRenderer = (props) => {
         'Content-Type': 'application/json'
     }*/
     
-    let data = {};
+    //let data = {};
     axiosInstance.post('/deleteProductFabric', {id: cellValue})
     /*axios.post(global["axios_url"]+'/deleteProductFabric', {id: cellValue}, {
         headers: headers

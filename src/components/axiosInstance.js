@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 import global from "./global";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const instance = axios.create({
   baseURL: global["axios_url"], // Replace with your API base URL

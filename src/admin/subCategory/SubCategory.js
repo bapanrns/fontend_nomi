@@ -11,10 +11,10 @@ import ActionCellRenderer from './ActionCellRenderer'
 import axios from "axios";
 import Loader from '../../components/Loader';
 import global from "../../components/global";
-import { useNavigate, Link } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 import axiosInstance from '../../components/axiosInstance';
 
-import { ToastContainer, toast } from 'react-toastify';
+//import { ToastContainer, toast } from 'react-toastify';
 
 const checkboxSelection = function (params) {
     // we put checkbox on the name if we are not doing grouping
@@ -37,7 +37,7 @@ const StatusCellRenderer = (p) =>{
 const SubCategories = () => {
     const [rowData, setRowData] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
     function getCategoryData(category_id = ""){
 
         setIsLoading(true);
