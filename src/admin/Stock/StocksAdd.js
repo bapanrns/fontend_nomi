@@ -1,6 +1,6 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Container, Row, Col, Image, Carousel } from 'react-bootstrap';
+import {  Image } from 'react-bootstrap';
 // Notification
 import { toast } from 'react-toastify';
 import axiosInstance from '../../components/axiosInstance';

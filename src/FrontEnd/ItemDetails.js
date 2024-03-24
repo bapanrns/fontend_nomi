@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react'
-import {Container, Row, Col, Image, Carousel, Modal } from 'react-bootstrap';
+import {Container, Row, Col, Image, Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import '../components/css/itemDetails.css';
 
-import { ScrollMenu, VisibilityContext } from "react-horizontal-scrolling-menu";
 import 'react-horizontal-scrolling-menu/dist/styles.css';
 import Loader from '../components/Loader'
 import global from "../components/global";
 import axios from "axios";
 // Notification
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { Carousel as ImageCarousel } from 'react-responsive-carousel';
@@ -24,14 +23,11 @@ import {
     useNavigate,
     useParams
   } from "react-router-dom";
-import { clear } from '@testing-library/user-event/dist/clear';
-
-
 
 const ItemDetails = (e) => {
     const [isLoading, setIsLoading] = useState(false);
     const {id} = useParams();
-    const [imageUrl, setImageUrl] = useState(process.env.PUBLIC_URL+"/assets/images/"+id+".png");
+    //const [imageUrl, setImageUrl] = useState(process.env.PUBLIC_URL+"/assets/images/"+id+".png");
     
     const [delivaryPincode, setDelivaryPincode] = useState();
     const [itemSize, setItemSize] = useState("");
@@ -136,10 +132,10 @@ const ItemDetails = (e) => {
         })
     }
 
-    function showImage(img){
-        const imgUrl = process.env.PUBLIC_URL+"/assets/images/"+img
-        setImageUrl( imgUrl );
-    }
+    //function showImage(img){
+       // const imgUrl = process.env.PUBLIC_URL+"/assets/images/"+img
+       // setImageUrl( imgUrl );
+    //}
 
     const navigate = useNavigate();
     function productDetailsFn(pid){
@@ -152,11 +148,11 @@ const ItemDetails = (e) => {
     }
 
     const [selected, setSelected] = React.useState([]);
-    const [position, setPosition] = React.useState(0);
+    //const [position, setPosition] = React.useState(0);
  
     const isItemSelected = (id) => !!selected.find((el) => el === id);
  
-    const handleClick = (id) =>
+   /* const handleClick = (id) =>
         ({ getItemById, scrollToItem }) => {
         const itemSelected = isItemSelected(id);
  
@@ -165,12 +161,12 @@ const ItemDetails = (e) => {
             ? currentSelected.filter((el) => el !== id)
             : currentSelected.concat(id)
         );
-    };
+    };*/
 
    
-    function Checkout(id){
+   /* function Checkout(id){
         navigate("../checkout");
-    }
+    }*/
 
     const [deliveryCode, setDeliveryCode] = useState("");
     const AcceptNumericValue = e => {

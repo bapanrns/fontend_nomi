@@ -40,6 +40,8 @@ import ShopDetails from "./admin/productBuyDetails/ShopDetails";
 import BuyDetails from "./admin/productBuyDetails/BuyDetails";
 import DeliveryBoy from "./admin/deliveryBoy/DeliveryBoy";
 import AddDeliveryBoy from "./admin/deliveryBoy/AddDeliveryBoy";
+import PhoneNumberList from "./admin/customerPhoneNumber/PhoneNumberList";
+import AddPhoneNumber from "./admin/customerPhoneNumber/AddPhoneNumber";
 
 import Order from "./admin/order/order";
 
@@ -68,11 +70,9 @@ if (localStorage.hasOwnProperty('ioc')) {
   userRole = jsonData.user_type;
 }
 
-
-
 // Custom function to check user authorization based on role
 const isAuthorized = (roleRequired) => {
-  return userRole === roleRequired;
+  return roleRequired.includes(userRole);
 };
 
 
@@ -153,9 +153,9 @@ function App() {
       <>
       <BrowserRouter>
         
-        <NavBars cartValue={cartValue}/>
+        
         {
-          (userRole === "Admin")?<AdminNavBars />:""
+          (userRole === "Admin" || userRole === "delivery_boy")?<AdminNavBars userRole={userRole} />:<NavBars cartValue={cartValue}/>
         }
         
         <Routes>
@@ -174,7 +174,7 @@ function App() {
           <Route
             path="admin/product-add"
             element={
-              isAuthorized('Admin') ? (
+              isAuthorized(['Admin']) ? (
                 <ProductAdd />
               ) : (
                 <Navigate to="/" replace />
@@ -185,7 +185,7 @@ function App() {
           <Route
             path="admin/product-add/:id"
             element={
-              isAuthorized('Admin') ? (
+              isAuthorized(['Admin']) ? (
                 <ProductAdd />
               ) : (
                 <Navigate to="/" replace />
@@ -197,7 +197,7 @@ function App() {
           <Route
             path="admin/product"
             element={
-              isAuthorized('Admin') ? (
+              isAuthorized(['Admin']) ? (
                 <Product />
               ) : (
                 <Navigate to="/" replace />
@@ -209,7 +209,7 @@ function App() {
           <Route
             path="admin/stocks/:id"
             element={
-              isAuthorized('Admin') ? (
+              isAuthorized(['Admin']) ? (
                 <Stocks />
               ) : (
                 <Navigate to="/" replace />
@@ -220,7 +220,7 @@ function App() {
           <Route
             path="admin/stocks_add/:id"
             element={
-              isAuthorized('Admin') ? (
+              isAuthorized(['Admin']) ? (
                 <StocksAdd />
               ) : (
                 <Navigate to="/" replace />
@@ -231,7 +231,7 @@ function App() {
           <Route
             path="admin/product_active/:id"
             element={
-              isAuthorized('Admin') ? (
+              isAuthorized(['Admin']) ? (
                 <ProductActive />
               ) : (
                 <Navigate to="/" replace />
@@ -243,7 +243,7 @@ function App() {
           <Route
             path="admin/product_buy"
             element={
-              isAuthorized('Admin') ? (
+              isAuthorized(['Admin']) ? (
                 <AdminBuy />
               ) : (
                 <Navigate to="/" replace />
@@ -255,7 +255,7 @@ function App() {
           <Route
             path="admin/category"
             element={
-              isAuthorized('Admin') ? (
+              isAuthorized(['Admin']) ? (
                 <Category />
               ) : (
                 <Navigate to="/" replace />
@@ -267,7 +267,7 @@ function App() {
           <Route
             path="admin/category-add"
             element={
-              isAuthorized('Admin') ? (
+              isAuthorized(['Admin']) ? (
                 <AddCategory />
               ) : (
                 <Navigate to="/" replace />
@@ -279,7 +279,7 @@ function App() {
           <Route
             path="admin/category-add/:id"
             element={
-              isAuthorized('Admin') ? (
+              isAuthorized(['Admin']) ? (
                 <AddCategory />
               ) : (
                 <Navigate to="/" replace />
@@ -291,7 +291,7 @@ function App() {
           <Route
             path="admin/sub_category"
             element={
-              isAuthorized('Admin') ? (
+              isAuthorized(['Admin']) ? (
                 <SubCategory />
               ) : (
                 <Navigate to="/" replace />
@@ -303,7 +303,7 @@ function App() {
           <Route
             path="admin/sub_category_add"
             element={
-              isAuthorized('Admin') ? (
+              isAuthorized(['Admin']) ? (
                 <AddSubCategory />
               ) : (
                 <Navigate to="/" replace />
@@ -315,7 +315,7 @@ function App() {
           <Route
             path="admin/sub_category_add/:id"
             element={
-              isAuthorized('Admin') ? (
+              isAuthorized(['Admin']) ? (
                 <AddSubCategory />
               ) : (
                 <Navigate to="/" replace />
@@ -327,7 +327,7 @@ function App() {
           <Route
             path="admin/product_fabric"
             element={
-              isAuthorized('Admin') ? (
+              isAuthorized(['Admin']) ? (
                 <ProductFabric />
               ) : (
                 <Navigate to="/" replace />
@@ -339,7 +339,7 @@ function App() {
           <Route
             path="admin/product_fabric_add"
             element={
-              isAuthorized('Admin') ? (
+              isAuthorized(['Admin']) ? (
                 <AddProductFabric />
               ) : (
                 <Navigate to="/" replace />
@@ -351,7 +351,7 @@ function App() {
           <Route
             path="admin/product_fabric_add/:id"
             element={
-              isAuthorized('Admin') ? (
+              isAuthorized(['Admin']) ? (
                 <AddProductFabric />
               ) : (
                 <Navigate to="/" replace />
@@ -363,7 +363,7 @@ function App() {
           <Route
             path="admin/buy_details_add"
             element={
-              isAuthorized('Admin') ? (
+              isAuthorized(['Admin']) ? (
                 <BuyDetailsAdd />
               ) : (
                 <Navigate to="/" replace />
@@ -375,7 +375,7 @@ function App() {
           <Route
             path="admin/buy_details_add/:id"
             element={
-              isAuthorized('Admin') ? (
+              isAuthorized(['Admin']) ? (
                 <BuyDetailsAdd />
               ) : (
                 <Navigate to="/" replace />
@@ -387,7 +387,7 @@ function App() {
           <Route
             path="admin/shop_details_add"
             element={
-              isAuthorized('Admin') ? (
+              isAuthorized(['Admin']) ? (
                 <ShopDetailsAdd />
               ) : (
                 <Navigate to="/" replace />
@@ -399,7 +399,7 @@ function App() {
           <Route
             path="admin/shop_details_add/:id"
             element={
-              isAuthorized('Admin') ? (
+              isAuthorized(['Admin']) ? (
                 <ShopDetailsAdd />
               ) : (
                 <Navigate to="/" replace />
@@ -411,7 +411,7 @@ function App() {
           <Route
             path="admin/shop"
             element={
-              isAuthorized('Admin') ? (
+              isAuthorized(['Admin']) ? (
                 <ShopDetails />
               ) : (
                 <Navigate to="/" replace />
@@ -423,7 +423,7 @@ function App() {
           <Route
             path="admin/buy_details"
             element={
-              isAuthorized('Admin') ? (
+              isAuthorized(['Admin']) ? (
                 <BuyDetails />
               ) : (
                 <Navigate to="/" replace />
@@ -436,7 +436,7 @@ function App() {
           <Route
             path="admin/order"
             element={
-              isAuthorized('Admin') ? (
+              isAuthorized(['Admin']) ? (
                 <Order />
               ) : (
                 <Navigate to="/" replace />
@@ -447,7 +447,7 @@ function App() {
           <Route
             path="admin/user_list"
             element={
-              isAuthorized('Admin') ? (
+              isAuthorized(['Admin']) ? (
                 <UserList />
               ) : (
                 <Navigate to="/" replace />
@@ -458,8 +458,30 @@ function App() {
           <Route
             path="admin/add_delivery_person"
             element={
-              isAuthorized('Admin') ? (
+              isAuthorized(['Admin']) ? (
                 <AddDeliveryBoy />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            }
+          />
+
+          <Route
+            path="admin/phone_number"
+            element={
+              isAuthorized(['Admin', 'delivery_boy']) ? (
+                <PhoneNumberList />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            }
+          />
+
+          <Route
+            path="admin/add_phone_number"
+            element={
+              isAuthorized(['Admin', 'delivery_boy']) ? (
+                <AddPhoneNumber />
               ) : (
                 <Navigate to="/" replace />
               )
@@ -469,7 +491,7 @@ function App() {
           <Route
             path="admin/delivery_person"
             element={
-              isAuthorized('Admin') ? (
+              isAuthorized(['Admin']) ? (
                 <DeliveryBoy />
               ) : (
                 <Navigate to="/" replace />

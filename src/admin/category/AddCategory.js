@@ -2,11 +2,9 @@ import React, { useState, useEffect } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from "axios";
 
-import Loader from '../../components/Loader'
 import global from "../../components/global";
 import axiosInstance from '../../components/axiosInstance';
 // Notification
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import {
@@ -16,10 +14,10 @@ import {
 
 const AddCategory = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const [editData, setEditData] = useState({
+    /*const [editData, setEditData] = useState({
         name: "",
         status: 1
-    });
+    });*/
     const {id} = useParams();
 
     useEffect(() => {
@@ -110,7 +108,7 @@ const AddCategory = () => {
             'Content-Type': 'application/json'
         }*/
         
-        let data = {};
+        //let data = {};
         axiosInstance.post('/categoryAdd', categoryObj)
         /*axios.post(global["axios_url"]+'/categoryAdd', categoryObj, {
             headers: headers

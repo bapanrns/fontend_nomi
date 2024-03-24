@@ -1,21 +1,14 @@
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
 
-import { Button, Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Loader from '../../components/Loader';
 
 import axiosInstance from '../../components/axiosInstance';
-import { ToastContainer, toast } from 'react-toastify';
-
-import {
-    useNavigate
-  } from "react-router-dom";
+import { toast } from 'react-toastify';
 
 
 
 const ActionCellRenderer = (props) => {
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
   const cellValue = props.valueFormatted ? props.valueFormatted : props.value;
 
   const updateProductStock=()=>{

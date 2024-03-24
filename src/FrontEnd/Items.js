@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {Container, Row, Col, Image, Form } from 'react-bootstrap';
+import {Container, Row, Col, Image } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import '../components/css/home.css';
@@ -26,7 +26,7 @@ const Home = () => {
         navigate("../product-details/"+id);
     }
 
-    const [searchTerm, setSearchTerm] = useState('');
+    //const [searchTerm, setSearchTerm] = useState('');
     const [selectedItems, setSelectedItems] = useState([]);
 
     const handleCheckboxChange = (event) => {
@@ -40,9 +40,9 @@ const Home = () => {
         }
     };
 
-    const handleSearchChange = (event) => {
+    /*const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
-    };
+    };*/
 
     const getFilterOption = (items="", searchFor="", search="") =>{
         console.log('getFilterOption');

@@ -8,7 +8,6 @@ import Loader from '../components/Loader'
 import global from "../components/global";
 import axiosInstance from '../components/axiosInstance';
 
-import { Carousel as ImageCarousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
 import { ScrollMenu, VisibilityContext } from "react-horizontal-scrolling-menu";
@@ -28,12 +27,9 @@ const Home = ({data2}) => {
 
     const location = useLocation();
     // Get the value of the 'param' parameter from the URL
-    const paramValue = new URLSearchParams(location.search);
-    useEffect(() => {
-        //console.log(localStorage.getItem('search'));
-        //console.log('Parameter changed:', paramValue);
-        //console.log(localStorage.getItem('search'))
-    }, [paramValue]);
+    // const paramValue = new URLSearchParams(location.search);
+    // useEffect(() => {
+    // }, [paramValue]);
     const navigate = useNavigate();
     function productDetailsFn(id){
         navigate("items/"+id);
@@ -70,9 +66,9 @@ const Home = ({data2}) => {
         })
     }
 
-    const [sareeListObj, setSareeList] = useState([]);
-    const [kurtiListObj, setKurtiListObj] = useState([]);
-    const [JewelleryListObj, setJewelleryListObj] = useState([]);
+    //const [sareeListObj, setSareeList] = useState([]);
+    //const [kurtiListObj, setKurtiListObj] = useState([]);
+    //const [JewelleryListObj, setJewelleryListObj] = useState([]);
 
     const [xxx, setxxx] = useState({});
 
@@ -82,8 +78,8 @@ const Home = ({data2}) => {
         axiosInstance.post('/getSareeListForHomePage', {})
         .then((response) => {
             setIsLoading(false);
-            setSareeList(response.data["1"]);
-            setKurtiListObj(response.data["2"]);
+            //setSareeList(response.data["1"]);
+            //setKurtiListObj(response.data["2"]);
 
             setxxx(response.data);
         })
@@ -92,7 +88,7 @@ const Home = ({data2}) => {
         });
     }
 
-    let xurl = "../";
+   // let xurl = "../";
 
         return (
             <div>
@@ -140,7 +136,7 @@ const Home = ({data2}) => {
                                                         className='similarTypeProductImg'
                                                         //src={require(`../images/product/${obj.image_name}`)}
                                                         src={`${global.productImageUrl}${obj.image_name}`}
-                                                        alt='no image'
+                                                        alt='No'
                                                         onClick={(e) => { 
                                                             productDetailsFn(obj.category_name);
                                                             localStorage.setItem("searchTermForType", obj.sub_category_id);

@@ -1,8 +1,6 @@
 import React, { useCallback, useState } from 'react'
-import {Container, Row, Col, Image, Carousel } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { createRoot } from 'react-dom/client';
 import { AgGridReact } from 'ag-grid-react';
 
 import 'ag-grid-community/styles/ag-grid.css';
@@ -14,11 +12,6 @@ import Loader from '../../components/Loader'
 
 
 import axios from "axios";
-
-import {
-    useNavigate,
-    useParams
-  } from "react-router-dom";
 
 const checkboxSelection = function (params) {
     // we put checkbox on the name if we are not doing grouping

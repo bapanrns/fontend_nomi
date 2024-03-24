@@ -1,8 +1,7 @@
 import React, { useCallback, useState } from 'react'
-import {Container, Row, Col, Image, Carousel } from 'react-bootstrap';
+import { Image } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { createRoot } from 'react-dom/client';
 import { AgGridReact } from 'ag-grid-react';
 
 import 'ag-grid-community/styles/ag-grid.css';
@@ -16,7 +15,6 @@ import Loader from '../../components/Loader'
 import axiosInstance from '../../components/axiosInstance';
 
 import {
-    useNavigate,
     useParams
   } from "react-router-dom";
 
@@ -29,14 +27,14 @@ const headerCheckboxSelection = function (params) {
     // we put checkbox on the name if we are not doing grouping
     return params.columnApi.getRowGroupColumns().length === 0;
 };
-
+/*
 const StatusCellRenderer = (p) =>{
     let status = <span >Active</span>;
     if (p.value === 0)
         status = <span style={{color: "red"}}>Inactive</span>;
 
     return <span>{status}</span>;
-}
+}*/
 
 const Categories = () => {
     const [rowData, setRowData] = useState([]);
