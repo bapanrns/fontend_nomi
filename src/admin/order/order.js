@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { createRoot } from 'react-dom/client';
+//import { createRoot } from 'react-dom/client';
 import { AgGridReact } from 'ag-grid-react';
 
 import 'ag-grid-community/styles/ag-grid.css';
@@ -11,15 +11,15 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
 import ActionCellRenderer from './ActionCellRenderer';
 import global from "../../components/global";
 import Loader from '../../components/Loader'
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 
 import axiosInstance from '../../components/axiosInstance';
-
+/*
 import {
     useNavigate,
     useParams
-  } from "react-router-dom";
+  } from "react-router-dom";*/
 
 const checkboxSelection = function (params) {
     // we put checkbox on the name if we are not doing grouping
@@ -67,7 +67,7 @@ const Order = () => {
             return (<img 
                 //src={require("../../images/bill/"+value.data.bill)} 
                 src={`${global.productImageUrl}${value.data.product_image}`}
-                alt="No Image" 
+                alt="No" 
                 style={{ height: '90px', width: '100%', cursor: 'pointer' }} 
                 onClick={(e) => { 
                     setImageLink(value.data.product_image);

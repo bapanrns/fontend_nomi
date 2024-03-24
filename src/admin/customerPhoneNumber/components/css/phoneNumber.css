@@ -1,0 +1,43 @@
+.addNewAddress{
+    min-height: 585px;
+}
+.duplicatesNumber{
+    color: red;
+}
+.phoneNoDiv{
+    clear: both;
+    min-height: 50px;
+    input{
+        float: left;
+    }
+    .removeBtn{
+        float: left;
+        margin-left: 20px;
+    }
+    .addBtn{
+        float: left;
+        margin-left: 20px;
+    }
+    .phoneError{
+        color: red;
+    }
+    .inputDiv{
+        float: left;
+    }
+}
+
+@media (max-width: 768px) {
+    .phoneNoDiv{
+        .inputDiv{
+            width: 70%;
+        }
+        .inputNewNoDiv{
+            width: 100%;
+        }
+    }
+
+    .addNewAddress{
+        min-height: 514px;
+    }
+}
+

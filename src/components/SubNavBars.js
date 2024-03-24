@@ -1,11 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import './css/SubNavBars.css';
-import {
-    useNavigate
-} from "react-router-dom";
 
 const SubNavBars = (props) => {
-    const navigate = useNavigate();
 
     const { parameter } = props;
     console.log("parameter"+parameter);

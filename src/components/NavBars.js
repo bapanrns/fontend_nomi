@@ -10,7 +10,7 @@ import NewPasswordModal from '../login/NewPassword';
 import SignUp from '../login/SignUp';
 
 // Notification
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 
 import '../components/css/profile.css';

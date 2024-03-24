@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import axios from "axios";
+//import axios from "axios";
 
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -56,9 +56,9 @@ const BuyDetailsAdd = () => {
  
     const getShopById = async (shop_id) => {
         setIsLoading(true);
-        const headers = {
+        /*const headers = {
             'Content-Type': 'application/json'
-        }
+        }*/
         
         let data = {id: shop_id};
         await axiosInstance.post('/findBuyProductByPK', data)
@@ -136,9 +136,9 @@ const BuyDetailsAdd = () => {
             });
             setErrors(validationErrors);
         } else {
-            const headers = {
+            /*const headers = {
                 'Content-Type': 'application/json'
-            }
+            }*/
             
             axiosInstance.post('/saveBuyProduct', editData)
             /*axios.post(global["axios_url"]+'/saveBuyProduct', editData, {
@@ -351,7 +351,7 @@ const BuyDetailsAdd = () => {
                                     <img 
                                         //src={require("../../images/bill/"+originalBill)} 
                                         src={`${global.billImageUrl}${originalBill}`}
-                                        alt="No image found" 
+                                        alt="No found" 
                                         style={{ width: '200px', height: '200px'}}
                                     ></img>
                                 </div>

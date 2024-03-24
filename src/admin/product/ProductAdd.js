@@ -607,8 +607,8 @@ const ProductAdd = () => {
                 bill_id_and_shop_id: response.data.bill_id_and_shop_id,
                 product_name: response.data.product_name,
                 company_name: response.data.company_name,
-                product_febric: response.data.product_febric,
-                year_month: response.data.year_month
+               // product_febric: response.data.product_febric,
+               // year_month: response.data.year_month
             });
 
             // Loader hide
@@ -809,7 +809,6 @@ const ProductAdd = () => {
                                         value={editData[objHtml.quantityName]}
                                         onKeyPress={(e) => AcceptNumericValue(e)}
                                         onChange={handalChange}
-                                        disabled = {id !== undefined?true:false}
                                     />
                                 </div>
                                 {/* Quantity Buy Price */}
@@ -823,7 +822,6 @@ const ProductAdd = () => {
                                         value={editData[objHtml.quantityBuyPriceName]}
                                         onKeyPress={(e) => AcceptNumericValue(e)}
                                         onChange={handalChange}
-                                        disabled = {id !== undefined?true:false}
                                     />
                                 </div>
                                 {/* Quantity MRP Price */}
@@ -837,7 +835,6 @@ const ProductAdd = () => {
                                         value={editData['quantity_mrp_price']}
                                         onKeyPress={(e) => AcceptNumericValue(e)}
                                         onChange={handalChange}
-                                        disabled = {id !== undefined?true:false}
                                     />
                                 </div>
                                 {/* Quantity Sell Price */}
@@ -851,7 +848,6 @@ const ProductAdd = () => {
                                         value={editData[objHtml.quantitySellPriceName]}
                                         onKeyPress={(e) => AcceptNumericValue(e)}
                                         onChange={handalChange}
-                                        disabled = {id !== undefined?true:false}
                                     />
                                 </div>
                             </>);

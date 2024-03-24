@@ -17,7 +17,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 
 import axiosInstance from '../../components/axiosInstance';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const checkboxSelection = function (params) {
     // we put checkbox on the name if we are not doing grouping
@@ -108,7 +108,7 @@ const Products = () => {
             return (<img 
                 //src={require("../../images/bill/"+value.data.bill)} 
                 src={`${global.productImageUrl}${value.data.product_img}`}
-                alt="No Image" 
+                alt="No" 
                 style={{ height: '90px', width: '100%', cursor: 'pointer' }} 
                 onClick={(e) => { 
                     setImageLink(value.data.product_img);

@@ -1,24 +1,24 @@
 import React, { useCallback, useState } from 'react'
-import { Modal } from 'react-bootstrap';
+//import { Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { createRoot } from 'react-dom/client';
+//import { createRoot } from 'react-dom/client';
 import { AgGridReact } from 'ag-grid-react';
 
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 
-import ActionCellRenderer from './ActionCellRenderer';
-import global from "../../components/global";
+//import ActionCellRenderer from './ActionCellRenderer';
+//import global from "../../components/global";
 import Loader from '../../components/Loader'
 
 
 import axiosInstance from '../../components/axiosInstance';
-
+/*
 import {
     useNavigate,
     useParams
-  } from "react-router-dom";
+  } from "react-router-dom";*/
 
 const checkboxSelection = function (params) {
     // we put checkbox on the name if we are not doing grouping
@@ -34,10 +34,10 @@ const DeliveryBoy = () => {
     const [rowData, setRowData] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     // {category_name: "", active_status: "", id: 1}
-    function getCategoryData(){
+    function getDeliveryBoyData(){
         setIsLoading(true);
         
-        axiosInstance.post('/alldeliveryBoy', {})
+        axiosInstance.get('/alldeliveryBoy', {})
         .then((response) => {
             setRowData(response.data);
             setIsLoading(false);
@@ -46,7 +46,7 @@ const DeliveryBoy = () => {
 
 
     const onGridReady = useCallback(() => {
-        getCategoryData();
+        getDeliveryBoyData();
     }, []);
     
     const [columnDefs] = useState([

@@ -1,11 +1,11 @@
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
 
-import { Button, Modal, ModalHeader, Table } from 'react-bootstrap';
+import { Modal, Table } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Loader from '../../components/Loader';
+//import Loader from '../../components/Loader';
 
 import axiosInstance from '../../components/axiosInstance';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 import {
     useNavigate
@@ -15,8 +15,8 @@ import {
 
 const ActionCellRenderer = (props) => {
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
-  const cellValue = props.valueFormatted ? props.valueFormatted : props.value;
+  //const navigate = useNavigate();
+  //const cellValue = props.valueFormatted ? props.valueFormatted : props.value;
   const [NameModalHeader, setNameModalHeader] = useState("");
   
   const [orderStatusChange, setOrderStatus] = useState({
