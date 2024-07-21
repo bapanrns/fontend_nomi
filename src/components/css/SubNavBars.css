@@ -58,6 +58,13 @@
 
 .subNavBar768{
     display: block;
+    padding: 0px;
+    border-top: 2px solid #fff;
+}
+
+#navbarNavDropdown{
+    background: #FFF;;
+    color: #000;
 }
 
 @media (max-width: 768px) {

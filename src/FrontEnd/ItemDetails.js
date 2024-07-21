@@ -312,8 +312,8 @@ const ItemDetails = (e) => {
                                     <Col md={6} key={"itemImage"+key} className='itemDetailsMainImgDiv'>
                                         <Image 
                                             className='itemDetailsMainImg'
-                                            //src={require(`../images/product/${imgName}`)} 
-                                            src={`${global.productImageUrl}${imgName}`}
+                                            src={require(`../${global.productImageUrl}${imgName}`)} 
+                                            //src={`${global.productImageUrl}${imgName}`}
                                             alt='No image found'
                                             onClick={(e) => { 
                                                 setImageLink(imgName);
@@ -348,8 +348,8 @@ const ItemDetails = (e) => {
                                                     key={"ImageCarousel-"+key}
                                                     style={{ marginBottom: '10px', maxHeight: windowHeight }}
                                                     className="img-fluid"
-                                                    //src={require(`../images/product/${imgName}`)} 
-                                                    src={`${global.productImageUrl}${imgName}`}
+                                                    src={require(`../${global.productImageUrl}${imgName}`)} 
+                                                    //src={`${global.productImageUrl}${imgName}`}
                                                     alt={`Image ${key + 1}`}
                                                     
                                                 />
@@ -398,8 +398,8 @@ const ItemDetails = (e) => {
                                         <Image 
                                             key={"sameImage"+key}
                                             className='sameTypeProductImg'
-                                            //src={require(`../images/product/${imgName.image_name}`)}
-                                            src={`${global.productImageUrl}${imgName.image_name}`}
+                                            src={require(`../${global.productImageUrl}${imgName.image_name}`)}
+                                            //src={`${global.productImageUrl}${imgName.image_name}`}
                                             alt='No image found' 
                                             style={(imgName.item_id.toString() === id.toString()) ? { border: "3px solid red"} : {}}
 
@@ -623,15 +623,17 @@ const ItemDetails = (e) => {
                                 {similarProducts.map(( obj, index ) => (
                                         <div key={index} className='d-inline-block px-3 similarTypeProductImgDiv' style={{padding: "0px"}}>
                                             <div style={{position: "relative"}}>
+                                            { obj.hasOwnProperty('image_name') &&
                                                 <Image
                                                     className='similarTypeProductImg'
-                                                    //src={require(`../images/product/${obj.image_name}`)} 
-                                                    src={`${global.productImageUrl}${obj.image_name}`}
+                                                    src={require(`../images/product/${obj.image_name}`)} 
+                                                    //src={`${global.productImageUrl}${obj.image_name}`}
                                                     alt='No image found'
                                                     onClick={(e) => { 
                                                         productDetailsFn(`${obj.item_id}`)
                                                     }}
                                                 />
+                                            }
                                                 <span className='nId'>N{obj.item_id}</span>
                                                 <ShareLink title={obj.product_name} text={obj.company_name} url={`https://www.bskart.com/product-details/${obj.item_id}`}></ShareLink>
                                             </div>

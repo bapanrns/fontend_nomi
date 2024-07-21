@@ -5,6 +5,10 @@
     text-align: center;
     margin-top: 5px;
     margin-bottom: 5px;
+    background: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    color: #000;
 }
 
 .saree{
@@ -184,6 +188,12 @@
 .addProductDiv{
     float: left;
     padding-right: 10px;
+}
+
+.homePageitemListRow{
+    padding: 0px;
+    margin: 0px auto;
+    width: 99%;
 }
 
 @media (max-width: 768px) {

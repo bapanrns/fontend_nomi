@@ -6,6 +6,7 @@ import global from "../../components/global";
 import axiosInstance from '../../components/axiosInstance';
 // Notification
 import 'react-toastify/dist/ReactToastify.css';
+import Tesseract from 'tesseract.js';
 
 import {
     useParams,
@@ -124,6 +125,60 @@ const AddCategory = () => {
         })
     };
 
+    const [selectedFile, setSelectedFile] = useState(null);
+  const [extractedNumbers, setExtractedNumbers] = useState([]);
+  const [isLoading1, setIsLoading1] = useState(false);
+
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
+
+  useEffect(()=>{
+    if(selectedFile){
+    extractMobileNumbers();
+    }
+  }, [selectedFile])
+
+  const extractMobileNumbers = async () => {
+    setIsLoading1(true);
+    try {
+      /*const { data: { text } } = await Tesseract.recognize(
+        selectedFile,
+        'eng',
+        { 
+            logger: m => console.log(m), // Enable logging
+            tessedit_char_whitelist: '0123456789', // Whitelist characters
+            tessedit_char_blacklist: '!"#$%&/()={}[]', // Blacklist characters
+            oem: Tesseract.OEM.LSTM_ONLY, // OCR Engine Mode
+            psm: Tesseract.PSM.AUTO // Page Segmentation Mode   
+        }
+      );*/
+
+     
+      /*const phoneNumbers = extractNumbers(text);
+      console.log("phoneNumbers", text,phoneNumbers);
+      setExtractedNumbers(phoneNumbers);*/
+
+
+      Tesseract.recognize(
+        'https://tesseract.projectnaptha.com/img/eng_bw.png',
+        'eng',
+        { logger: m => console.log(m) }
+      ).then(({ data: { text } }) => {
+        console.log(text);
+      })
+
+    } catch (error) {
+      console.error('Error during OCR:', error);
+    }
+    setIsLoading1(false);
+  };
+
+  const extractNumbers = (text) => {
+    const phoneNumbers = text.match(/\b\d{10}\b/g); // Adjust regex for your use case
+    return phoneNumbers || [];
+  };
+
     return (
         <>
             <div className='addNewAddress' style={{padding: '10px'}}>
@@ -168,6 +223,25 @@ const AddCategory = () => {
                             <option value="1">Active</option>
                             <option value="0">Inactive</option>
                         </select>
+                    </div>
+
+
+                    <div>
+                    <input type="file" onChange={(e)=> setSelectedFile(URL.createObjectURL(e.target.files[0]))} />
+                        <button type="submit" disabled={!selectedFile || isLoading}>
+                        {isLoading1 ? 'Extracting...' : 'Extract Numbers'}
+                        </button>
+
+                        {extractedNumbers.length > 0 && (
+        <div>
+          <h2>Extracted Mobile Numbers:</h2>
+          <ul>
+            {extractedNumbers.map((number, index) => (
+              <li key={index}>{number}</li>
+            ))}
+          </ul>
+        </div>
+      )}
                     </div>
 
                     <div className="mb-3 formValidation">

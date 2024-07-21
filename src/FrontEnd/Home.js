@@ -103,8 +103,8 @@ const Home = ({data2}) => {
                                         <Image className='categoriesImg'
                                             key={object.cat_image}
                                             style={{borderRadius: "50%"}}
-                                            //src={require(`../images/categories/${object.cat_image}`)} 
-                                            src={`${global.categoriesImageUrl}${object.cat_image}`} 
+                                            src={require(`../${global.categoriesImageUrl}${object.cat_image}`)} 
+                                            //src={`${global.categoriesImageUrl}${object.cat_image}`} 
                                             alt="No Category image"
                                             onClick={(e) => { 
                                                 productDetailsFn(object.category_name);
@@ -119,7 +119,7 @@ const Home = ({data2}) => {
                     ))}
                        
                         
-                        <Row>
+                        <Row className='homePageitemListRow'>
                             
                             {Object.keys(xxx).length > 0 && 
                             Object.keys(xxx).map((mainObj, key) => (
@@ -132,16 +132,20 @@ const Home = ({data2}) => {
                                         {xxx[mainObj].map((obj, index) => (
                                             <div key={"Jewellery-"+index}>
                                                 <div className='HomeShareLink'>
-                                                    <img
-                                                        className='similarTypeProductImg'
-                                                        //src={require(`../images/product/${obj.image_name}`)}
-                                                        src={`${global.productImageUrl}${obj.image_name}`}
-                                                        alt='No'
-                                                        onClick={(e) => { 
-                                                            productDetailsFn(obj.category_name);
-                                                            localStorage.setItem("searchTermForType", obj.sub_category_id);
-                                                        }}
-                                                    />
+                                                    { obj.hasOwnProperty('image_name') &&
+                                                    <>
+                                                        <img
+                                                            className='similarTypeProductImg'
+                                                            src={require(`../${global.productImageUrl}${obj.image_name}`)}
+                                                            //src={`${global.productImageUrl}${obj.image_name}`}
+                                                            alt='No'
+                                                            onClick={(e) => { 
+                                                                productDetailsFn(obj.category_name);
+                                                                localStorage.setItem("searchTermForType", obj.sub_category_id);
+                                                            }}
+                                                        />
+                                                        </>
+                                                    }
                                                     <span className='nId'>N{obj.item_id}</span>
                                                     <span 
                                                         className='aroColorAche' 
@@ -170,32 +174,40 @@ const Home = ({data2}) => {
                                 <React.StrictMode>
                                     <div className="scroll-container scroll-containerHome">
                                      {xxx[mainObj].map((obj, index) => (
+                                        
+                                        
                                             <div key={"Jewellery-scroll-container-"+index} className='HomeShareLink'>
-                                                <Image
-                                                    className='similarTypeProductImg'
-                                                    // src={require(`../images/product/${obj.image_name}`)} 
-                                                    src={`${global.productImageUrl}${obj.image_name}`}
-                                                    alt='No Image found'
-                                                    onClick={(e) => { 
-                                                        productDetailsFn(obj.category_name);
-                                                        localStorage.setItem("searchTermForType", obj.sub_category_id);
-                                                    }}
-                                                />
-                                                <span className='nId'>N{obj.item_id}</span>
-                                                <span className='aroColorAche' 
-                                                    onClick={(e) => { 
-                                                        productDetailsFn(obj.category_name);
-                                                        localStorage.setItem("searchTermForType", obj.sub_category_id);
-                                                    }}>
-                                                    {obj.more_color>0?"আরো কালার আছে":""}
-                                                </span>
-                                                <ShareLink title={obj.product_name} text={obj.company_name} url={`https://www.bskart.com/product-details/${obj.item_id}`}></ShareLink>
-                                                <div>{obj.sub_category_name}</div>
-                                                <div id={index} className='productPrice'>
-                                                    <span className='offerPrice'>₹{obj.price}</span>
-                                                    <span className='actualPrice'>₹{obj.offerPrice}</span>
-                                                    <span className='offerPercentage'>{obj.product_offer_percentage}% OFF</span>
+                                                {
+                                            obj.image_name !== undefined &&
+                                                <div>
+                                                    <Image
+                                                        className='similarTypeProductImg'
+                                                        // src={require(`../images/product/${obj.image_name}`)} 
+                                                        src={require(`../${global.productImageUrl}${obj.image_name}`)}
+                                                        alt='No Image found'
+                                                        onClick={(e) => { 
+                                                            productDetailsFn(obj.category_name);
+                                                            localStorage.setItem("searchTermForType", obj.sub_category_id);
+                                                        }}
+                                                    />
+
+                                                    <span className='nId'>N{obj.item_id}</span>
+                                                    <span className='aroColorAche' 
+                                                        onClick={(e) => { 
+                                                            productDetailsFn(obj.category_name);
+                                                            localStorage.setItem("searchTermForType", obj.sub_category_id);
+                                                        }}>
+                                                        {obj.more_color>0?"আরো কালার আছে":""}
+                                                    </span>
+                                                    <ShareLink title={obj.product_name} text={obj.company_name} url={`https://www.bskart.com/product-details/${obj.item_id}`}></ShareLink>
+                                                    <div>{obj.sub_category_name}</div>
+                                                    <div id={index} className='productPrice'>
+                                                        <span className='offerPrice'>₹{obj.price}</span>
+                                                        <span className='actualPrice'>₹{obj.offerPrice}</span>
+                                                        <span className='offerPercentage'>{obj.product_offer_percentage}% OFF</span>
+                                                    </div>
                                                 </div>
+                                                }
                                             </div>
                                         ))}
                                     </div>

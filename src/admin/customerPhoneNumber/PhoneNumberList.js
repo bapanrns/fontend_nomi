@@ -8,11 +8,17 @@ import Select from 'react-select';
 import axiosInstance from '../../components/axiosInstance';
 
 const checkboxSelection = function (params) {
+    if (!params.columnApi) {
+        return false;
+    }
     // we put checkbox on the name if we are not doing grouping
     return params.columnApi.getRowGroupColumns().length === 0;
 };
   
 const headerCheckboxSelection = function (params) {
+    if (!params.columnApi) {
+        return false;
+    }
     // we put checkbox on the name if we are not doing grouping
     return params.columnApi.getRowGroupColumns().length === 0;
 };

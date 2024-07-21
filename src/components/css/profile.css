@@ -41,7 +41,14 @@
 }
 
 .navbarBg{
-    background-color: #00cfff !important;
+    background-color: #1da2b7 !important;
+}
+#navbarScroll .navbar-nav-scroll .dropdown .nav-link{
+    color: #fff;
+}
+
+#navbarScroll .navbar-nav-scroll .nav-link{
+    color: #fff;
 }
 
 .dropdown-item:focus, .dropdown-item:hover {
@@ -55,12 +62,15 @@
 
 .HomeContainer{
     max-width: 100%;
-    padding: 15px;
+   /* padding: 0px 15px 15px 0px;*/
 }
-
+.HomeContainerPadding{
+    padding-left: 0px;
+}
 .cartIconDiv{
     position: relative;
     cursor: pointer;
+    float: right;
 }
 
 .itemCount{
@@ -79,6 +89,9 @@
 .cartIcon{
     width: 30px;
     margin-left: 11px;
+}
+.cartImageIcon{
+    float: right;
 }
 /* Item Details */
 

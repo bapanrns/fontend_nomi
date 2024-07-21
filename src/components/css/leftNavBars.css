@@ -19,7 +19,10 @@
 .search-container {
     position: relative;
 }
-  
+.leftNavBarsForItems .accordion-item .accordion-header .button{
+    background-color: #1da2b7;
+    color: #fff;
+}
 .search-container .form-control {
     padding: 4px 30px;
     margin-bottom: 13px; 
@@ -29,7 +32,17 @@
     background-position-y: 7px;
     background-position-x: 4px;
 }
-
+#navbarNavDropdown .mobileTopMenu .menuLink .nav-link{
+    color: #000;
+}
+.leftNavBarsForItems .accordion-item{
+    background-color: #B71D72;
+    color: #fff;
+}
+.leftNavBarsForItems .accordion-item .accordion-header button{
+    background-color: #1da2b7;
+    color: #fff;
+}
 @media (max-width: 768px) {
 
     .leftNavBarsForItems{

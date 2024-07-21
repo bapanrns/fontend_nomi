@@ -152,7 +152,7 @@ const Home = () => {
                 {isLoading ? <Loader /> : ""}
                 <SubNavBars getFilterOption={getFilterOption} parameter={parameter.id} SubNavBarsUrlChange={SubNavBarsUrlChange}/>
                 
-                <Container className='HomeContainer'>
+                <Container className='HomeContainer HomeContainerPadding'>
                     <Row>
                         <Col xs={6} md={2} style={{/*height: '1500px'*/}}>
                             <div className='leftPanelOpenShowFn' onClick={leftPanelOpenShowFn} >
@@ -175,14 +175,16 @@ const Home = () => {
                                     <Col className='itemsClMd3' md={3} key={"list"+key}>
                                         <div className='sareeList'>
                                             <div className='product productShare'>
+                                            {object.image_name &&
                                                 <Image className='saree'
-                                                    //src={require(`../images/product/${object.image_name}`)} 
-                                                    src={`${global.productImageUrl}${object.image_name}`}
+                                                    src={require(`../images/product/${object.image_name}`)} 
+                                                    //src={`${global.productImageUrl}${object.image_name}`}
                                                     alt='No image found'
                                                     onClick={(e) => { 
                                                         productDetailsFn(object.items_id)
                                                     }}
                                                 />
+                                            }
                                                 <ShareLink title={object.product_name} text={object.company_name} url={`https://www.bskart.com/product-details/${object.items_id}`}></ShareLink>
                                             </div>
                                             <div className='productDesc' title={object.product_name}>{object.product_name} </div>

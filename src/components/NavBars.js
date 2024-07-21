@@ -183,14 +183,13 @@ import '../components/css/profile.css';
             </Navbar>
             {/** For Mobile */}
             <Navbar bg="light" expand="lg" className='navbarBg NBapan onlyMobile'>
-                <Navbar.Brand className='anyQuery'><Image 
-                            className='cartIcon'
-                            style={{width: "20px"}}
-                            src={require(`../images/whatsapp.png`)} 
-                        /> Any Query: 7679215404</Navbar.Brand>
-                <Container fluid>
-                    <Navbar.Brand href="/">BsKart</Navbar.Brand>
-                    
+                <Navbar.Brand className='anyQuery'>
+                    <Image 
+                        className='cartIcon'
+                        style={{width: "20px"}}
+                        src={require(`../images/whatsapp.png`)} 
+                    /> Any Query: 7679215404</Navbar.Brand>
+
                     <Navbar.Brand 
                         className='cartIconDiv'
                         onClick={() => { 
@@ -201,10 +200,12 @@ import '../components/css/profile.css';
                         <div className='itemCount'>{cartValue}</div>
                         )}
                         <Image 
-                            className='cartIcon'
+                            className='cartIcon cartImageIcon'
                             src={require(`../images/cart.png`)} 
                         />
                     </Navbar.Brand>
+                <Container fluid>
+                    <Navbar.Brand href="/">BsKart</Navbar.Brand>
                     <Navbar.Toggle className='NavBarManMenu' aria-controls="navbarScroll" >
                         {
                             (localStorage.getItem('login') !== "true") ?
@@ -234,7 +235,22 @@ import '../components/css/profile.css';
                                 )}
                                 
                             </Nav>
-                            <Form className="d-flex">
+                            {/*<Form className="d-flex">
+                                <Form.Control
+                                type="search"
+                                placeholder="Search"
+                                className="me-2"
+                                aria-label="Search"
+                                onChange={(e) => { 
+                                    setSerchString(e.target.value)
+                                }}
+                                />
+                                <Button variant="outline-success" onClick={globalSearch}>Search</Button>
+                            </Form>*/}
+                        </Navbar.Collapse>
+                    </Navbar.Toggle>
+
+                    <Form className="d-flex">
                                 <Form.Control
                                 type="search"
                                 placeholder="Search"
@@ -246,8 +262,6 @@ import '../components/css/profile.css';
                                 />
                                 <Button variant="outline-success" onClick={globalSearch}>Search</Button>
                             </Form>
-                        </Navbar.Collapse>
-                    </Navbar.Toggle>
                     
                 </Container>
             </Navbar>

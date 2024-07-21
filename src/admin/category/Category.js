@@ -13,23 +13,7 @@ import Loader from '../../components/Loader'
 
 import axios from "axios";
 
-const checkboxSelection = function (params) {
-    // we put checkbox on the name if we are not doing grouping
-    return params.columnApi.getRowGroupColumns().length === 0;
-};
-  
-const headerCheckboxSelection = function (params) {
-    // we put checkbox on the name if we are not doing grouping
-    return params.columnApi.getRowGroupColumns().length === 0;
-};
 
-const StatusCellRenderer = (p) =>{
-    let status = <span >Active</span>;
-    if (p.value === 0)
-        status = <span style={{color: "red"}}>Inactive</span>;
-
-    return <span>{status}</span>;
-}
 /*
 const ActionCellRenderer = (p) => {
     const btn = <>
@@ -70,6 +54,30 @@ const Categories = () => {
     const onGridReady = useCallback((params) => {
           getCategoryData();
     }, []);
+
+    const checkboxSelection = function (params) {
+        if (!params.columnApi) {
+            return false;
+        }
+        // we put checkbox on the name if we are not doing grouping
+        return params.columnApi.getRowGroupColumns().length === 0;
+    };
+      
+    const headerCheckboxSelection = function (params) {
+        if (!params.columnApi) {
+            return false;
+        }
+        // we put checkbox on the name if we are not doing grouping
+        return params.columnApi.getRowGroupColumns().length === 0;
+    };
+    
+    const StatusCellRenderer = (p) =>{
+        let status = <span >Active</span>;
+        if (p.value === 0)
+            status = <span style={{color: "red"}}>Inactive</span>;
+    
+        return <span>{status}</span>;
+    }
 
     
     
