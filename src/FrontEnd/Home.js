@@ -88,7 +88,7 @@ const Home = ({data2}) => {
         });
     }
 
-   // let xurl = "../";
+   // let xurl = "../"; 
 
         return (
             <div>
